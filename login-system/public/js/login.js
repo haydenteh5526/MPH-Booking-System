@@ -8,12 +8,13 @@ form.addEventListener('submit', async (e) => {
   try {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
+    const rememberMe = document.getElementById('rememberMe')?.checked || false;
 
     const t0 = performance.now();
     const res = await fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ email, password, rememberMe })
     });
     const t1 = performance.now();
 
@@ -26,7 +27,14 @@ form.addEventListener('submit', async (e) => {
       setTimeout(() => location.href = '/dashboard', 600);
     } else {
       msg.className = 'err';
-      msg.textContent = data.error || `Error ${res.status}`;
+      if (data && data.mfaRequired) {
+        // Store state and go to OTP page
+        sessionStorage.setItem('mfaEmail', email);
+        sessionStorage.setItem('mfaRemember', rememberMe ? '1' : '0');
+        window.location.href = '/mfa.html';
+      } else {
+        msg.textContent = (data && data.error) || `Error ${res.status}`;
+      }
     }
   } catch (err) {
     console.error('Fetch error:', err);

@@ -9,7 +9,8 @@ import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.js";
 import { requireAuth } from "./src/middleware/requireAuth.js";
 
-dotenv.config();
+// load .env from the app directory after move
+dotenv.config({ path: path.join(path.dirname(fileURLToPath(import.meta.url)), ".env") });
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,4 +1,7 @@
 {
+  "name": "login-system",
+  "private": true,
+  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "connect-mongo": "^5.1.0",
@@ -6,10 +9,11 @@
     "express": "^5.1.0",
     "express-session": "^1.18.2",
     "helmet": "^8.1.0",
-    "mongoose": "^8.19.2"
+    "mongoose": "^8.19.2",
+    "nodemailer": "^6.9.16"
   },
   "scripts": {
-  "start": "node app.js",
-  "seed": "node scripts/resetPassword.mjs"
-}
+    "start": "node app.js",
+    "seed": "node scripts/resetPassword.mjs"
+  }
 }
