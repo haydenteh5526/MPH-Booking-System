@@ -1,0 +1,1955 @@
+/* CSS Variables - Modern shadcn/ui inspired palette */
+:root {
+    --brand-gold: #A39461;
+    --brand-black: #000000;
+    --brand-white: #FFFFFF;
+    --accent-skyblue: #AFD2F0;
+    --accent-mossgreen: #E1EB73;
+    --accent-riverblue: #232D9B;
+    
+    /* Modern neutral palette */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 42 45% 51%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 42 45% 51%;
+    --radius: 0.5rem;
+    
+    /* Semantic colors */
+    --text-primary: hsl(222.2, 84%, 4.9%);
+    --text-secondary: hsl(215.4, 16.3%, 46.9%);
+    --bg-primary: hsl(0, 0%, 100%);
+    --bg-secondary: hsl(210, 40%, 98%);
+    --bg-tertiary: hsl(210, 40%, 96.1%);
+    --border-primary: hsl(214.3, 31.8%, 91.4%);
+    --border-secondary: hsl(214.3, 31.8%, 85%);
+    
+    /* Slot colors - more vibrant */
+    --slot-available: hsl(142, 76%, 36%);
+    --slot-available-hover: hsl(142, 76%, 32%);
+    --slot-booked: hsl(0, 84%, 60%);
+    --slot-blocked: hsl(215, 16%, 47%);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 42 45% 51%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        
+        --text-primary: hsl(210, 40%, 98%);
+        --text-secondary: hsl(215, 20.2%, 65.1%);
+        --bg-primary: hsl(222.2, 84%, 4.9%);
+        --bg-secondary: hsl(217.2, 32.6%, 12%);
+        --bg-tertiary: hsl(217.2, 32.6%, 17.5%);
+        --border-primary: hsl(217.2, 32.6%, 17.5%);
+        --border-secondary: hsl(217.2, 32.6%, 25%);
+    }
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header Styles */
+.main-header {
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-primary);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.95);
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.header-left {
+    flex-shrink: 0;
+}
+
+.brand-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--brand-gold);
+    letter-spacing: -0.03em;
+}
+
+.header-center {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: calc(var(--radius) - 2px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.nav-link:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.nav-link.active {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.header-right {
+    flex-shrink: 0;
+}
+
+.profile-btn {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 9999px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.profile-btn:hover {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-secondary);
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-icon {
+    width: 18px;
+    height: 18px;
+    color: var(--text-primary);
+}
+
+/* Main Content */
+.main-content {
+    min-height: calc(100vh - 140px);
+    padding: 2.5rem 1.5rem;
+}
+
+.content-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Page Header */
+.page-header {
+    margin-bottom: 2.5rem;
+}
+
+.page-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.page-title-wrapper {
+    flex: 1;
+    min-width: 280px;
+}
+
+.page-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Primary Button */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--brand-gold);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background-color: hsl(42, 45%, 46%);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* Section Label */
+.section-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+/* Sport Filter Section */
+.sport-filter-section {
+    margin-bottom: 2.5rem;
+}
+
+.sport-filter {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+/* Court Selection Section */
+.court-selection-section {
+    margin-bottom: 2.5rem;
+}
+
+.court-selection-header {
+    margin-bottom: 1.5rem;
+}
+
+.court-selection-subtitle {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.court-layout-container {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-primary);
+    border-radius: calc(var(--radius) + 4px);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+}
+
+.court-visual-layout {
+    display: none;
+}
+
+.court-visual-layout.active {
+    display: block;
+    animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Court Display Wrapper */
+.court-display-wrapper {
+    margin-bottom: 1rem;
+}
+
+/* Court Info Text */
+.court-info-text {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.08) 0%, rgba(163, 148, 97, 0.02) 100%);
+    border: 1px solid rgba(163, 148, 97, 0.2);
+    border-radius: var(--radius);
+    backdrop-filter: blur(10px);
+}
+
+.court-info-text svg {
+    width: 20px;
+    height: 20px;
+    color: var(--brand-gold);
+    flex-shrink: 0;
+}
+
+.court-info-text span {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* ============ BASKETBALL COURT VISUAL ============ */
+.basketball-court-visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2.2 / 1;
+    background: linear-gradient(145deg, #8B4513 0%, #A0522D 50%, #8B4513 100%);
+    border: 5px solid #2C1810;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Center Line */
+.center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.7)
+    );
+    transform: translateX(-50%);
+    z-index: 1;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.center-line::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+}
+
+/* Half Courts Container */
+.half-courts-container {
+    display: flex;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+}
+
+.half-court-visual {
+    flex: 1;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.half-court-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    transition: all 0.4s ease;
+}
+
+.half-court-visual:hover::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.15) 0%, rgba(163, 148, 97, 0.05) 100%);
+}
+
+.half-court-visual.selected::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.3) 0%, rgba(163, 148, 97, 0.15) 100%);
+    box-shadow: inset 0 0 0 5px var(--brand-gold);
+}
+
+.half-court-visual:active {
+    transform: scale(0.98);
+}
+
+/* Full Court Indicator */
+.full-court-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.full-court-indicator.active {
+    opacity: 1;
+    animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        filter: drop-shadow(0 0 20px rgba(163, 148, 97, 0.6));
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.05);
+        filter: drop-shadow(0 0 30px rgba(163, 148, 97, 0.8));
+    }
+}
+
+.full-court-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.95) 0%, rgba(163, 148, 97, 0.85) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    border-radius: calc(var(--radius) + 4px);
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.full-court-badge svg {
+    width: 24px;
+    height: 24px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.full-court-badge span {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.02em;
+}
+
+/* Basketball Court Markings */
+.basketball-half-markings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Hoop/Rim Circle */
+.hoop-circle {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 140, 0, 0.3) 0%, transparent 70%);
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.4);
+}
+
+/* Key/Paint Area */
+.key-area {
+    position: absolute;
+    bottom: 3%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45%;
+    height: 45%;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-bottom: none;
+}
+
+/* Free Throw Line */
+.free-throw-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+/* Free Throw Circle */
+.free-throw-circle {
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    border-bottom: none;
+}
+
+/* Three Point Arc */
+.three-point-arc {
+    position: absolute;
+    bottom: 0;
+    width: 85%;
+    height: 70%;
+    border: 3px solid rgba(255, 255, 255, 0.65);
+}
+
+.three-point-arc.left {
+    left: 7.5%;
+    border-radius: 0 0 0 300px;
+    border-top: none;
+    border-right: none;
+}
+
+.three-point-arc.right {
+    right: 7.5%;
+    border-radius: 0 0 300px 0;
+    border-top: none;
+    border-left: none;
+}
+
+/* Baseline */
+.baseline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Center Line with Circle */
+.center-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to bottom, 
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.7)
+    );
+    transform: translateX(-50%);
+    z-index: 1;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.center-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+}
+
+/* Court Overlay Content */
+.court-overlay-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    z-index: 5;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.75) 100%);
+    padding: 1.25rem 1.75rem;
+    border-radius: calc(var(--radius) + 2px);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(163, 148, 97, 0.3);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.court-option:hover .court-overlay-content {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+.court-option.selected .court-overlay-content {
+    opacity: 1;
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.95) 0%, rgba(163, 148, 97, 0.85) 100%);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.court-overlay-content .court-label {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.375rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    letter-spacing: 0.02em;
+}
+
+.court-overlay-content .court-price {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.court-option.selected .court-overlay-content .court-price {
+    color: #FFF8DC;
+}
+
+.court-overlay-content .court-dimensions {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.375rem;
+}
+
+/* ============ BADMINTON COURT VISUAL ============ */
+.badminton-court-visual {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(145deg, #1B5E20 0%, #2E7D32 50%, #1B5E20 100%);
+    border: 5px solid #0D3F0F;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.badminton-courts-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+}
+
+.badminton-court-visual .court-option {
+    aspect-ratio: 0.7 / 1;
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.5) 0%, rgba(46, 125, 50, 0.3) 100%);
+    border: 3px solid rgba(255, 255, 255, 0.5);
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.badminton-court-visual .court-option::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.badminton-court-visual .court-option:hover::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.2) 0%, rgba(163, 148, 97, 0.1) 100%);
+}
+
+.badminton-court-visual .court-option:hover {
+    border-color: var(--brand-gold);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.badminton-court-visual .court-option.selected::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.35) 0%, rgba(163, 148, 97, 0.2) 100%);
+}
+
+.badminton-court-visual .court-option.selected {
+    border-color: var(--brand-gold);
+    border-width: 4px;
+    box-shadow: 
+        0 8px 24px rgba(163, 148, 97, 0.4),
+        inset 0 0 0 2px var(--brand-gold);
+}
+
+.badminton-court-visual .court-option.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(50%);
+}
+
+.badminton-court-visual .court-option.disabled:hover {
+    transform: none;
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Badminton Court Markings */
+.badminton-markings {
+    position: absolute;
+    inset: 5%;
+    pointer-events: none;
+}
+
+/* Badminton Net (Horizontal center line) */
+.badminton-net {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 3px;
+    background: linear-gradient(to right,
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 0.9),
+        rgba(255, 255, 255, 0.7)
+    );
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+    z-index: 3;
+}
+
+.badminton-net::before,
+.badminton-net::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.badminton-net::before {
+    left: -4px;
+}
+
+.badminton-net::after {
+    right: -4px;
+}
+
+/* Court Lines Structure */
+.court-lines {
+    position: absolute;
+    inset: 0;
+}
+
+/* Doubles Sidelines (outer boundary) */
+.doubles-sideline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Singles Sidelines (inner boundary) */
+.singles-sideline {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 15%;
+    right: 15%;
+    border-left: 2px solid rgba(255, 255, 255, 0.4);
+    border-right: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Short Service Lines */
+.service-line.short {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 25%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.service-line.short.bottom {
+    top: auto;
+    bottom: 25%;
+}
+
+/* Center Service Line (divides service courts) */
+.center-service-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 25%;
+    bottom: 25%;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* ============ VOLLEYBALL COURT VISUAL ============ */
+.volleyball-court-visual {
+    position: relative;
+    width: 100%;
+}
+
+.volleyball-court-full {
+    aspect-ratio: 2 / 1;
+    background: linear-gradient(145deg, #0D47A1 0%, #1565C0 50%, #0D47A1 100%);
+    border: 5px solid #052C66;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    box-shadow: 
+        0 10px 40px rgba(0, 0, 0, 0.4),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.volleyball-court-full::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    transition: all 0.4s ease;
+}
+
+.volleyball-court-full:hover::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.15) 0%, rgba(163, 148, 97, 0.05) 100%);
+}
+
+.volleyball-court-full:hover {
+    transform: translateY(-4px);
+    box-shadow: 
+        0 16px 48px rgba(0, 0, 0, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.volleyball-court-full.selected::before {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.3) 0%, rgba(163, 148, 97, 0.15) 100%);
+    box-shadow: inset 0 0 0 5px var(--brand-gold);
+}
+
+.volleyball-court-full:active {
+    transform: translateY(-2px) scale(0.99);
+}
+
+/* Volleyball Court Markings */
+.volleyball-markings {
+    position: absolute;
+    inset: 5%;
+    pointer-events: none;
+}
+
+/* Vertical Net in Center */
+.volleyball-net-vertical {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: linear-gradient(to bottom,
+        rgba(255, 255, 255, 0.7),
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.7)
+    );
+    transform: translateX(-50%);
+    box-shadow: 
+        0 0 12px rgba(255, 255, 255, 0.5),
+        0 0 24px rgba(255, 255, 255, 0.3);
+    z-index: 3;
+}
+
+/* Net Posts (top and bottom) */
+.net-post {
+    position: absolute;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+}
+
+.net-post.top {
+    top: -8px;
+}
+
+.net-post.bottom {
+    bottom: -8px;
+}
+
+/* Center Line under net */
+.center-line-volleyball {
+    position: absolute;
+    left: 50%;
+    top: -2%;
+    bottom: -2%;
+    width: 3px;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateX(-50%);
+    z-index: 1;
+}
+
+/* Attack Lines (3m from net on each side) */
+.attack-lines {
+    position: absolute;
+    inset: 0;
+}
+
+.attack-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.attack-line.left {
+    left: 22%;
+}
+
+.attack-line.right {
+    right: 22%;
+}
+
+/* Court Boundary Lines */
+.court-boundary-lines {
+    position: absolute;
+    inset: 0;
+}
+
+.boundary-line {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.boundary-line.top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.boundary-line.bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.boundary-line.left-side {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+}
+
+.boundary-line.right-side {
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+}
+
+/* Selected Court Info */
+.selected-court-info {
+    margin-top: 1.5rem;
+}
+
+.info-card {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border: 2px solid rgba(34, 197, 94, 0.4);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 1rem;
+}
+
+.info-header svg {
+    width: 22px;
+    height: 22px;
+    color: var(--slot-available);
+}
+
+.info-header span {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.info-content p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.info-content strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.info-content span {
+    color: var(--brand-gold);
+    font-weight: 700;
+}
+
+/* Sport Cards - shadcn/ui style */
+.sport-card {
+    background-color: var(--bg-primary);
+    border: 2px solid var(--border-primary);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.sport-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--brand-gold) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sport-card:hover {
+    border-color: var(--brand-gold);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.sport-card.active {
+    border-color: var(--brand-gold);
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.05) 0%, var(--bg-primary) 100%);
+    box-shadow: var(--shadow-sm);
+}
+
+.sport-card.active::before {
+    opacity: 0.03;
+}
+
+.sport-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.sport-icon {
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: grayscale(30%);
+    transition: filter 0.2s ease;
+}
+
+.sport-card:hover .sport-icon,
+.sport-card.active .sport-icon {
+    filter: grayscale(0%);
+}
+
+.sport-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.sport-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.sport-desc {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    line-height: 1.3;
+}
+
+.sport-card-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
+}
+
+.sport-card-check svg {
+    width: 14px;
+    height: 14px;
+    color: transparent;
+    transition: color 0.2s ease;
+}
+
+.sport-card.active .sport-card-check {
+    background-color: var(--brand-gold);
+    border-color: var(--brand-gold);
+}
+
+.sport-card.active .sport-card-check svg {
+    color: white;
+}
+
+/* Calendar Section */
+.calendar-section {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: calc(var(--radius) + 4px);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 1.75rem;
+    border-bottom: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+    flex-wrap: wrap;
+    gap: 1.25rem;
+}
+
+.calendar-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.calendar-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+/* Week Navigation */
+.week-navigation {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius);
+    padding: 0.25rem;
+}
+
+.week-nav-btn {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: calc(var(--radius) - 2px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-secondary);
+}
+
+.week-nav-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.week-nav-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.week-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 0 0.75rem;
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Calendar Legend */
+.calendar-legend {
+    display: flex;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 9999px;
+    border: 2px solid var(--border-primary);
+}
+
+.legend-dot.available {
+    background-color: var(--slot-available);
+    border-color: var(--slot-available);
+}
+
+.legend-dot.booked {
+    background-color: var(--slot-booked);
+    border-color: var(--slot-booked);
+}
+
+.legend-dot.blocked {
+    background-color: var(--slot-blocked);
+    border-color: var(--slot-blocked);
+}
+
+.legend-label {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--bg-tertiary);
+    border-top-color: var(--brand-gold);
+    border-radius: 50%;
+    margin: 0 auto 1.25rem;
+    animation: spin 0.7s linear infinite;
+}
+
+.loading-indicator p {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Calendar Container */
+.calendar-container {
+    overflow: hidden;
+}
+
+.calendar-scroll {
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Scrollbar Styling */
+.calendar-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.calendar-scroll::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb {
+    background: var(--border-secondary);
+    border-radius: 4px;
+}
+
+.calendar-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Calendar Grid */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: 90px repeat(7, minmax(110px, 1fr));
+    gap: 0;
+    min-width: 900px;
+}
+
+.time-column {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
+}
+
+.time-header {
+    height: 72px;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.time-slot-label {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    padding: 0.5rem;
+    font-weight: 500;
+    background-color: var(--bg-secondary);
+}
+
+.day-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.day-header {
+    height: 72px;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-primary);
+    border-left: 1px solid var(--border-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem;
+    gap: 0.25rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.day-header.today {
+    background: linear-gradient(135deg, rgba(163, 148, 97, 0.08) 0%, var(--bg-secondary) 100%);
+}
+
+.day-name {
+    font-weight: 700;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.day-header.today .day-name {
+    color: var(--brand-gold);
+}
+
+.day-date {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.day-header.today .day-date {
+    color: var(--brand-gold);
+}
+
+.day-month {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Time Slots */
+.time-slot {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid var(--border-primary);
+    border-left: 1px solid var(--border-primary);
+    cursor: pointer;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.75rem;
+    font-weight: 600;
+    position: relative;
+    background-color: var(--bg-primary);
+}
+
+.time-slot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.time-slot.available {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(34, 197, 94, 0.02) 100%);
+    color: var(--slot-available);
+}
+
+.time-slot.available::before {
+    background: radial-gradient(circle at center, rgba(34, 197, 94, 0.1) 0%, transparent 70%);
+}
+
+.time-slot.available:hover {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.12) 0%, rgba(34, 197, 94, 0.05) 100%);
+    transform: scale(1.02);
+    z-index: 5;
+    box-shadow: inset 0 0 0 2px var(--slot-available);
+}
+
+.time-slot.available:hover::before {
+    opacity: 1;
+}
+
+.time-slot.booked {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.02) 100%);
+    color: var(--slot-booked);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.time-slot.blocked {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.time-slot-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.slot-icon {
+    font-size: 1rem;
+}
+
+.slot-price {
+    font-size: 0.6875rem;
+    opacity: 0.8;
+}
+
+/* Empty State */
+.empty-state {
+    background-color: var(--bg-tertiary);
+    border: 1px dashed var(--border-secondary);
+    border-radius: calc(var(--radius) + 2px);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.empty-state p {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+/* Hero Section (Home Page) */
+.hero-section {
+    margin-top: 3rem;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.hero-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: calc(var(--radius) + 4px);
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hero-card:hover {
+    border-color: var(--brand-gold);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-4px);
+}
+
+.hero-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    filter: grayscale(20%);
+}
+
+.hero-card:hover .hero-icon {
+    filter: grayscale(0%);
+    transform: scale(1.1);
+    transition: all 0.3s ease;
+}
+
+.hero-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.hero-card p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+.cta-section {
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.btn-large {
+    padding: 1rem 2rem;
+    font-size: 1.0625rem;
+    display: inline-flex;
+}
+
+/* About Page */
+.about-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2.5rem;
+}
+
+.about-card {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: calc(var(--radius) + 4px);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.about-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.about-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--brand-gold);
+    margin-bottom: 1rem;
+}
+
+.about-card p {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+}
+
+/* Footer */
+.main-footer {
+    background-color: var(--bg-primary);
+    border-top: 1px solid var(--border-primary);
+    margin-top: 4rem;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .calendar-grid {
+        grid-template-columns: 80px repeat(7, minmax(100px, 1fr));
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .badminton-courts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .court-layout-container {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        padding: 2rem 1rem;
+    }
+    
+    .header-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .brand-name {
+        font-size: 1.125rem;
+    }
+    
+    .header-center {
+        gap: 0.25rem;
+    }
+    
+    .nav-link {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .page-title {
+        font-size: 1.75rem;
+    }
+    
+    .page-subtitle {
+        font-size: 0.9375rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .sport-filter {
+        grid-template-columns: 1fr;
+    }
+    
+    .basketball-court-visual {
+        aspect-ratio: 1.8 / 1;
+    }
+    
+    .court-layout-container {
+        padding: 1.5rem;
+    }
+    
+    .badminton-courts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .court-overlay-content {
+        padding: 1rem 1.25rem;
+    }
+    
+    .court-overlay-content .court-label {
+        font-size: 1.125rem;
+    }
+    
+    .full-court-badge {
+        padding: 0.875rem 1.25rem;
+    }
+    
+    .full-court-badge span {
+        font-size: 1rem;
+    }
+
+
+    
+    .badminton-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .court-layout-container {
+        padding: 1.25rem;
+    }
+    
+    .calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.25rem;
+    }
+    
+    .calendar-header-left {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .week-navigation {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .calendar-grid {
+        grid-template-columns: 70px repeat(5, minmax(90px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .header-center {
+        display: none;
+    }
+    
+    .page-header-content {
+        flex-direction: column;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .badminton-courts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+    
+    .basketball-court-visual {
+        aspect-ratio: 1.2 / 1;
+    }
+    
+    .half-courts-container {
+        flex-direction: column;
+    }
+    
+    .court-layout-container {
+        padding: 1rem;
+    }
+    
+    .court-overlay-content {
+        padding: 0.75rem 1rem;
+    }
+    
+    .court-overlay-content .court-label {
+        font-size: 1rem;
+    }
+    
+    .court-overlay-content .court-price {
+        font-size: 0.875rem;
+    }
+    
+    .full-court-badge {
+        padding: 0.75rem 1rem;
+        gap: 0.5rem;
+    }
+    
+    .full-court-badge svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .full-court-badge span {
+        font-size: 0.875rem;
+    }
+    
+    .court-info-text {
+        padding: 0.875rem 1rem;
+        font-size: 0.8125rem;
+    }
+    
+    .badminton-court-visual {
+        padding: 1rem;
+    }
+    
+    .basketball-full,
+    .volleyball-full {
+        min-height: 140px;
+    }
+    
+    .basketball-half,
+    .badminton-single {
+        min-height: 100px;
+    }
+    
+    .court-label {
+        font-size: 1rem;
+    }
+    
+    .calendar-grid {
+        grid-template-columns: 60px repeat(3, minmax(80px, 1fr));
+    }
+    
+    .time-slot {
+        font-size: 0.6875rem;
+    }
+    
+    .day-date {
+        font-size: 1.125rem;
+    }
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    color: #6B7280;
+    font-size: 0.875rem;
+}
+
+/* Mobile Responsive - Tablet */
+@media (max-width: 1024px) {
+    .calendar-grid {
+        grid-template-columns: 70px repeat(7, minmax(90px, 1fr));
+    }
+}
+
+/* Mobile Responsive - Phone */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .brand-name {
+        font-size: 1rem;
+    }
+    
+    .header-center {
+        gap: 1rem;
+    }
+    
+    .nav-link {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+    }
+    
+    .page-title {
+        font-size: 1.5rem;
+    }
+    
+    .sport-filter {
+        gap: 0.75rem;
+    }
+    
+    .sport-btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .sport-icon {
+        font-size: 1.25rem;
+    }
+    
+    .calendar-section {
+        padding: 1rem;
+        overflow-x: auto;
+    }
+    
+    .calendar-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .calendar-grid {
+        grid-template-columns: 60px repeat(7, minmax(80px, 1fr));
+        font-size: 0.75rem;
+    }
+    
+    .time-slot-label {
+        font-size: 0.7rem;
+    }
+    
+    .day-name {
+        font-size: 0.75rem;
+    }
+    
+    .day-date {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-center {
+        display: none;
+    }
+    
+    .brand-name {
+        font-size: 0.95rem;
+    }
+    
+    .calendar-grid {
+        grid-template-columns: 50px repeat(3, minmax(70px, 1fr));
+    }
+    
+    .sport-filter {
+        flex-direction: column;
+    }
+    
+    .sport-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
