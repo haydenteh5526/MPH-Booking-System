@@ -1,3 +1,4 @@
+import "../config/env.js";
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
@@ -76,6 +77,29 @@ router.get("/verify-email", async (req, res) => {
   } catch (e) {
     console.error("[verify-email]", e);
     return res.redirect("/verify.html?status=error");
+  }
+});
+
+// POST /auth/resend-verification
+router.post("/resend-verification", async (req, res) => {
+  try {
+    const { email } = req.body || {};
+    if (!email) return res.status(200).json({ message: "If the account exists, an email has been sent." });
+    const normEmail = String(email).trim().toLowerCase();
+    const user = await User.findOne({ email: normEmail }).lean(false);
+    if (!user || user.emailVerified) {
+      return res.status(200).json({ message: "If the account exists, an email has been sent." });
+    }
+    const { token, hash, expiresAt } = generateToken(32, VERIFY_TOKEN_MINUTES);
+    user.emailVerifyTokenHash = hash;
+    user.emailVerifyExpires = expiresAt;
+    await user.save();
+    const link = `${APP_BASE_URL}/auth/verify-email?token=${encodeURIComponent(token)}`;
+    await sendVerificationEmail(normEmail, link);
+    return res.status(200).json({ message: "Verification email sent." });
+  } catch (e) {
+    console.error("[resend-verification]", e);
+    return res.status(500).json({ error: "Server error" });
   }
 });
 

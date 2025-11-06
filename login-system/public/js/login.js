@@ -32,6 +32,10 @@ form.addEventListener('submit', async (e) => {
         sessionStorage.setItem('mfaEmail', email);
         sessionStorage.setItem('mfaRemember', rememberMe ? '1' : '0');
         window.location.href = '/mfa.html';
+      } else if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {
+        // Redirect to resend verification, pre-filling the email
+        const q = new URLSearchParams({ email }).toString();
+        window.location.href = `/resend.html?${q}`;
       } else {
         msg.textContent = (data && data.error) || `Error ${res.status}`;
       }
