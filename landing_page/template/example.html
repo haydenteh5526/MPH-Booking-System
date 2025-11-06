@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TUS — MPH Booking</title>
+  <meta name="description" content="Book the Multi-Purpose Hall (MPH) at TUS for classes, clubs, and events." />  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <!-- Header -->
+  <header class="header" role="banner" aria-label="TUS MPH Booking header">
+    <div class="container nav">
+  <a class="brand" href="#main-content" aria-label="Go to main content">
+        <span class="home" aria-hidden="true">
+          <!-- House icon -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+          </svg>
+        </span>
+        <span>MPH Booking</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-cta">
+        <!-- New Login button (gold) -->
+        <a class="btn btn-primary" href="login.html" aria-label="Login">Login</a>
+        <!-- Book button kept white -->
+        <a class="btn btn-white" href="booking.html" aria-label="Book now">Book</a>
+        <button class="btn btn-ghost menu-btn" aria-controls="mobileNav" aria-expanded="false" id="menuToggle">Menu</button>
+      </div>
+    </div>
+  <!-- Mobile drawer -->
+  <div id="mobileNav" class="mobile-nav" hidden aria-hidden="true" role="dialog" aria-label="Mobile navigation">
+      <div class="container" style="padding:12px 24px 18px">
+        <div style="display:flex; flex-direction:column; gap:8px">
+          <a href="#features">Features</a>
+          <a href="#how">How it works</a>
+          <a href="#faq">FAQ</a>
+          <a href="login.html">Login</a>
+          <a href="booking.html">Book</a>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Hero -->
+  <main id="main-content" class="hero">
+    <div class="particles" aria-hidden="true"></div>
+    <div class="gold-ring" aria-hidden="true"></div>
+    <div class="container hero-grid">
+      <div>
+        <div class="kicker">Technological University of the Shannon</div>
+        <h1>Book the Multi-Purpose Hall in seconds.</h1>
+        <p>Simple, elegant, and reliable. Reserve slots for classes, clubs, exams, or events—fully aligned with TUS policies.</p>
+        <div class="actions">
+          <a class="btn btn-white" href="booking.html" aria-label="Book now">Book Now</a>
+          <a class="btn btn-ghost" href="#how" aria-label="Learn how it works">How it works</a>
+          <button class="btn btn-accent" id="demoOpen" aria-haspopup="dialog" aria-controls="demoModal">Try demo</button>
+        </div>
+        <div class="stats" aria-label="Key stats">
+          <div class="stat"><b>7am–10pm</b><span>Daily slots</span></div>
+          <div class="stat"><b>5 mins</b><span>Avg. approval</span></div>
+          <div class="stat"><b>0 fees</b><span>Student societies</span></div>
+        </div>
+      </div>
+
+      <div class="hero-card" aria-label="Quick overview">
+        <div style="text-align:center; padding:20px;">
+          <div style="margin-bottom:24px;">
+            <div style="width:80px; height:80px; margin:0 auto 16px; display:grid; place-items:center; border-radius:20px; background:linear-gradient(135deg, var(--gold-bright) 0%, var(--gold) 100%); box-shadow:0 8px 24px rgba(212,197,144,.5);" aria-hidden="true">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+                <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/>
+              </svg>
+            </div>
+            <h3 style="font-size:1.5rem; margin-bottom:12px;">Smart Booking System</h3>
+            <p style="max-width:100%; margin:0 auto 24px; color:rgba(255,255,255,.85);">
+              Our intelligent platform handles everything from availability checks to approval workflows, making MPH bookings effortless.
+            </p>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:left;">
+            <div style="padding:16px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(212,197,144,.2);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:rgba(163,148,97,.2); display:grid; place-items:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <h4 style="margin:0; font-size:.95rem; color:#fff;">Real-time Updates</h4>
+              </div>
+              <p style="margin:0; font-size:.85rem; color:rgba(255,255,255,.7);">Instant notifications on booking status</p>
+            </div>
+            
+            <div style="padding:16px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(212,197,144,.2);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:rgba(163,148,97,.2); display:grid; place-items:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                </div>
+                <h4 style="margin:0; font-size:.95rem; color:#fff;">Secure & Reliable</h4>
+              </div>
+              <p style="margin:0; font-size:.85rem; color:rgba(255,255,255,.7);">Your data is protected and encrypted</p>
+            </div>
+            
+            <div style="padding:16px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(212,197,144,.2);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:rgba(163,148,97,.2); display:grid; place-items:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <h4 style="margin:0; font-size:.95rem; color:#fff;">24/7 Access</h4>
+              </div>
+              <p style="margin:0; font-size:.85rem; color:rgba(255,255,255,.7);">Book anytime, anywhere you need</p>
+            </div>
+            
+            <div style="padding:16px; border-radius:12px; background:rgba(255,255,255,.05); border:1px solid rgba(212,197,144,.2);">
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <div style="width:32px; height:32px; border-radius:8px; background:rgba(163,148,97,.2); display:grid; place-items:center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
+                <h4 style="margin:0; font-size:.95rem; color:#fff;">Multi-user Support</h4>
+              </div>
+              <p style="margin:0; font-size:.85rem; color:rgba(255,255,255,.7);">Perfect for teams and societies</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Features -->
+  <section id="features" aria-labelledby="features-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 id="features-title">Why students & staff love it</h2>
+        <p>Designed with a minimalist TUS look—black, gold, and white—so content stays readable and professional.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 11h18M3 7h18M3 15h18M3 19h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Clear availability</h3>
+          <p>Instantly see open slots and conflicts before submitting.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 1v22M1 12h22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>One form</h3>
+          <p>All essential details in one place—no emails back & forth.</p>
+        </div>
+        <div class="card reveal">
+          <div class="icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M20 7 9 18l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Fast approvals</h3>
+          <p>Smart routing to approvers, with notifications on each step.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" aria-labelledby="how-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 id="how-title">How it works</h2>
+        <p>Three simple steps to secure the hall.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal">
+          <span class="badge" aria-hidden="true">1</span>
+          <h3 style="margin-top:.5rem">Pick a time</h3>
+          <p>Choose date, start, and end time that fit your event.</p>
+        </div>
+        <div class="card reveal">
+          <span class="badge" aria-hidden="true">2</span>
+          <h3 style="margin-top:.5rem">Add details</h3>
+          <p>Purpose, expected attendees, and special requirements.</p>
+        </div>
+        <div class="card reveal">
+          <span class="badge" aria-hidden="true">3</span>
+          <h3 style="margin-top:.5rem">Submit</h3>
+          <p>We confirm by email and block your slot on the calendar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <p>If you still need help, contact Student Services.</p>
+      </div>
+      <div class="grid-3">
+        <div class="card reveal">
+          <h3>Who can book?</h3>
+          <p>All TUS students, staff, and registered clubs/societies.</p>
+        </div>
+        <div class="card reveal">
+          <h3>Is there a cost?</h3>
+          <p>No fee for student societies. Staff bookings follow department policies.</p>
+        </div>
+        <div class="card reveal">
+          <h3>What's the approval time?</h3>
+          <p>Most requests are approved within minutes during office hours.</p>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <a class="btn btn-primary" href="login.html" aria-label="Login">Login</a>
+        <a class="btn btn-white" href="booking.html" aria-label="Go to booking page" style="margin-left:8px;">Go to Booking Page</a>
+      </div>
+    </div>
+  </section>
+
+  <footer role="contentinfo">
+    <div class="container" style="display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+      <div>© <span id="year"></span> TUS — MPH Booking</div>
+      <div style="opacity:.85">Built with a minimalist black-gold-white palette.</div>
+    </div>
+  </footer>
+
+  <!-- Demo booking modal -->
+  <div id="demoModal" class="modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="demoTitle" style="display:none;">
+    <div class="overlay" data-action="close"></div>
+    <div class="dialog" role="document">
+      <h3 id="demoTitle">Try a quick booking</h3>
+      <p style="margin-top:0; opacity:.9">This demo will validate inputs and generate a calendar invite you can download.</p>
+      <form id="demoForm">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" required placeholder="e.g. Aisling O'Connor">
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@tus.ie">
+        </div>
+        <div class="field">
+          <label for="date">Date</label>
+          <input id="date" name="date" type="date" required>
+        </div>
+        <div style="display:flex; gap:8px; margin-top:8px; justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" data-action="close">Cancel</button>
+          <button type="submit" class="btn btn-primary">Reserve (demo)</button>
+        </div>
+      </form>
+    </div>
+  </div>  <div id="demoToast" class="toast" role="status" aria-live="polite" aria-atomic="true">Demo booking confirmed</div>
+
+  <!-- External JavaScript -->
+  <script src="../js/script.js"></script>
+</body>
+</html>
