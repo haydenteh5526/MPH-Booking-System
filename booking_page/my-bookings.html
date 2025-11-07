@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Bookings - MPH Booking System</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- Header -->
     <div id="header-placeholder"></div>
     
-    <!-- Main Content -->
-    <main class="main-content">
+    <!-- My Bookings Hero Section -->
+    <section class="my-bookings-hero-section">
         <div class="content-container">
             <!-- Page Title -->
             <div class="page-header">
                 <div class="page-header-content-center">
+                    <div class="booking-badge">Your Reservations</div>
                     <h1 class="page-title">My Bookings</h1>
                     <p class="page-subtitle">View and manage your court reservations</p>
                 </div>
             </div>
-            
+        </div>
+    </section>
+    
+    <!-- Bookings List Section -->
+    <section class="bookings-list-section">
+        <div class="content-container">
             <!-- Success Message (shown after payment) -->
             <div id="successBanner" class="success-banner" style="display: none;">
                 <div class="success-banner-content">
@@ -45,7 +51,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </section>
     
     <!-- Cancel Booking Modal -->
     <div class="modal-overlay" id="cancelModal" style="display: none;">
@@ -117,11 +123,11 @@
     <div id="footer-placeholder"></div>
     
     <!-- Scripts -->
-    <script src="../js/my-bookings.js"></script>
-    <script src="../js/navigation.js"></script>
+    <script src="js/my-bookings.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         // Load header and footer
-        fetch('../../partials/header.html')
+        fetch('../partials/header.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
@@ -151,7 +157,7 @@
                 }
             });
         
-        fetch('../../partials/footer.html')
+        fetch('../partials/footer.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('footer-placeholder').innerHTML = html;

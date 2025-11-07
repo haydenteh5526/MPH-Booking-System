@@ -238,41 +238,140 @@ body {
     margin: 0.25rem 0;
 }
 
-/* Main Content */
-.main-content {
-    min-height: calc(100vh - 140px);
-    padding: 3rem 2rem;
+/* Sections */
+.booking-search-section {
+    min-height: 70vh;
+    padding: 8rem 2rem 6rem;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.featured-courts-section {
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+}
+
+.calendar-results-section {
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+}
+
+.booking-tips-section {
+    padding: 6rem 2rem;
+    background: var(--bg-primary);
+}
+
+.why-book-section {
+    padding: 6rem 2rem;
+    background: var(--bg-secondary);
+}
+
+.booking-cta-section {
+    padding: 6rem 2rem;
+    background: var(--bg-secondary);
+}
+
+/* My Bookings Page Sections */
+.my-bookings-hero-section {
+    min-height: 50vh;
+    padding: 8rem 2rem 6rem;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookings-list-section {
+    padding: 4rem 2rem;
+    background: var(--bg-secondary);
+    min-height: 50vh;
 }
 
 .content-container {
     max-width: 1400px;
     margin: 0 auto;
+    width: 100%;
+}
+
+.my-bookings-hero-section .content-container,
+.payment-hero-section .content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.booking-search-section .content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Payment Page Sections */
+.payment-hero-section {
+    min-height: 40vh;
+    padding: 8rem 2rem 4rem;
+    background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-form-section {
+    padding: 4rem 2rem 6rem;
+    background: var(--bg-secondary);
+}
+
+.my-bookings-hero-section .page-header,
+.payment-hero-section .page-header {
+    margin-bottom: 0;
 }
 
 /* Page Header */
 .page-header {
     margin-bottom: 3rem;
+    text-align: center;
 }
 
 .page-header-content-center {
     text-align: center;
-    max-width: 700px;
+    max-width: 900px;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.booking-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(163, 148, 97, 0.1);
+    border: 1px solid rgba(163, 148, 97, 0.3);
+    border-radius: 2rem;
+    color: var(--brand-gold);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
 .page-title {
-    font-size: 2.25rem;
+    font-size: 3.5rem;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
 .page-subtitle {
-    font-size: 1rem;
+    font-size: 1.125rem;
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 /* Primary Button */
@@ -319,8 +418,10 @@ body {
 
 /* Booking Search Bar */
 .booking-search-wrapper {
-    margin-bottom: 4rem;
+    margin-bottom: 0;
     position: relative;
+    width: 100%;
+    max-width: 900px;
 }
 
 .booking-search-bar {
@@ -836,6 +937,200 @@ body {
     color: var(--text-secondary);
 }
 
+/* ===== Common Section Styles ===== */
+.section-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: rgba(163, 148, 97, 0.1);
+    border: 1px solid rgba(163, 148, 97, 0.3);
+    border-radius: 2rem;
+    color: var(--brand-gold);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.section-description {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ===== Booking Tips Section ===== */
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.tip-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.tip-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand-gold);
+    box-shadow: var(--shadow-lg);
+}
+
+.tip-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.tip-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.tip-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* ===== Why Book Section ===== */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.benefit-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--brand-gold);
+    box-shadow: var(--shadow-lg);
+}
+
+.benefit-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.benefit-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.benefit-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* ===== Booking CTA Section ===== */
+.booking-cta-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.booking-cta-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.booking-cta-description {
+    font-size: 1.25rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.booking-cta-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.booking-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+}
+
+.booking-cta-btn-primary {
+    background: linear-gradient(135deg, var(--brand-gold), #B5A574);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.booking-cta-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.booking-cta-btn-secondary {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border-primary);
+}
+
+.booking-cta-btn-secondary:hover {
+    background: var(--bg-primary);
+    border-color: var(--brand-gold);
+    transform: translateY(-2px);
+}
+
+.booking-cta-btn-icon {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.booking-cta-btn:hover .booking-cta-btn-icon {
+    transform: translateX(4px);
+}
+
 /* Why Choose MPH Section */
 .why-choose-section {
     margin-bottom: 3rem;
@@ -851,12 +1146,6 @@ body {
     color: var(--text-primary);
     margin-bottom: 2.5rem;
     letter-spacing: -0.02em;
-}
-
-.benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 2rem;
 }
 
 .benefit-item {
@@ -3492,7 +3781,23 @@ body {
     }
     
     .page-title {
-        font-size: 2rem;
+        font-size: 3rem;
+    }
+    
+    .tips-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .section-title {
+        font-size: 2.25rem;
+    }
+    
+    .booking-cta-title {
+        font-size: 2.5rem;
     }
     
     .badminton-courts-grid {
@@ -3505,8 +3810,67 @@ body {
 }
 
 @media (max-width: 768px) {
-    .main-content {
-        padding: 2rem 1.5rem;
+    .booking-search-section,
+    .my-bookings-hero-section,
+    .payment-hero-section {
+        padding: 7rem 1.5rem 4rem;
+        min-height: auto;
+    }
+    
+    .featured-courts-section,
+    .calendar-results-section,
+    .bookings-list-section,
+    .payment-form-section {
+        padding: 3rem 1.5rem;
+    }
+    
+    .page-title {
+        font-size: 2.25rem;
+    }
+    
+    .page-subtitle {
+        font-size: 1rem;
+    }
+    
+    .booking-tips-section,
+    .why-book-section,
+    .booking-cta-section {
+        padding: 4rem 1.5rem;
+    }
+    
+    .tips-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .benefits-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .section-description {
+        font-size: 1rem;
+    }
+    
+    .booking-cta-title {
+        font-size: 2rem;
+    }
+    
+    .booking-cta-description {
+        font-size: 1.125rem;
+    }
+    
+    .booking-cta-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .booking-cta-btn {
+        width: 100%;
     }
     
     .header-container {
@@ -3549,7 +3913,7 @@ body {
     }
     
     .page-title {
-        font-size: 1.75rem;
+        font-size: 2.25rem;
     }
     
     .page-subtitle {
@@ -3706,7 +4070,7 @@ body {
     }
     
     .page-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
     
     /* Smaller Search Bar for Small Phones */
@@ -3836,7 +4200,7 @@ body {
 @media (max-width: 768px) {
     
     .page-title {
-        font-size: 1.5rem;
+        font-size: 2rem;
     }
     
     .sport-filter {

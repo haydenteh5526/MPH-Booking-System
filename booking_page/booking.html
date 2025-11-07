@@ -4,24 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookings - MPH Booking System</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- Header -->
     <div id="header-placeholder"></div>
     
-    <!-- Main Content -->
-    <main class="main-content">
+    <!-- Booking Search Section -->
+    <section class="booking-search-section">
         <div class="content-container">
-            <!-- Page Title Section -->
+            <!-- Page Title -->
             <div class="page-header">
                 <div class="page-header-content-center">
+                    <div class="booking-badge">Quick Booking</div>
                     <h1 class="page-title">Book Your Session</h1>
                     <p class="page-subtitle">Select a sport and find available time slots for the upcoming weeks</p>
                 </div>
             </div>
             
-            <!-- Booking Search Bar -->
+            <!-- Search Bar -->
             <div class="booking-search-wrapper">
                 <div class="booking-search-bar">
                     <!-- Sport Section -->
@@ -107,8 +108,12 @@
                     </button>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Featured Courts Section -->
+    <!-- Featured Courts Section -->
+    <section class="featured-courts-section">
+        <div class="content-container">
             <div class="featured-section">
                 <div class="featured-header">
                     <h2 class="featured-title">Featured Courts</h2>
@@ -147,10 +152,135 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            
-            <!-- Calendar Section -->
-            <div class="calendar-section" style="display: none;">
+    <!-- Booking Tips Section -->
+    <section class="booking-tips-section">
+        <div class="content-container">
+            <div class="section-header">
+                <div class="section-badge">Good to Know</div>
+                <h2 class="section-title">Make the Most of Your Booking</h2>
+                <p class="section-description">Helpful tips and information for a smooth booking experience</p>
+            </div>
+
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-icon">⏰</div>
+                    <h3 class="tip-title">Best Times to Book</h3>
+                    <p class="tip-description">Weekday mornings (8-11 AM) and late evenings (8-10 PM) are usually less crowded. Book early for weekend slots!</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">👥</div>
+                    <h3 class="tip-title">Group Bookings</h3>
+                    <p class="tip-description">Playing with friends? One person can book for the entire group. Just show up together at your scheduled time.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🔄</div>
+                    <h3 class="tip-title">Cancellation Policy</h3>
+                    <p class="tip-description">Free cancellation anytime before your booking. Full refund processed within 3-5 business days.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">🎒</div>
+                    <h3 class="tip-title">What to Bring</h3>
+                    <p class="tip-description">Bring your own equipment, water bottle, and towel. Indoor sports shoes required for all courts.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">📧</div>
+                    <h3 class="tip-title">Confirmation Email</h3>
+                    <p class="tip-description">Check your email for booking details. Save or screenshot your confirmation for easy check-in.</p>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-icon">⏱️</div>
+                    <h3 class="tip-title">Arrive Early</h3>
+                    <p class="tip-description">Come 5-10 minutes before your slot to warm up. Late arrivals don't get extra time—your slot ends as scheduled.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Book With MPH Section -->
+    <section class="why-book-section">
+        <div class="content-container">
+            <div class="section-header">
+                <div class="section-badge">Why Book With MPH</div>
+                <h2 class="section-title">The Best Way to Book Your Court</h2>
+                <p class="section-description">Experience the convenience and reliability of our booking system</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3 class="benefit-title">Instant Confirmation</h3>
+                    <p class="benefit-description">Get immediate booking confirmation via email. No waiting, no uncertainty.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">💳</div>
+                    <h3 class="benefit-title">Secure Payment</h3>
+                    <p class="benefit-description">Safe and encrypted payment processing. Your financial data is protected.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">🔄</div>
+                    <h3 class="benefit-title">Flexible Cancellation</h3>
+                    <p class="benefit-description">Cancel anytime with full refund. Life happens, we understand.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📱</div>
+                    <h3 class="benefit-title">Mobile Friendly</h3>
+                    <p class="benefit-description">Book from anywhere, anytime. Works perfectly on all devices.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">⏰</div>
+                    <h3 class="benefit-title">24/7 Booking</h3>
+                    <p class="benefit-description">Reserve courts around the clock. Book when it's convenient for you.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">📊</div>
+                    <h3 class="benefit-title">Real-Time Availability</h3>
+                    <p class="benefit-description">See exactly what's available. No double bookings or conflicts.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="booking-cta-section">
+        <div class="content-container">
+            <div class="booking-cta-content">
+                <h2 class="booking-cta-title">Ready to Play?</h2>
+                <p class="booking-cta-description">
+                    Don't wait! Book your favorite court now and get back in the game. Join hundreds of students who trust MPH for their sporting needs.
+                </p>
+                <div class="booking-cta-buttons">
+                    <a href="#" class="booking-cta-btn booking-cta-btn-primary" onclick="event.preventDefault(); document.querySelector('.booking-search-section').scrollIntoView({ behavior: 'smooth' });">
+                        <span>Book Now</span>
+                        <svg class="booking-cta-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="../about_page/index.html" class="booking-cta-btn booking-cta-btn-secondary">
+                        <span>Learn More</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Calendar/Results Section -->
+    <section class="calendar-results-section" style="display: none;">
+        <div class="content-container">
+            <div class="calendar-section">
                 <!-- Loading Indicator -->
                 <div class="loading-indicator" id="loadingIndicator">
                     <div class="spinner"></div>
@@ -165,7 +295,7 @@
                 </div>
             </div>
         </div>
-    </main>
+    </section>
     
     <!-- Booking Confirmation Modal -->
     <div class="modal-overlay" id="bookingModal" style="display: none;">
@@ -269,11 +399,11 @@
     <div id="footer-placeholder"></div>
     
     <!-- Scripts -->
-    <script src="../js/calendar.js"></script>
-    <script src="../js/navigation.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         // Load header and footer
-        fetch('../../partials/header.html')
+        fetch('../partials/header.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('header-placeholder').innerHTML = data;
@@ -283,7 +413,7 @@
                 setupProfileDropdown();
             });
         
-        fetch('../../partials/footer.html')
+        fetch('../partials/footer.html')
             .then(response => response.text())
             .then(data => {
                 document.getElementById('footer-placeholder').innerHTML = data;

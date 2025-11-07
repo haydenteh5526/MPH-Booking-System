@@ -74,18 +74,27 @@ A modern, student-friendly sports facility booking platform with a clean shadcn/
 
 ```
 MPH-Booking-System/
-├── booking_page/
+├── landing_page/
+│   ├── index.html                  # Landing page
 │   ├── css/
-│   │   └── styles.css              # Complete styling (~3000 lines)
-│   ├── js/
-│   │   ├── calendar.js             # Booking logic & availability table
-│   │   ├── payment.js              # Payment processing
-│   │   ├── my-bookings.js          # Bookings management & cancellation
-│   │   └── navigation.js           # Navigation helper for active states
-│   └── templates/
-│       ├── booking.html            # Main booking search & availability
-│       ├── payment.html            # Payment processing page
-│       └── my-bookings.html        # View/cancel bookings page
+│   │   └── styles.css              # Landing page styles
+│   └── js/
+│       └── main.js                 # Landing page scripts
+├── booking_page/
+│   ├── booking.html                # Main booking search & availability
+│   ├── payment.html                # Payment processing page
+│   ├── my-bookings.html            # View/cancel bookings page
+│   ├── css/
+│   │   └── styles.css              # Complete styling (~4000 lines)
+│   └── js/
+│       ├── calendar.js             # Booking logic & availability table
+│       ├── payment.js              # Payment processing
+│       ├── my-bookings.js          # Bookings management & cancellation
+│       └── navigation.js           # Navigation helper for active states
+├── about_page/
+│   ├── index.html                  # About page
+│   └── css/
+│       └── styles.css              # About page styles
 ├── partials/
 │   ├── header.html                 # Shared header with nav + profile
 │   └── footer.html                 # Shared footer component

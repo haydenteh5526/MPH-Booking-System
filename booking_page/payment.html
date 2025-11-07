@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment - MPH Booking System</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- Header -->
     <div id="header-placeholder"></div>
     
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="content-container payment-container">
+    <!-- Payment Hero Section -->
+    <section class="payment-hero-section">
+        <div class="content-container">
             <!-- Page Title -->
             <div class="page-header">
                 <div class="page-header-content-center">
+                    <div class="booking-badge">Secure Checkout</div>
                     <h1 class="page-title">Complete Your Payment</h1>
                     <p class="page-subtitle">Secure online payment for your court booking</p>
                 </div>
             </div>
-            
+        </div>
+    </section>
+    
+    <!-- Payment Form Section -->
+    <section class="payment-form-section">
+        <div class="content-container">
             <div class="payment-layout">
                 <!-- Booking Summary -->
                 <div class="booking-summary-card">
@@ -152,17 +158,17 @@
                 </div>
             </div>
         </div>
-    </main>
+    </section>
     
     <!-- Footer -->
     <div id="footer-placeholder"></div>
     
     <!-- Scripts -->
-    <script src="../js/payment.js"></script>
-    <script src="../js/navigation.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/navigation.js"></script>
     <script>
         // Load header and footer
-        fetch('../../partials/header.html')
+        fetch('../partials/header.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
@@ -192,7 +198,7 @@
                 }
             });
         
-        fetch('../../partials/footer.html')
+        fetch('../partials/footer.html')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('footer-placeholder').innerHTML = html;

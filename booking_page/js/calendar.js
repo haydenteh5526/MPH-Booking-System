@@ -329,7 +329,7 @@ class BookingCalendar {
     }
 
     // Hide Featured Courts section when showing results
-    const featuredSection = document.querySelector(".featured-section")
+    const featuredSection = document.querySelector(".featured-courts-section")
     if (featuredSection) {
       featuredSection.style.display = "none"
     }
@@ -788,20 +788,20 @@ class BookingCalendar {
   }
 
   hideCalendar() {
-    const calendarSection = document.querySelector(".calendar-section")
+    const calendarSection = document.querySelector(".calendar-results-section")
     if (calendarSection) {
       calendarSection.style.display = "none"
     }
     
     // Show featured courts when hiding calendar
-    const featuredSection = document.querySelector(".featured-section")
+    const featuredSection = document.querySelector(".featured-courts-section")
     if (featuredSection) {
       featuredSection.style.display = "block"
     }
   }
 
   showCalendar() {
-    const calendarSection = document.querySelector(".calendar-section")
+    const calendarSection = document.querySelector(".calendar-results-section")
     if (calendarSection) {
       calendarSection.style.display = "block"
     }
