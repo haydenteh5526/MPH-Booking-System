@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - MPH Booking System</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-container">
+            <!-- Page Title -->
+            <div class="page-header">
+                <div class="page-header-content-center">
+                    <h1 class="page-title">My Bookings</h1>
+                    <p class="page-subtitle">View and manage your court reservations</p>
+                </div>
+            </div>
+            
+            <!-- Success Message (shown after payment) -->
+            <div id="successBanner" class="success-banner" style="display: none;">
+                <div class="success-banner-content">
+                    <svg class="success-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <div>
+                        <h3 class="success-banner-title">Payment Successful!</h3>
+                        <p class="success-banner-text">Your booking has been confirmed. Receipt sent to your email.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bookings List -->
+            <div class="bookings-container" id="bookingsContainer">
+                <div class="bookings-empty" id="emptyState">
+                    <div class="empty-icon">📅</div>
+                    <h3>No Bookings Yet</h3>
+                    <p>You haven't made any reservations yet.</p>
+                    <a href="booking.html" class="btn-primary">Make a Booking</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Cancel Booking Modal -->
+    <div class="modal-overlay" id="cancelModal" style="display: none;">
+        <div class="modal-container modal-container-cancel">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-icon modal-icon-warning">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                    </div>
+                    <h3 class="modal-title">Cancel Booking?</h3>
+                    <p class="modal-subtitle">Are you sure you want to cancel this reservation?</p>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="cancel-booking-details">
+                        <div class="cancel-detail-row">
+                            <span class="cancel-detail-icon" id="cancelSportIcon">🏀</span>
+                            <div class="cancel-detail-content">
+                                <span class="cancel-detail-label">Sport</span>
+                                <span class="cancel-detail-value" id="cancelSport">-</span>
+                            </div>
+                        </div>
+                        <div class="cancel-detail-row">
+                            <span class="cancel-detail-icon">🏟️</span>
+                            <div class="cancel-detail-content">
+                                <span class="cancel-detail-label">Court</span>
+                                <span class="cancel-detail-value" id="cancelCourt">-</span>
+                            </div>
+                        </div>
+                        <div class="cancel-detail-row">
+                            <span class="cancel-detail-icon">📅</span>
+                            <div class="cancel-detail-content">
+                                <span class="cancel-detail-label">Date</span>
+                                <span class="cancel-detail-value" id="cancelDate">-</span>
+                            </div>
+                        </div>
+                        <div class="cancel-detail-row">
+                            <span class="cancel-detail-icon">⏰</span>
+                            <div class="cancel-detail-content">
+                                <span class="cancel-detail-label">Time</span>
+                                <span class="cancel-detail-value" id="cancelTime">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="cancel-warning">
+                        <svg class="warning-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                            <line x1="12" y1="9" x2="12" y2="13"></line>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                        <p>This action cannot be undone. Your refund will be processed within 3-5 business days.</p>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button class="modal-btn modal-btn-secondary" id="cancelModalNoBtn">Keep Booking</button>
+                    <button class="modal-btn modal-btn-danger" id="cancelModalYesBtn">Yes, Cancel Booking</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Scripts -->
+    <script src="../js/my-bookings.js"></script>
+    <script src="../js/navigation.js"></script>
+    <script>
+        // Load header and footer
+        fetch('../../partials/header.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                
+                // Setup profile dropdown
+                const profileBtn = document.getElementById('profileBtn');
+                const profileDropdown = document.getElementById('profileDropdown');
+                
+                if (profileBtn && profileDropdown) {
+                    profileBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        profileDropdown.style.display = 
+                            profileDropdown.style.display === 'none' ? 'block' : 'none';
+                    });
+                    
+                    document.addEventListener('click', () => {
+                        profileDropdown.style.display = 'none';
+                    });
+                }
+                
+                // My Bookings button
+                const myBookingsBtn = document.getElementById('myBookingsBtn');
+                if (myBookingsBtn) {
+                    myBookingsBtn.addEventListener('click', () => {
+                        window.location.href = 'my-bookings.html';
+                    });
+                }
+            });
+        
+        fetch('../../partials/footer.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            });
+    </script>
+</body>
+</html>
+

@@ -1,14 +1,31 @@
-// Calendar functionality for MPH Booking System
+// Calendar functionality for MPH Booking System - Horizontal Search Bar
 class BookingCalendar {
   constructor() {
-    this.currentSport = "basketball"
-    this.selectedCourts = [] // Changed to array for multi-selection
+    this.selectedSport = null
+    this.selectedSportEmoji = null
+    this.selectedDate = null
+    this.selectedTimeHour = null
+    this.selectedPeriod = "AM" // Default to AM to match the HTML default
+    this.selectedDuration = null
     this.currentWeekOffset = 0
 
+    // Court availability by sport (Student-friendly pricing)
+    this.sportCourts = {
+      basketball: [
+        { id: "half-court-1", name: "Half Court 1", price: 8 },
+        { id: "half-court-2", name: "Half Court 2", price: 8 },
+        { id: "full-court", name: "Full Court", price: 15 },
+      ],
+      badminton: [
+        { id: "badminton-1", name: "Court 1", price: 5 },
+        { id: "badminton-2", name: "Court 2", price: 5 },
+        { id: "badminton-3", name: "Court 3", price: 5 },
+        { id: "badminton-4", name: "Court 4", price: 5 },
+      ],
+      volleyball: [{ id: "volleyball-court", name: "Volleyball Court", price: 12 }],
+    }
+
     // Court conflict mapping
-    // Full basketball court conflicts with both halves and all badminton courts and volleyball
-    // Half basketball courts conflict with 2 badminton courts each
-    // Volleyball uses full court
     this.courtConflicts = {
       "full-court": [
         "half-court-1",
@@ -36,29 +53,7 @@ class BookingCalendar {
       ],
     }
 
-    this.courtPrices = {
-      "full-court": 50,
-      "half-court-1": 25,
-      "half-court-2": 25,
-      "badminton-1": 15,
-      "badminton-2": 15,
-      "badminton-3": 15,
-      "badminton-4": 15,
-      "volleyball-court": 45,
-    }
-
-    this.courtNames = {
-      "full-court": "Full Basketball Court",
-      "half-court-1": "Basketball Half Court 1",
-      "half-court-2": "Basketball Half Court 2",
-      "badminton-1": "Badminton Court 1",
-      "badminton-2": "Badminton Court 2",
-      "badminton-3": "Badminton Court 3",
-      "badminton-4": "Badminton Court 4",
-      "volleyball-court": "Volleyball Court",
-    }
-
-    // Initialize hours and booking data AFTER court configuration
+    // Initialize hours and booking data
     this.hours = this.generateHours()
     this.bookingData = this.generateMockData()
 
@@ -66,233 +61,659 @@ class BookingCalendar {
   }
 
   init() {
-    this.attachSportListeners()
-    this.attachCourtListeners()
-    this.attachMyBookingsListener()
-    this.attachCalendarGridListener()
+    this.attachFormListeners()
     this.hideCalendar()
-
-    // Don't auto-select - let user choose first
-    // this.selectCourt('full-court');
+    this.setMinDate()
+    this.setupClickOutside()
   }
 
-  attachCalendarGridListener() {
-    // Attach click listener to calendar grid once (uses event delegation)
-    const calendarContainer = document.getElementById("calendarContainer")
-    if (calendarContainer) {
-      calendarContainer.addEventListener("click", (e) => {
-        const slot = e.target.closest(".time-slot")
-        if (slot && slot.dataset.status === "available" && !slot.classList.contains("blocked")) {
-          this.handleSlotClick(slot)
-        } else if (slot && slot.dataset.conflictReason) {
-          alert(slot.dataset.conflictReason)
+  setMinDate() {
+    const dateInput = document.getElementById("dateSelect")
+    if (dateInput) {
+      const today = new Date()
+      const minDate = today.toISOString().split("T")[0]
+      dateInput.setAttribute("min", minDate)
+    }
+  }
+
+  attachFormListeners() {
+    // Sport Section
+    const sportSection = document.getElementById("sportSection")
+    const sportDropdown = document.getElementById("sportDropdown")
+    const sportOptions = document.querySelectorAll(".sport-option")
+
+    if (sportSection) {
+      sportSection.addEventListener("click", (e) => {
+        e.stopPropagation()
+        if (!e.target.closest(".clear-btn")) {
+          this.toggleDropdown("sport")
         }
       })
     }
-  }
 
-  hideCalendar() {
-    const calendarSection = document.querySelector(".calendar-section")
-    if (calendarSection) {
-      calendarSection.style.display = "none"
-    }
-  }
-
-  showCalendar() {
-    const calendarSection = document.querySelector(".calendar-section")
-    if (calendarSection) {
-      calendarSection.style.display = "block"
-    }
-
-    // Show loading and render calendar
-    this.showLoading()
-    setTimeout(() => {
-      this.renderCalendar()
-      this.hideLoading()
-    }, 800)
-  }
-
-  attachSportListeners() {
-    const sportCards = document.querySelectorAll(".sport-card")
-    sportCards.forEach((card) => {
-      card.addEventListener("click", (e) => {
-        const sport = e.currentTarget.dataset.sport
-        this.changeSport(sport)
+    // Prevent sport dropdown from closing when clicking inside it
+    if (sportDropdown) {
+      sportDropdown.addEventListener("click", (e) => {
+        e.stopPropagation()
       })
-    })
-  }
+    }
 
-  attachCourtListeners() {
-    const courtOptions = document.querySelectorAll(".court-option")
-    courtOptions.forEach((option) => {
+    sportOptions.forEach((option) => {
       option.addEventListener("click", (e) => {
-        if (option.classList.contains("disabled")) return
-
-        const courtId = e.currentTarget.dataset.court
-        this.toggleCourtSelection(courtId)
+        e.stopPropagation()
+        const sport = option.dataset.sport
+        const emoji = option.dataset.emoji
+        this.selectSport(sport, emoji)
       })
+    })
+
+    // When Section
+    const whenSection = document.getElementById("whenSection")
+    const whenDropdown = document.getElementById("whenDropdown")
+    
+    if (whenSection) {
+      whenSection.addEventListener("click", (e) => {
+        e.stopPropagation()
+        this.toggleDropdown("when")
+      })
+    }
+
+    // Prevent when dropdown from closing when clicking inside it
+    if (whenDropdown) {
+      whenDropdown.addEventListener("click", (e) => {
+        e.stopPropagation()
+      })
+    }
+
+    // Form inputs
+    const dateSelect = document.getElementById("dateSelect")
+    const timeHourSelect = document.getElementById("timeHourSelect")
+    const periodSelect = document.getElementById("periodSelect")
+    const durationSelect = document.getElementById("durationSelect")
+    const searchBtn = document.getElementById("searchBtn")
+
+    if (dateSelect) {
+      dateSelect.addEventListener("change", (e) => {
+        this.selectedDate = e.target.value
+        this.updateWhenDisplay()
+        this.checkFormValidity()
+      })
+    }
+
+    if (timeHourSelect) {
+      timeHourSelect.addEventListener("change", (e) => {
+        this.selectedTimeHour = e.target.value
+        this.updateWhenDisplay()
+        this.checkFormValidity()
+      })
+    }
+
+    if (periodSelect) {
+      periodSelect.addEventListener("change", (e) => {
+        this.selectedPeriod = e.target.value
+        this.updateWhenDisplay()
+        this.checkFormValidity()
+      })
+    }
+
+    if (durationSelect) {
+      durationSelect.addEventListener("change", (e) => {
+        this.selectedDuration = e.target.value
+        this.updateWhenDisplay()
+        this.checkFormValidity()
+      })
+    }
+
+    if (searchBtn) {
+      searchBtn.addEventListener("click", () => {
+        this.performSearch()
+      })
+    }
+  }
+
+  setupClickOutside() {
+    document.addEventListener("click", (e) => {
+      const sportDropdown = document.getElementById("sportDropdown")
+      const whenDropdown = document.getElementById("whenDropdown")
+
+      // Close dropdowns when clicking outside (stopPropagation handles inside clicks)
+      if (sportDropdown && sportDropdown.style.display === "block") {
+        sportDropdown.style.display = "none"
+      }
+
+      if (whenDropdown && whenDropdown.style.display === "block") {
+        whenDropdown.style.display = "none"
+      }
     })
   }
 
-  toggleCourtSelection(courtId) {
-    // For volleyball, it's single selection
-    if (this.currentSport === "volleyball") {
-      this.selectedCourts = [courtId]
-      this.updateCourtSelectionUI()
-      this.checkBasketballFullCourt()
-      this.updateSelectedCourtInfo()
-      this.showCalendar()
+  toggleDropdown(type) {
+    const sportDropdown = document.getElementById("sportDropdown")
+    const whenDropdown = document.getElementById("whenDropdown")
+
+    if (type === "sport") {
+      const isVisible = sportDropdown.style.display === "block"
+      sportDropdown.style.display = isVisible ? "none" : "block"
+      whenDropdown.style.display = "none"
+    } else if (type === "when") {
+      const isVisible = whenDropdown.style.display === "block"
+      whenDropdown.style.display = isVisible ? "none" : "block"
+      sportDropdown.style.display = "none"
+    }
+  }
+
+  selectSport(sport, emoji) {
+    this.selectedSport = sport
+    this.selectedSportEmoji = emoji
+
+    const sportValue = document.getElementById("sportValue")
+    const sportDropdown = document.getElementById("sportDropdown")
+
+    const sportName = sport.charAt(0).toUpperCase() + sport.slice(1)
+
+    sportValue.innerHTML = `
+      <div class="sport-selected">
+        <span>${emoji} ${sportName}</span>
+        <button class="clear-btn" onclick="bookingCalendar.clearSport(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    `
+
+    sportDropdown.style.display = "none"
+    this.checkFormValidity()
+  }
+
+  clearSport(event) {
+    event.stopPropagation()
+    this.selectedSport = null
+    this.selectedSportEmoji = null
+
+    const sportValue = document.getElementById("sportValue")
+    sportValue.innerHTML = '<span class="placeholder">Select a sport</span>'
+
+    // Reset all selections
+    this.selectedDate = null
+    this.selectedTimeHour = null
+    this.selectedPeriod = "AM" // Reset to AM (default)
+    this.selectedDuration = null
+
+    // Reset form
+    const dateSelect = document.getElementById("dateSelect")
+    const timeHourSelect = document.getElementById("timeHourSelect")
+    const periodSelect = document.getElementById("periodSelect")
+    const durationSelect = document.getElementById("durationSelect")
+    
+    if (dateSelect) dateSelect.value = ""
+    if (timeHourSelect) timeHourSelect.value = ""
+    if (periodSelect) periodSelect.value = "AM"
+    if (durationSelect) durationSelect.value = ""
+
+    // Reset when display
+    const whenValue = document.getElementById("whenValue")
+    if (whenValue) {
+      whenValue.innerHTML = '<span class="placeholder">Pick a date</span>'
+    }
+
+    // Hide calendar and show featured courts
+    this.hideCalendar()
+
+    this.checkFormValidity()
+  }
+
+  updateWhenDisplay() {
+    const whenValue = document.getElementById("whenValue")
+
+    if (this.selectedDate) {
+      const dateObj = new Date(this.selectedDate + "T00:00:00")
+      const formattedDate = dateObj.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
+
+      let displayText = formattedDate
+
+      if (this.selectedTimeHour && this.selectedPeriod && this.selectedDuration) {
+        const timeHour = Number.parseInt(this.selectedTimeHour)
+        displayText += ` • ${timeHour}:00 ${this.selectedPeriod} • ${this.selectedDuration}h`
+      }
+
+      whenValue.innerHTML = `<span>${displayText}</span>`
+    } else {
+      whenValue.innerHTML = '<span class="placeholder">Pick a date</span>'
+    }
+  }
+
+  checkFormValidity() {
+    const searchBtn = document.getElementById("searchBtn")
+    const isValid =
+      this.selectedSport &&
+      this.selectedDate &&
+      this.selectedTimeHour &&
+      this.selectedPeriod &&
+      this.selectedDuration
+
+    if (searchBtn) {
+      searchBtn.disabled = !isValid
+    }
+  }
+
+  get24HourTime() {
+    if (!this.selectedTimeHour || !this.selectedPeriod) return null
+
+    let hour = Number.parseInt(this.selectedTimeHour)
+
+    // Convert to 24-hour format
+    if (this.selectedPeriod === "PM" && hour !== 12) {
+      hour += 12
+    } else if (this.selectedPeriod === "AM" && hour === 12) {
+      hour = 0
+    }
+
+    return hour
+  }
+
+  performSearch() {
+    const hour24 = this.get24HourTime()
+    if (!this.selectedSport || !this.selectedDate || hour24 === null || !this.selectedDuration) {
       return
     }
 
-    // For basketball and badminton, allow multiple selection
-    const index = this.selectedCourts.indexOf(courtId)
-
-    if (index > -1) {
-      // Deselect
-      this.selectedCourts.splice(index, 1)
-    } else {
-      // Select
-      if (this.currentSport === "basketball") {
-        // Basketball: max 2 courts (both halves)
-        if (this.selectedCourts.length < 2) {
-          this.selectedCourts.push(courtId)
-        }
-      } else if (this.currentSport === "badminton") {
-        // Badminton: max 4 courts
-        if (this.selectedCourts.length < 4) {
-          this.selectedCourts.push(courtId)
-        }
-      }
+    // Close dropdowns
+    const whenDropdown = document.getElementById("whenDropdown")
+    if (whenDropdown) {
+      whenDropdown.style.display = "none"
     }
 
-    this.updateCourtSelectionUI()
-    this.checkBasketballFullCourt()
-    this.updateSelectedCourtInfo()
-
-    // Only show calendar if at least one court is selected
-    if (this.selectedCourts.length > 0) {
-      this.showCalendar()
-    } else {
-      this.hideCalendar()
+    // Hide Featured Courts section when showing results
+    const featuredSection = document.querySelector(".featured-section")
+    if (featuredSection) {
+      featuredSection.style.display = "none"
     }
+
+    this.showCalendar()
+    this.renderAvailableCourts()
   }
 
-  updateCourtSelectionUI() {
-    // Remove all selected classes
-    document.querySelectorAll(".court-option").forEach((opt) => {
-      opt.classList.remove("selected")
+  renderAvailableCourts() {
+    const calendarContainer = document.getElementById("calendarContainer")
+    if (!calendarContainer) return
+
+    this.showLoading()
+
+    setTimeout(() => {
+      const availabilityData = this.getCourtAvailability()
+      this.displayAvailableCourts(availabilityData)
+      this.hideLoading()
+    }, 500)
+  }
+
+  getCourtAvailability() {
+    const courts = this.sportCourts[this.selectedSport] || []
+    const startHour = this.get24HourTime()
+    const duration = Number.parseInt(this.selectedDuration)
+    
+    // Generate time slots for display (show a range around selected time)
+    const timeSlots = []
+    const startDisplay = Math.max(8, startHour - 2) // Show 2 hours before
+    const endDisplay = Math.min(22, startHour + duration + 2) // Show 2 hours after
+    
+    for (let hour = startDisplay; hour <= endDisplay; hour++) {
+      timeSlots.push(hour)
+    }
+
+    // For each court, check availability for each time slot
+    const courtAvailability = courts.map((court) => {
+      const slots = timeSlots.map((hour) => {
+        const slotData = this.bookingData[this.selectedDate]?.[hour]?.[court.id]
+        
+        if (!slotData) {
+          return { hour, status: "blocked", price: 0 }
+        }
+
+        // Check for conflicts
+        const conflictCheck = this.checkCourtConflicts(this.selectedDate, hour, court.id)
+        
+        if (conflictCheck.hasConflict && slotData.status === "available") {
+          return { hour, status: "blocked", price: 0 }
+        }
+
+        return { 
+          hour, 
+          status: slotData.status,
+          price: slotData.price 
+        }
+      })
+
+      return {
+        ...court,
+        slots: slots
+      }
     })
 
-    // Add selected class to selected courts
-    this.selectedCourts.forEach((courtId) => {
-      const option = document.querySelector(`[data-court="${courtId}"]`)
-      if (option) {
-        option.classList.add("selected")
-      }
+    return { courts: courtAvailability, timeSlots }
+  }
+
+  displayAvailableCourts(availabilityData) {
+    const calendarGrid = document.getElementById("calendarGrid")
+    if (!calendarGrid) return
+
+    const { courts, timeSlots } = availabilityData
+
+    if (!courts || courts.length === 0) {
+      calendarGrid.innerHTML = `
+        <div class="empty-state">
+          <p>No courts available for the selected sport.</p>
+          <p>Please try a different sport or time.</p>
+        </div>
+      `
+      return
+    }
+
+    // Build table HTML
+    let tableHTML = `
+      <div class="available-courts-section">
+        <div class="results-header">
+          <h2 class="results-title">Availability</h2>
+          <p class="results-subtitle">Select a time slot to complete your booking</p>
+        </div>
+        
+        <div class="availability-table-wrapper">
+          <table class="availability-table">
+            <thead>
+              <tr class="legend-row">
+                <th colspan="100%" class="legend-header">
+                  <div class="legend">
+                    <div class="legend-item">
+                      <span class="legend-color legend-available"></span>
+                      <span>Available</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-color legend-booked"></span>
+                      <span>Booked</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-color legend-blocked"></span>
+                      <span>Blocked</span>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th class="court-header">Court</th>
+    `
+
+    // Add time slot headers
+    timeSlots.forEach(hour => {
+      const timeStr = this.getTimeLabel(hour)
+      tableHTML += `<th class="time-header">${timeStr}</th>`
+    })
+
+    tableHTML += `
+              </tr>
+            </thead>
+            <tbody>
+    `
+
+    // Add court rows
+    courts.forEach(court => {
+      tableHTML += `
+              <tr class="court-row" data-court-id="${court.id}">
+                <td class="court-name-cell">
+                  <div class="court-name">${court.name}</div>
+                  <div class="court-price">€${court.price}/hr</div>
+                </td>
+      `
+
+      // Add slot cells
+      court.slots.forEach(slot => {
+        const statusClass = `slot-${slot.status}`
+        const isClickable = slot.status === 'available'
+        const clickableClass = isClickable ? 'slot-clickable' : ''
+        
+        tableHTML += `
+                <td class="time-slot ${statusClass} ${clickableClass}" 
+                    data-court-id="${court.id}"
+                    data-court-name="${court.name}"
+                    data-hour="${slot.hour}"
+                    data-price="${slot.price}"
+                    data-status="${slot.status}">
+                  <div class="slot-indicator"></div>
+                </td>
+        `
+      })
+
+      tableHTML += `
+              </tr>
+      `
+    })
+
+    tableHTML += `
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `
+
+    calendarGrid.innerHTML = tableHTML
+
+    // Attach click listeners to available slots
+    const availableSlots = calendarGrid.querySelectorAll('.time-slot.slot-available')
+    availableSlots.forEach(slot => {
+      slot.addEventListener('click', (e) => {
+        const courtId = e.currentTarget.dataset.courtId
+        const courtName = e.currentTarget.dataset.courtName
+        const hour = Number.parseInt(e.currentTarget.dataset.hour)
+        const price = Number.parseFloat(e.currentTarget.dataset.price)
+        this.handleSlotBooking(courtId, courtName, hour, price)
+      })
     })
   }
 
-  checkBasketballFullCourt() {
-    const indicator = document.getElementById("fullCourtIndicator")
-    if (!indicator) return
-
-    // Check if both basketball half courts are selected
-    const hasBothHalves = this.selectedCourts.includes("half-court-1") && this.selectedCourts.includes("half-court-2")
-
-    if (hasBothHalves && this.currentSport === "basketball") {
-      indicator.classList.add("active")
-    } else {
-      indicator.classList.remove("active")
+  getSportEmoji(sport) {
+    const emojis = {
+      basketball: "🏀",
+      badminton: "🏸",
+      volleyball: "🏐",
     }
+    return emojis[sport] || "⚽"
   }
 
-  selectCourt(courtId) {
-    // Legacy method - redirect to toggle
-    this.toggleCourtSelection(courtId)
+  getTimeLabel(hourValue) {
+    const hour = Number.parseInt(hourValue)
+    const displayHour = hour > 12 ? hour - 12 : hour
+    const period = hour >= 12 ? "PM" : "AM"
+    return `${displayHour === 0 ? 12 : displayHour}:00 ${period}`
   }
 
-  attachMyBookingsListener() {
-    const myBookingsBtn = document.getElementById("myBookingsBtn")
-    if (myBookingsBtn) {
-      myBookingsBtn.onclick = () => {
-        alert("My Bookings feature coming soon!")
-      }
+  formatDate(dateString) {
+    const date = new Date(dateString + "T00:00:00")
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ]
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+    return `${dayNames[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`
+  }
+
+  handleSlotBooking(courtId, courtName, hour, price) {
+    const duration = Number.parseInt(this.selectedDuration)
+    const totalPrice = price * duration
+
+    // Store booking data for confirmation
+    this.pendingBooking = {
+      courtId,
+      courtName,
+      hour,
+      price,
+      duration,
+      totalPrice
     }
+
+    // Show confirmation modal
+    this.showBookingModal()
   }
 
-  updateSelectedCourtInfo() {
-    const infoSection = document.getElementById("selectedCourtInfo")
-    const courtName = document.getElementById("selectedCourtName")
-    const courtPrice = document.getElementById("selectedCourtPrice")
+  showBookingModal() {
+    const modal = document.getElementById('bookingModal')
+    const { courtName, hour, duration, totalPrice } = this.pendingBooking
 
-    if (this.selectedCourts.length > 0) {
-      infoSection.style.display = "block"
+    // Populate modal with booking details
+    document.getElementById('modalSportIcon').textContent = this.selectedSportEmoji || this.getSportEmoji(this.selectedSport)
+    document.getElementById('modalSport').textContent = 
+      this.selectedSport.charAt(0).toUpperCase() + this.selectedSport.slice(1)
+    document.getElementById('modalCourt').textContent = courtName
+    document.getElementById('modalDate').textContent = this.formatDate(this.selectedDate)
+    document.getElementById('modalTime').textContent = this.getTimeLabel(hour)
+    document.getElementById('modalDuration').textContent = 
+      `${duration} ${duration > 1 ? 'hours' : 'hour'}`
+    document.getElementById('modalPrice').textContent = `€${totalPrice}`
 
-      // Calculate total price and display court names
-      let totalPrice = 0
-      const courtNames = []
+    // Show modal
+    modal.style.display = 'flex'
+    document.body.style.overflow = 'hidden' // Prevent background scrolling
 
-      // Check if both basketball halves are selected (full court)
-      const hasBothHalves = this.selectedCourts.includes("half-court-1") && this.selectedCourts.includes("half-court-2")
+    // Setup button handlers
+    const cancelBtn = document.getElementById('modalCancelBtn')
+    const confirmBtn = document.getElementById('modalConfirmBtn')
 
-      if (hasBothHalves && this.currentSport === "basketball") {
-        courtNames.push("Full Basketball Court")
-        totalPrice = 50
-      } else {
-        this.selectedCourts.forEach((courtId) => {
-          courtNames.push(this.courtNames[courtId])
-          totalPrice += this.courtPrices[courtId]
+    cancelBtn.onclick = () => this.closeBookingModal()
+    confirmBtn.onclick = () => this.proceedToPayment()
+  }
+
+  closeBookingModal() {
+    const modal = document.getElementById('bookingModal')
+    modal.style.display = 'none'
+    document.body.style.overflow = '' // Restore scrolling
+    this.pendingBooking = null
+  }
+
+  proceedToPayment() {
+    const { courtId, courtName, hour, duration, totalPrice } = this.pendingBooking
+
+    // Create booking object
+    const booking = {
+      id: Date.now().toString(),
+      sport: this.selectedSport,
+      sportEmoji: this.selectedSportEmoji || this.getSportEmoji(this.selectedSport),
+      courtId: courtId,
+      courtName: courtName,
+      date: this.selectedDate,
+      dateFormatted: this.formatDate(this.selectedDate),
+      time: hour,
+      timeFormatted: this.getTimeLabel(hour),
+      duration: duration,
+      totalPrice: totalPrice,
+      status: 'pending',
+      createdAt: new Date().toISOString()
+    }
+
+    // Store booking in localStorage for payment page
+    localStorage.setItem('pendingBooking', JSON.stringify(booking))
+
+    // Also update the availability data
+    const startHour = hour
+    for (let i = 0; i < duration; i++) {
+      const bookingHour = startHour + i
+      if (this.bookingData[this.selectedDate]?.[bookingHour]?.[courtId]) {
+        this.bookingData[this.selectedDate][bookingHour][courtId].status = "booked"
+
+        const conflictingCourts = this.courtConflicts[courtId] || []
+        conflictingCourts.forEach((conflictCourt) => {
+          if (this.bookingData[this.selectedDate]?.[bookingHour]?.[conflictCourt]) {
+            this.bookingData[this.selectedDate][bookingHour][conflictCourt].status = "booked"
+          }
         })
       }
-
-      courtName.textContent = courtNames.join(", ")
-      courtPrice.textContent = `$${totalPrice}/hour`
-    } else {
-      infoSection.style.display = "none"
     }
+
+    // Redirect to payment page
+    window.location.href = 'payment.html'
   }
 
-  changeSport(sport) {
-    this.currentSport = sport
+  showSuccessModal() {
+    const modal = document.getElementById('successModal')
+    modal.style.display = 'flex'
+    document.body.style.overflow = 'hidden'
 
-    // Reset selected courts when changing sport
-    this.selectedCourts = []
-    this.hideCalendar()
+    const okBtn = document.getElementById('successOkBtn')
+    okBtn.onclick = () => {
+      modal.style.display = 'none'
+      document.body.style.overflow = ''
+    }
 
-    // Update active card
-    document.querySelectorAll(".sport-card").forEach((card) => {
-      card.classList.remove("active")
-      if (card.dataset.sport === sport) {
-        card.classList.add("active")
+    // Auto close after 3 seconds
+    setTimeout(() => {
+      if (modal.style.display === 'flex') {
+        modal.style.display = 'none'
+        document.body.style.overflow = ''
       }
-    })
+    }, 3000)
+  }
 
-    // Switch court layout
-    document.querySelectorAll(".court-visual-layout").forEach((layout) => {
-      layout.classList.remove("active")
-      if (layout.dataset.sport === sport) {
-        layout.classList.add("active")
+  bookCourt(courtId, totalPrice) {
+    const court = this.sportCourts[this.selectedSport].find((c) => c.id === courtId)
+
+    if (!court) return
+
+    const hour24 = this.get24HourTime()
+
+    const confirmed = confirm(
+      `Confirm booking?\n\n` +
+        `Court: ${court.name}\n` +
+        `Sport: ${this.selectedSport.charAt(0).toUpperCase() + this.selectedSport.slice(1)}\n` +
+        `Date: ${this.formatDate(this.selectedDate)}\n` +
+        `Time: ${this.getTimeLabel(hour24)}\n` +
+        `Duration: ${this.selectedDuration} ${this.selectedDuration > 1 ? "hours" : "hour"}\n` +
+        `Total Price: €${totalPrice}`,
+    )
+
+    if (confirmed) {
+      const startHour = hour24
+      const duration = Number.parseInt(this.selectedDuration)
+
+      for (let i = 0; i < duration; i++) {
+        const hour = startHour + i
+        if (this.bookingData[this.selectedDate]?.[hour]?.[courtId]) {
+          this.bookingData[this.selectedDate][hour][courtId].status = "booked"
+
+          const conflictingCourts = this.courtConflicts[courtId] || []
+          conflictingCourts.forEach((conflictCourt) => {
+            if (this.bookingData[this.selectedDate]?.[hour]?.[conflictCourt]) {
+              this.bookingData[this.selectedDate][hour][conflictCourt].status = "booked"
+            }
+          })
+        }
       }
-    })
 
-    // Clear all selections
-    this.updateCourtSelectionUI()
-    this.updateSelectedCourtInfo()
-    this.checkBasketballFullCourt()
+      alert("Booking confirmed! Check 'My Bookings' to view your reservations.")
+      this.performSearch()
+    }
   }
 
   checkCourtConflicts(date, hour, courtId) {
-    // Get all conflicting courts
     const conflictingCourts = this.courtConflicts[courtId] || []
 
-    // Check if any conflicting court is booked at this time
     for (const conflictCourt of conflictingCourts) {
       const booking = this.bookingData[date]?.[hour]?.[conflictCourt]
       if (booking && booking.status === "booked") {
         return {
           hasConflict: true,
-          conflictingCourt: this.courtNames[conflictCourt],
+          conflictingCourt: conflictCourt,
         }
       }
     }
@@ -308,92 +729,35 @@ class BookingCalendar {
       const displayHour = i === 12 ? 12 : hour
       hours.push({
         value: i,
-        label: `${displayHour} ${period}`,
+        label: `${displayHour}:00 ${period}`,
       })
     }
     return hours
   }
 
-  getMonday(date) {
-    const d = new Date(date)
-    const day = d.getDay()
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1)
-    return new Date(d.setDate(diff))
-  }
-
-  generateDays(weekOffset = 0) {
-    const days = []
-    const today = new Date()
-    const monday = this.getMonday(today)
-
-    monday.setDate(monday.getDate() + weekOffset * 7)
-
-    const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(monday)
-      date.setDate(monday.getDate() + i)
-
-      const isToday = this.isSameDay(date, new Date())
-
-      days.push({
-        date: date,
-        dayName: dayNames[i],
-        dayNumber: date.getDate(),
-        month: months[date.getMonth()],
-        fullDate: date.toISOString().split("T")[0],
-        isToday: isToday,
-      })
-    }
-
-    return days
-  }
-
-  isSameDay(date1, date2) {
-    return (
-      date1.getFullYear() === date2.getFullYear() &&
-      date1.getMonth() === date2.getMonth() &&
-      date1.getDate() === date2.getDate()
-    )
-  }
-
-  getWeekLabel(weekOffset) {
-    if (weekOffset === 0) return "This Week"
-    if (weekOffset === 1) return "Next Week"
-    if (weekOffset === -1) return "Last Week"
-
-    const monday = this.getMonday(new Date())
-    monday.setDate(monday.getDate() + weekOffset * 7)
-    const sunday = new Date(monday)
-    sunday.setDate(monday.getDate() + 6)
-
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-    return `${months[monday.getMonth()]} ${monday.getDate()} - ${months[sunday.getMonth()]} ${sunday.getDate()}`
-  }
-
   generateMockData() {
-    // Generate mock booking data with court-specific bookings
     const data = {}
-    const allCourts = Object.keys(this.courtNames)
+    const allCourts = []
 
-    // Generate data for 8 weeks
-    for (let weekOffset = -2; weekOffset <= 5; weekOffset++) {
-      const days = this.generateDays(weekOffset)
+    Object.values(this.sportCourts).forEach((courts) => {
+      courts.forEach((court) => allCourts.push(court.id))
+    })
 
-      days.forEach((day) => {
-        data[day.fullDate] = {}
+    const today = new Date()
+    for (let dayOffset = 0; dayOffset < 60; dayOffset++) {
+      const date = new Date(today)
+      date.setDate(today.getDate() + dayOffset)
+      const dateString = date.toISOString().split("T")[0]
+
+      data[dateString] = {}
 
         this.hours.forEach((hour) => {
-          data[day.fullDate][hour.value] = {}
+        data[dateString][hour.value] = {}
 
           allCourts.forEach((courtId) => {
-            // Randomly assign slot status
             const random = Math.random()
             let status
 
-            // Peak hours have more bookings
             const isPeakHour = hour.value >= 18 && hour.value <= 21
             const threshold = isPeakHour ? 0.3 : 0.5
 
@@ -405,17 +769,42 @@ class BookingCalendar {
               status = "blocked"
             }
 
-            data[day.fullDate][hour.value][courtId] = {
+          let price = 0
+          Object.values(this.sportCourts).forEach((courts) => {
+            const court = courts.find((c) => c.id === courtId)
+            if (court) price = court.price
+          })
+
+          data[dateString][hour.value][courtId] = {
               status: status,
               time: hour.label,
-              price: this.courtPrices[courtId],
+            price: price,
             }
-          })
         })
       })
     }
 
     return data
+  }
+
+  hideCalendar() {
+    const calendarSection = document.querySelector(".calendar-section")
+    if (calendarSection) {
+      calendarSection.style.display = "none"
+    }
+    
+    // Show featured courts when hiding calendar
+    const featuredSection = document.querySelector(".featured-section")
+    if (featuredSection) {
+      featuredSection.style.display = "block"
+    }
+  }
+
+  showCalendar() {
+    const calendarSection = document.querySelector(".calendar-section")
+    if (calendarSection) {
+      calendarSection.style.display = "block"
+    }
   }
 
   showLoading() {
@@ -433,287 +822,10 @@ class BookingCalendar {
     if (loadingIndicator) loadingIndicator.style.display = "none"
     if (calendarContainer) calendarContainer.style.display = "block"
   }
-
-  renderCalendar() {
-    if (this.selectedCourts.length === 0) return
-
-    const calendarGrid = document.getElementById("calendarGrid")
-    if (!calendarGrid) return
-
-    // Update week label
-    const weekLabel = document.getElementById("weekLabel")
-    if (weekLabel) {
-      weekLabel.textContent = this.getWeekLabel(this.currentWeekOffset)
-    }
-
-    // Clear existing content
-    calendarGrid.innerHTML = ""
-
-    // Add time column
-    calendarGrid.appendChild(this.createTimeColumn())
-
-    // Add day columns
-    const days = this.generateDays(this.currentWeekOffset)
-    days.forEach((day) => {
-      calendarGrid.appendChild(this.createDayColumn(day))
-    })
-
-    // Attach event listeners after rendering
-    this.attachCalendarEventListeners()
-  }
-
-  createTimeColumn() {
-    const column = document.createElement("div")
-    column.className = "time-column"
-
-    const header = document.createElement("div")
-    header.className = "time-header"
-    column.appendChild(header)
-
-    this.hours.forEach((hour) => {
-      const label = document.createElement("div")
-      label.className = "time-slot-label"
-      label.textContent = hour.label
-      column.appendChild(label)
-    })
-
-    return column
-  }
-
-  createDayColumn(day) {
-    const column = document.createElement("div")
-    column.className = "day-column"
-
-    const header = document.createElement("div")
-    header.className = "day-header"
-    if (day.isToday) {
-      header.classList.add("today")
-    }
-
-    const dayName = document.createElement("div")
-    dayName.className = "day-name"
-    dayName.textContent = day.dayName
-
-    const dayDate = document.createElement("div")
-    dayDate.className = "day-date"
-    dayDate.textContent = day.dayNumber
-
-    const dayMonth = document.createElement("div")
-    dayMonth.className = "day-month"
-    dayMonth.textContent = day.month
-
-    header.appendChild(dayName)
-    header.appendChild(dayDate)
-    header.appendChild(dayMonth)
-    column.appendChild(header)
-
-    this.hours.forEach((hour) => {
-      const slot = this.createTimeSlot(day, hour)
-      column.appendChild(slot)
-    })
-
-    return column
-  }
-
-  createTimeSlot(day, hour) {
-    const slot = document.createElement("div")
-    slot.className = "time-slot"
-
-    // Check availability for ALL selected courts
-    let allAvailable = true
-    let anyBooked = false
-    let anyBlocked = false
-    let totalPrice = 0
-    let conflictReason = null
-
-    for (const courtId of this.selectedCourts) {
-      const slotData = this.bookingData[day.fullDate]?.[hour.value]?.[courtId]
-
-      if (!slotData) {
-        anyBlocked = true
-        allAvailable = false
-        break
-      }
-
-      // Check for conflicts
-      const conflictCheck = this.checkCourtConflicts(day.fullDate, hour.value, courtId)
-
-      if (conflictCheck.hasConflict && slotData.status === "available") {
-        anyBlocked = true
-        allAvailable = false
-        conflictReason = `Conflict: ${conflictCheck.conflictingCourt} is booked`
-        break
-      }
-
-      if (slotData.status === "booked") {
-        anyBooked = true
-        allAvailable = false
-      } else if (slotData.status === "blocked") {
-        anyBlocked = true
-        allAvailable = false
-      }
-
-      if (slotData.status === "available") {
-        totalPrice += slotData.price
-      }
-    }
-
-    // Determine final status
-    if (anyBlocked || conflictReason) {
-      slot.classList.add("blocked")
-      if (conflictReason) {
-        slot.dataset.conflictReason = conflictReason
-      }
-      slot.innerHTML = '<div class="time-slot-content"><span class="slot-icon">⊗</span></div>'
-    } else if (anyBooked) {
-      slot.classList.add("booked")
-      slot.innerHTML = '<div class="time-slot-content"><span class="slot-icon">✕</span></div>'
-      slot.dataset.status = "booked"
-    } else if (allAvailable) {
-      slot.classList.add("available")
-      slot.dataset.status = "available"
-
-      // Check if both basketball halves selected (full court price)
-      const hasBothHalves = this.selectedCourts.includes("half-court-1") && this.selectedCourts.includes("half-court-2")
-      if (hasBothHalves && this.currentSport === "basketball") {
-        totalPrice = 50 // Full court price
-      }
-
-      slot.dataset.price = totalPrice
-
-      const content = document.createElement("div")
-      content.className = "time-slot-content"
-
-      const icon = document.createElement("span")
-      icon.className = "slot-icon"
-      icon.textContent = "✓"
-
-      const price = document.createElement("span")
-      price.className = "slot-price"
-      price.textContent = `$${totalPrice}`
-
-      content.appendChild(icon)
-      content.appendChild(price)
-      slot.appendChild(content)
-    } else {
-      slot.classList.add("blocked")
-      slot.innerHTML = '<div class="time-slot-content"><span class="slot-icon">⊗</span></div>'
-    }
-
-    // Add common data attributes
-    slot.dataset.date = day.fullDate
-    slot.dataset.hour = hour.value
-    slot.dataset.courts = this.selectedCourts.join(",")
-
-    return slot
-  }
-
-  attachCalendarEventListeners() {
-    // Week navigation - use onclick to replace any existing handlers
-    const prevWeekBtn = document.getElementById("prevWeekBtn")
-    const nextWeekBtn = document.getElementById("nextWeekBtn")
-
-    if (prevWeekBtn) {
-      prevWeekBtn.onclick = () => this.navigateWeek(-1)
-    }
-
-    if (nextWeekBtn) {
-      nextWeekBtn.onclick = () => this.navigateWeek(1)
-    }
-  }
-
-  navigateWeek(direction) {
-    this.currentWeekOffset += direction
-
-    if (this.currentWeekOffset < -2) this.currentWeekOffset = -2
-    if (this.currentWeekOffset > 5) this.currentWeekOffset = 5
-
-    this.showLoading()
-    setTimeout(() => {
-      this.renderCalendar()
-      this.hideLoading()
-    }, 300)
-  }
-
-  handleSlotClick(slot) {
-    const date = slot.dataset.date
-    const hour = slot.dataset.hour
-    const courtsString = slot.dataset.courts
-    const price = slot.dataset.price
-
-    const courts = courtsString.split(",")
-
-    const slotDate = new Date(date)
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ]
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-
-    const hourInt = Number.parseInt(hour)
-    const displayHour = hourInt > 12 ? hourInt - 12 : hourInt
-    const period = hourInt >= 12 ? "PM" : "AM"
-
-    // Build court names list
-    const courtNamesList = courts.map((courtId) => this.courtNames[courtId]).join(", ")
-
-    const confirmed = confirm(
-      `Book this slot?\n\n` +
-        `Court${courts.length > 1 ? "s" : ""}: ${courtNamesList}\n` +
-        `Day: ${dayNames[slotDate.getDay()]}\n` +
-        `Date: ${months[slotDate.getMonth()]} ${slotDate.getDate()}, ${slotDate.getFullYear()}\n` +
-        `Time: ${displayHour === 0 ? 12 : displayHour}:00 ${period}\n` +
-        `Total Price: $${price}`,
-    )
-
-    if (confirmed) {
-      const allConflictingCourts = new Set()
-
-      // Update booking status for all selected courts
-      courts.forEach((courtId) => {
-        this.bookingData[date][hourInt][courtId].status = "booked"
-
-        // Collect all conflicting courts
-        const conflictingCourts = this.courtConflicts[courtId] || []
-        conflictingCourts.forEach((conflictCourt) => {
-          allConflictingCourts.add(conflictCourt)
-        })
-      })
-
-      // Block all conflicting courts
-      allConflictingCourts.forEach((conflictCourt) => {
-        if (this.bookingData[date][hourInt][conflictCourt]) {
-          this.bookingData[date][hourInt][conflictCourt].status = "booked"
-        }
-      })
-
-      // Re-render calendar to show updated status
-      this.showLoading()
-      setTimeout(() => {
-        this.renderCalendar()
-        this.hideLoading()
-
-        const message =
-          allConflictingCourts.size > 0
-            ? "Booking confirmed! Conflicting courts have been automatically blocked."
-            : "Booking confirmed!"
-        alert(message)
-      }, 300)
-    }
-  }
 }
 
 // Initialize calendar when DOM is loaded
+let bookingCalendar
 document.addEventListener("DOMContentLoaded", () => {
-  new BookingCalendar()
+  bookingCalendar = new BookingCalendar()
 })

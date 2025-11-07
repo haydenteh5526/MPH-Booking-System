@@ -1,53 +1,74 @@
 # MPH Booking System
 
-A modern, premium sports facility booking platform with a clean shadcn/ui-inspired design.
+A modern, student-friendly sports facility booking platform with a clean shadcn/ui-inspired design. Complete booking flow from search to payment to booking management.
 
 ## Features
 
 ### 🎨 Modern UI/UX
 - **shadcn/ui-inspired design** - Clean, minimalistic interface with smooth animations
-- **Premium startup aesthetic** - Professional look and feel
-- **Dark mode support** - Automatic dark mode based on system preferences
+- **Premium aesthetic** - Professional look and feel with gold accents
 - **Fully responsive** - Optimized for desktop, tablet, and mobile devices
+- **Beautiful modals** - Confirmation, success, and cancellation modals with smooth animations
 
-### 🏟️ Court Selection System
-- **Visual court layout** - See the physical court configuration before booking
-- **Multiple court types**:
-  - **Basketball**: Full court or two half courts
-  - **Badminton**: 4 individual courts (2 per half)
-  - **Volleyball**: Full court (basketball court size)
+### 🔍 Smart Search Interface
+- **Horizontal pill-shaped search bar** - Modern, intuitive design
+- **Sport selection** - Visual dropdown with emojis (🏀 Basketball, 🏸 Badminton, 🏐 Volleyball)
+- **Date picker** - Easy calendar selection
+- **Time selection** - 12-hour format with AM/PM
+- **Duration options** - Book 1-4 hours at a time
+- **Real-time validation** - Search button activates when all fields complete
+
+### 📅 Availability Table
+- **Court × Time grid layout** - Clear visualization of all available slots
+- **Color-coded slots**:
+  - 🟢 Green - Available (clickable)
+  - 🔴 Red - Booked (reserved)
+  - ⚫ Gray - Blocked (conflicts)
+- **Integrated legend** - Explains color coding at a glance
+- **Dynamic pricing display** - Each court shows price per hour
+- **Hover effects** - Interactive feedback on available slots
+
+### 🏟️ Multiple Court Types
+- **Basketball**: 2 Half Courts (€8/hr) + 1 Full Court (€15/hr)
+- **Badminton**: 4 Courts (€5/hr each)
+- **Volleyball**: 1 Full Court (€12/hr)
 - **Intelligent conflict detection**:
-  - Full basketball court blocks both halves and all badminton courts
-  - Each basketball half blocks 2 badminton courts on that end
+  - Full basketball court blocks both halves + all badminton + volleyball
+  - Each basketball half blocks 2 badminton courts on that side
   - Volleyball blocks the entire facility
-  - Automatic blocking of conflicting courts upon booking
-- **Visual feedback** - Selected courts are highlighted, blocked courts are grayed out
-- **Price transparency** - Each court shows pricing before selection
+  - Automatic conflict resolution on booking
 
-### 📅 Booking Calendar
-- **Week-based view** - Navigate through multiple weeks (up to 5 weeks ahead)
-- **Starts with Monday** - Week begins on Monday for better planning
-- **Hourly time slots** - 8 AM to 10 PM (15 slots per day)
-- **Color-coded availability**:
-  - 🟢 Green - Available slots
-  - 🔴 Red - Booked slots
-  - ⚫ Gray - Blocked slots (conflicts or maintenance)
-- **Dynamic pricing** - Different rates for different courts
-- **Real-time conflict checking** - Prevents double-booking and court conflicts
-- **Real-time booking** - Instant slot booking with automatic conflict resolution
+### 💳 Complete Booking Flow
+1. **Search & Select** - Choose sport, date, time, duration
+2. **Availability View** - See all courts and time slots
+3. **Confirmation Modal** - Review booking details
+4. **Payment Page** - Secure credit card processing
+5. **Success Confirmation** - Booking confirmed with receipt email
+6. **My Bookings** - View and manage all reservations
 
-### 🏀 Multi-Sport Support
-- Basketball courts (full or half)
-- Badminton courts (4 courts available)
-- Volleyball courts (full court size)
+### 💰 Student-Friendly Pricing (Euros)
+- **Badminton**: €5/hour - Perfect for students!
+- **Basketball Half Court**: €8/hour - Great for pickup games
+- **Basketball Full Court**: €15/hour - Competitive matches
+- **Volleyball**: €12/hour - Team sports
+- **No hidden fees** - All prices shown upfront
+- **Group splitting** - Split costs with friends easily
+
+### 📱 My Bookings Page
+- View all confirmed bookings
+- Cancel bookings with refund policy
+- Success banner notifications
+- Empty state for new users
+- Booking cards with full details
 
 ### ✨ Additional Features
-- Sticky header with navigation
-- Week navigation controls (previous/next week)
-- "My Bookings" button for future booking management
-- Today's date highlighting
-- Smooth loading states
-- Interactive hover effects
+- **Profile dropdown** - Access My Bookings, Profile, Logout
+- **Centered navigation** - Clean header layout
+- **LocalStorage persistence** - Data saved across sessions
+- **Form validation** - Credit card, email, required fields
+- **Loading states** - Spinners for async operations
+- **Auto-formatting** - Card numbers, expiry dates
+- **Refund policy** - 3-5 business days for cancellations
 
 ## File Structure
 
@@ -55,17 +76,19 @@ A modern, premium sports facility booking platform with a clean shadcn/ui-inspir
 MPH-Booking-System/
 ├── booking_page/
 │   ├── css/
-│   │   └── styles.css          # Complete styling with modern design system
+│   │   └── styles.css              # Complete styling (~3000 lines)
 │   ├── js/
-│   │   ├── calendar.js         # Calendar logic and booking functionality
-│   │   └── navigation.js       # Navigation helper for active states
+│   │   ├── calendar.js             # Booking logic & availability table
+│   │   ├── payment.js              # Payment processing
+│   │   ├── my-bookings.js          # Bookings management & cancellation
+│   │   └── navigation.js           # Navigation helper for active states
 │   └── templates/
-│       ├── home.html           # Home/landing page
-│       ├── booking.html        # Main booking calendar page
-│       ├── about.html          # About page
-│       └── partials/
-│           ├── header.html     # Shared header component
-│           └── footer.html     # Shared footer component
+│       ├── booking.html            # Main booking search & availability
+│       ├── payment.html            # Payment processing page
+│       └── my-bookings.html        # View/cancel bookings page
+├── partials/
+│   ├── header.html                 # Shared header with nav + profile
+│   └── footer.html                 # Shared footer component
 ├── LICENSE
 └── README.md
 ```
@@ -73,41 +96,31 @@ MPH-Booking-System/
 ## Design System
 
 ### Color Palette
-- **Primary**: Gold (#A39461) - Brand color
+- **Primary**: Gold (#A39461) - Buttons, accents, hovers
+- **Success**: Green (#22C55E) - Available slots, confirmations
+- **Warning**: Orange - Cancel modal, alerts
+- **Danger**: Red (#EF4444) - Booked slots, destructive actions
 - **Background**: Light gray (#F9F9F9) with white cards
 - **Text**: Dark gray with semantic hierarchy
-- **Slot Colors**:
-  - Available: Green (#22C55E)
-  - Booked: Red (#EF4444)
-  - Blocked: Gray (#6B7280)
 
 ### Typography
-- System font stack for native feel
-- Font weights: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
-- Responsive font sizing
+- **Font**: Inter (system fallback)
+- **Weights**: 400 (regular), 500 (medium), 600 (semibold), 700 (bold)
+- **Headings**: 1.5-2.5rem
+- **Body**: 0.875-1rem
+- **Responsive sizing** across devices
 
 ### Components
-- Cards with subtle shadows and hover effects
-- Rounded corners (8px radius)
-- Smooth transitions and animations
-- Interactive states (hover, active, disabled)
+- **Cards**: Subtle shadows with hover lift effects
+- **Modals**: Backdrop blur, slide-up animation, centered
+- **Buttons**: Gradient backgrounds, hover lift, disabled states
+- **Forms**: Floating labels, auto-formatting, validation feedback
+- **Tables**: Sticky columns, color-coded cells, hover effects
+- **Dropdowns**: Smooth open/close, click-outside to close
+- **Rounded corners**: 8px standard, 12px for modals
+- **Smooth transitions**: 0.2-0.3s ease
 
 ## Court Configuration
-
-### Physical Layout
-The facility is based on a full basketball court that can be divided:
-
-```
-┌─────────────────────────────────────────┐
-│  Badminton 1  │  Badminton 3           │
-│  Badminton 2  │  Badminton 4           │
-│               │                         │
-│  Half Court 1 │  Half Court 2          │
-│               │                         │
-│         Full Basketball Court           │
-│      (or Volleyball Court)              │
-└─────────────────────────────────────────┘
-```
 
 ### Conflict Rules
 1. **Full Basketball Court** - Blocks everything (both halves, all badminton, volleyball)
@@ -117,36 +130,65 @@ The facility is based on a full basketball court that can be divided:
 5. **Badminton Courts 3-4** - Share space with Half Court 2
 6. **Volleyball Court** - Uses entire space, blocks all courts
 
-### Pricing
-- Full Basketball Court: $50/hour
-- Half Basketball Court: $25/hour each
-- Badminton Court: $15/hour each
-- Volleyball Court: $45/hour
+### Pricing (Student-Friendly in Euros)
+- **Badminton Court**: €5/hour each (4 courts available)
+- **Basketball Half Court**: €8/hour each (2 courts available)
+- **Basketball Full Court**: €15/hour
+- **Volleyball Court**: €12/hour
 
 ## How to Use
 
-1. **Select a sport**
-   - Click on Basketball, Badminton, or Volleyball card
+### Making a Booking
 
-2. **Choose your court**
-   - Visual court layout will appear
-   - Select your preferred court configuration
-   - Courts are color-coded and show pricing
+1. **Go to Bookings Page**
+   - Navigate to the booking page from the header
 
-3. **Navigate weeks**
-   - Use the ◀ ▶ arrows to view different weeks
-   - Current week label shows "This Week"
+2. **Use the Search Bar**
+   - **Sport**: Click to open dropdown, select 🏀 Basketball, 🏸 Badminton, or 🏐 Volleyball
+   - **When**: Click to open calendar and pick a date
+   - **Time**: Select start time (12-hour format with AM/PM)
+   - **Duration**: Choose 1-4 hours
 
-4. **Book a slot**
-   - Click on any green (available) slot
-   - Confirm the booking details
-   - Slot will turn red (booked)
-   - Conflicting courts are automatically blocked
+3. **Search Availability**
+   - Click the gold "Search" button
+   - Availability table appears showing all courts
 
-5. **Conflict prevention**
-   - System automatically detects conflicts
-   - Gray slots indicate conflicts with other bookings
-   - Click on gray slots to see conflict reason
+4. **Select a Time Slot**
+   - Green slots are available (click to book)
+   - Red slots are already booked
+   - Gray slots are blocked due to conflicts
+   - Each court shows price per hour
+
+5. **Confirm Booking**
+   - Review details in the confirmation modal
+   - Check sport, court, date, time, duration, and total price
+   - Click "Confirm Booking" to proceed
+
+6. **Complete Payment**
+   - Fill in credit card information
+   - Card number auto-formats (XXXX XXXX XXXX XXXX)
+   - Enter cardholder name, expiry (MM/YY), CVV
+   - Provide email for receipt
+   - Click "Pay €XX" button
+   - Wait for processing (2 seconds)
+
+7. **Booking Confirmed!**
+   - Success banner appears
+   - Redirected to My Bookings page
+   - Booking saved and visible in your account
+
+### Managing Bookings
+
+1. **View Bookings**
+   - Click profile icon → "My Bookings"
+   - See all confirmed reservations
+   - Each card shows full details and price
+
+2. **Cancel a Booking**
+   - Click "Cancel Booking" on any booking card
+   - Review details in cancellation modal
+   - Confirm cancellation
+   - Refund processed within 3-5 business days
 
 ## Browser Compatibility
 
@@ -159,30 +201,43 @@ The facility is based on a full basketball court that can be divided:
 ## Technical Details
 
 - **No build process required** - Pure HTML, CSS, JavaScript
-- **No dependencies** - Vanilla JavaScript
-- **Component-based** - Reusable header/footer partials
-- **State management** - Class-based calendar with local state
-- **Data generation** - Mock data for 8 weeks (demo purposes)
+- **No dependencies** - Vanilla JavaScript (no frameworks)
+- **Component-based** - Reusable header/footer partials loaded via fetch
+- **State management** - Class-based architecture with local state
+- **Data persistence** - LocalStorage for bookings and pending transactions
+- **Modular code** - Separate JS files for booking, payment, and booking management
+- **Responsive CSS** - Media queries for desktop, tablet, mobile
+- **Form validation** - HTML5 + custom JavaScript validation
+- **Time handling** - Accurate 12-hour ↔ 24-hour conversion
+- **Conflict resolution** - Automatic court blocking based on sport selection
+
+## Current Features (Production Ready)
+
+✅ Complete booking flow from search to confirmation
+✅ Real-time availability checking
+✅ Payment processing simulation
+✅ Booking management and cancellation
+✅ Price calculations and display
+✅ Court conflict detection and blocking
+✅ Form validation and auto-formatting
+✅ Responsive design for all devices
+✅ Beautiful UI with smooth animations
+✅ LocalStorage data persistence
+✅ Success and error handling
+✅ Refund policy and notifications
 
 ## Future Enhancements
 
 - Backend API integration
-- User authentication
-- Payment processing
-- Email confirmations
-- Booking history
-- User profiles
-- Filter by court number
-- Time range selection
+- User authentication system
+- Real payment gateway (Stripe, PayPal)
+- Email confirmations and receipts
+- SMS notifications
+- User profiles with history
 - Recurring bookings
-
-## Acceptance Criteria ✓
-
-- ✅ AC-1: Calendar displays 7 days forward with hourly time slots (8 AM - 10 PM)
-- ✅ AC-2: Users can filter by sport type (basketball, badminton, volleyball)
-- ✅ AC-3: Available slots shown in green, booked slots in red, blocked slots in gray
-- ✅ AC-4: Calendar loads within 3 seconds
-- ✅ AC-5: Mobile responsive design for on-the-go viewing
+- Admin dashboard
+- Analytics and reporting
+- Multi-language support
 
 ## License
 
@@ -190,5 +245,6 @@ See LICENSE file for details.
 
 ---
 
-Built with ❤️ for MPH Sports Facility
-Campus Multi-Purpose Hall Booking System - Software Engineering  Group Project. Built with Node.js, Express, MongoDB. Supports booking for  basketball, badminton, and volleyball.
+**Built with ❤️ for MPH Students**
+
+Campus Multi-Purpose Hall Booking System - Student-friendly sports facility booking with affordable pricing. Pure JavaScript implementation with modern UI/UX design. Supports basketball, badminton, and volleyball court bookings.
