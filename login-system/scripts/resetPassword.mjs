@@ -15,7 +15,7 @@ const passwordHash = await bcrypt.hash(plain, 10);
 
 await mongoose.connection.db.collection("users").updateOne(
   { email },
-  { $set: { email, passwordHash, failedAttempts: 0, lockedUntil: null, lastLoginAt: null } },
+  { $set: { email, passwordHash, failedAttempts: 0, lockedUntil: null, lastLoginAt: null, emailVerified: true } },
   { upsert: true }
 );
 

@@ -1,10 +1,9 @@
 import "../config/env.js";
 import { Router } from "express";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import User from "../models/User.js";
-import { generateOtp6, generateToken, sha256Hex, userAgentHash } from "../utils/tokens.js";
-import { sendVerificationEmail, sendLoginOtpEmail, sendPasswordResetEmail } from "../utils/mailer.js";
+import { generateToken, sha256Hex } from "../utils/tokens.js";
+import { sendVerificationEmail, sendPasswordResetEmail } from "../utils/mailer.js";
 
 const router = Router();
 
@@ -13,18 +12,11 @@ const LOCKOUT_MINUTES = parseInt(process.env.LOCKOUT_MINUTES || "15", 10);
 const idleSecs = parseInt(process.env.SESSION_IDLE_MINUTES || "30", 10) * 60;
 
 const VERIFY_TOKEN_MINUTES = parseInt(process.env.VERIFY_TOKEN_MINUTES || "1440", 10);
-const OTP_MINUTES = parseInt(process.env.OTP_MINUTES || "10", 10);
 const RESET_TOKEN_MINUTES = parseInt(process.env.RESET_TOKEN_MINUTES || "60", 10);
-const TRUSTED_DEVICE_DAYS = parseInt(process.env.TRUSTED_DEVICE_DAYS || "30", 10);
 const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:" + (process.env.PORT || 3000);
 const ALLOWED_EMAIL_DOMAIN = (process.env.ALLOWED_EMAIL_DOMAIN || "student.tus.ie").toLowerCase();
 
-function getCookie(req, name) {
-  const raw = req.headers?.cookie || "";
-  const parts = raw.split(/;\s*/).map(p => p.split("=", 2)).filter(a => a.length === 2);
-  const found = parts.find(([k]) => k === name);
-  return found ? decodeURIComponent(found[1]) : null;
-}
+// no cookies used beyond session for simplified flow
 
 // POST /auth/register
 router.post("/register", async (req, res) => {
@@ -135,88 +127,19 @@ router.post("/login", async (req, res) => {
     return res.status(403).json({ error: "Email not verified. Please verify before logging in." });
   }
 
-  // Check trusted device cookie
-  const did = getCookie(req, "did");
-  let trusted = false;
-  if (did && Array.isArray(user.trustedDevices) && user.trustedDevices.length) {
-    const didHash = sha256Hex(did);
-    const uaHash = userAgentHash(req.headers["user-agent"] || "");
-    const td = user.trustedDevices.find(d => d.deviceIdHash === didHash && d.userAgentHash === uaHash && d.expiresAt && d.expiresAt > new Date());
-    if (td) {
-      trusted = true;
-      td.lastSeenAt = new Date();
-      await user.save();
-    }
-  }
-
-  if (trusted) {
-    // success without OTP
-    user.failedAttempts = 0;
-    user.lockedUntil = null;
-    user.lastLoginAt = now;
-    await user.save();
-
-    req.session.userId = user._id.toString();
-    req.session.email = user.email;
-    res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
-    return res.status(200).json({ message: "Logged in", userId: req.session.userId, expiresIn: idleSecs, trusted: true });
-  }
-
-  // Generate and email OTP, require MFA verification step
-  const { code, hash, expiresAt } = generateOtp6(OTP_MINUTES);
-  user.loginOtpHash = hash;
-  user.loginOtpExpires = expiresAt;
+  // Simplified: successful login sets session directly (no OTP/mfa)
+  user.failedAttempts = 0;
+  user.lockedUntil = null;
+  user.lastLoginAt = now;
   await user.save();
-  await sendLoginOtpEmail(user.email, code);
-  return res.status(401).json({ error: "Verification code sent to your email.", mfaRequired: true });
+
+  req.session.userId = user._id.toString();
+  req.session.email = user.email;
+  res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
+  return res.status(200).json({ message: "Logged in", userId: req.session.userId, expiresIn: idleSecs });
 });
 
-// POST /auth/mfa-verify
-router.post("/mfa-verify", async (req, res) => {
-  try {
-    const { email, code, rememberMe } = req.body || {};
-    if (!email || !code) return res.status(400).json({ error: "Email and code are required." });
-    const normEmail = String(email).trim().toLowerCase();
-    const user = await User.findOne({ email: normEmail }).lean(false);
-    if (!user) return res.status(400).json({ error: "Invalid code." });
-
-    const now = new Date();
-    if (!user.loginOtpHash || !user.loginOtpExpires || now > user.loginOtpExpires) {
-      return res.status(400).json({ error: "Code expired or not requested." });
-    }
-    if (sha256Hex(String(code)) !== user.loginOtpHash) {
-      return res.status(400).json({ error: "Invalid code." });
-    }
-
-    // success
-    user.loginOtpHash = null;
-    user.loginOtpExpires = null;
-    user.failedAttempts = 0;
-    user.lockedUntil = null;
-    user.lastLoginAt = now;
-
-    // Trust this device if requested
-    if (rememberMe) {
-      const deviceId = crypto.randomBytes(24).toString("hex");
-      const didHash = sha256Hex(deviceId);
-      const uaHash = userAgentHash(req.headers["user-agent"] || "");
-      const expiresAt = new Date(Date.now() + TRUSTED_DEVICE_DAYS * 24 * 60 * 60 * 1000);
-      user.trustedDevices = Array.isArray(user.trustedDevices) ? user.trustedDevices : [];
-      user.trustedDevices.push({ deviceIdHash: didHash, userAgentHash: uaHash, createdAt: now, lastSeenAt: now, expiresAt });
-      // set persistent device cookie
-      res.cookie("did", deviceId, { httpOnly: true, sameSite: "lax", secure: false, maxAge: TRUSTED_DEVICE_DAYS * 24 * 60 * 60 * 1000 });
-    }
-
-    await user.save();
-
-    req.session.userId = user._id.toString();
-    req.session.email = user.email;
-    return res.status(200).json({ message: "Logged in" });
-  } catch (e) {
-    console.error("[mfa-verify]", e);
-    return res.status(500).json({ error: "Server error" });
-  }
-});
+// MFA removed in simplified flow
 
 // POST /auth/forgot-password
 router.post("/forgot-password", async (req, res) => {
@@ -251,11 +174,13 @@ router.post("/reset-password", async (req, res) => {
     const user = await User.findOne({ passwordResetTokenHash: hash, passwordResetExpires: { $gt: now } }).lean(false);
     if (!user) return res.status(400).json({ error: "Invalid or expired token." });
     user.passwordHash = await bcrypt.hash(newPassword, 10);
+    // Consider reset as proof of mailbox ownership; mark verified
+    user.emailVerified = true;
     user.passwordResetTokenHash = null;
     user.passwordResetExpires = null;
     user.failedAttempts = 0;
     user.lockedUntil = null;
-    user.trustedDevices = [];
+    // Clear any previous trust markers if any existed
     await user.save();
     return res.status(200).json({ message: "Password reset successful." });
   } catch (e) {
@@ -268,7 +193,6 @@ router.post("/reset-password", async (req, res) => {
 router.post("/logout", (req, res) => {
   req.session?.destroy(() => {
     res.clearCookie("sid");
-    res.clearCookie("did");
     res.status(200).json({ message: "Logged out" });
   });
 });

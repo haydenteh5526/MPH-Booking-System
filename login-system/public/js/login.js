@@ -8,13 +8,12 @@ form.addEventListener('submit', async (e) => {
   try {
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
-    const rememberMe = document.getElementById('rememberMe')?.checked || false;
 
     const t0 = performance.now();
     const res = await fetch('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, rememberMe })
+      body: JSON.stringify({ email, password })
     });
     const t1 = performance.now();
 
@@ -27,12 +26,7 @@ form.addEventListener('submit', async (e) => {
       setTimeout(() => location.href = '/dashboard', 600);
     } else {
       msg.className = 'err';
-      if (data && data.mfaRequired) {
-        // Store state and go to OTP page
-        sessionStorage.setItem('mfaEmail', email);
-        sessionStorage.setItem('mfaRemember', rememberMe ? '1' : '0');
-        window.location.href = '/mfa.html';
-      } else if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {
+      if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {
         // Redirect to resend verification, pre-filling the email
         const q = new URLSearchParams({ email }).toString();
         window.location.href = `/resend.html?${q}`;
