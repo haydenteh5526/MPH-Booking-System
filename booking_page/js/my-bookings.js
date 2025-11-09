@@ -41,12 +41,47 @@ class BookingsManager {
     const container = document.getElementById('bookingsContainer')
     const emptyState = document.getElementById('emptyState')
 
+    if (!container) return
+
     if (this.bookings.length === 0) {
-      emptyState.style.display = 'flex'
+      // Remove any existing booking grids
+      const existingGrid = container.querySelector('.bookings-grid')
+      if (existingGrid) {
+        existingGrid.remove()
+      }
+      
+      // Show empty state if it exists, otherwise create it
+      let emptyStateElement = document.getElementById('emptyState')
+      if (emptyStateElement) {
+        emptyStateElement.style.display = 'flex'
+      } else {
+        // Recreate empty state if it was removed
+        container.innerHTML = `
+          <div class="bookings-empty" id="emptyState">
+            <div class="empty-icon">📅</div>
+            <h3>No Bookings Yet</h3>
+            <p>You haven't made any reservations yet.</p>
+            <a href="booking.html" class="btn-primary">Make a Booking</a>
+          </div>
+        `
+        // Get fresh reference after creating
+        emptyStateElement = document.getElementById('emptyState')
+        if (emptyStateElement) {
+          emptyStateElement.style.display = 'flex'
+        }
+      }
       return
     }
 
-    emptyState.style.display = 'none'
+    // Hide empty state if it exists
+    if (emptyState) {
+      emptyState.style.display = 'none'
+    }
+
+    // Remove empty state from container if it exists
+    if (emptyState && emptyState.parentNode === container) {
+      emptyState.remove()
+    }
 
     const bookingsHTML = `
       <div class="bookings-grid">
@@ -179,8 +214,10 @@ class BookingsManager {
   confirmCancellation() {
     if (!this.pendingCancelBooking) return
 
+    const cancelledBookingId = this.pendingCancelBooking.id
+
     // Remove booking from array
-    this.bookings = this.bookings.filter(b => b.id !== this.pendingCancelBooking.id)
+    this.bookings = this.bookings.filter(b => b.id !== cancelledBookingId)
     
     // Update localStorage
     localStorage.setItem('userBookings', JSON.stringify(this.bookings))
@@ -188,39 +225,76 @@ class BookingsManager {
     // Close modal
     this.closeCancelModal()
     
-    // Refresh display
-    this.displayBookings()
+    // Remove the booking card from DOM with fade-out animation
+    const bookingCard = document.querySelector(`[data-booking-id="${cancelledBookingId}"]`)
+    if (bookingCard) {
+      bookingCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
+      bookingCard.style.opacity = '0'
+      bookingCard.style.transform = 'translateY(-10px)'
+      setTimeout(() => {
+        bookingCard.remove()
+        // Refresh display after animation completes (will handle empty state if no bookings)
+        this.displayBookings()
+      }, 300)
+    } else {
+      // If card not found, refresh immediately
+      this.displayBookings()
+    }
     
     // Show success message
     this.showCancellationSuccess()
   }
 
   showCancellationSuccess() {
-    // Create a temporary success banner
+    // Remove any existing success banner first
+    const existingBanner = document.querySelector('.cancellation-success-banner')
+    if (existingBanner) {
+      existingBanner.remove()
+    }
+
+    // Create a prominent success banner
     const banner = document.createElement('div')
-    banner.className = 'success-banner'
+    banner.className = 'success-banner cancellation-success-banner'
     banner.style.marginBottom = '2rem'
+    banner.style.animation = 'slideDown 0.3s ease-out'
     banner.innerHTML = `
       <div class="success-banner-content">
-        <svg class="success-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        <svg class="success-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9 12l2 2 4-4"></path>
         </svg>
         <div>
-          <h3 class="success-banner-title">Booking Cancelled</h3>
-          <p class="success-banner-text">Your booking has been cancelled. Refund will be processed within 3-5 business days.</p>
+          <h3 class="success-banner-title">Booking Cancelled Successfully</h3>
+          <p class="success-banner-text">Your booking has been cancelled and removed. Refund will be processed within 3-5 business days.</p>
         </div>
       </div>
     `
     
     const container = document.querySelector('.content-container')
-    const pageHeader = container.querySelector('.page-header')
-    container.insertBefore(banner, pageHeader.nextSibling)
+    const bookingsContainer = document.getElementById('bookingsContainer')
     
-    // Auto remove after 5 seconds
+    // Insert banner before bookings container
+    if (bookingsContainer && bookingsContainer.parentNode) {
+      bookingsContainer.parentNode.insertBefore(banner, bookingsContainer)
+    } else if (container) {
+      // Fallback: insert after page header
+      const pageHeader = container.querySelector('.page-header')
+      if (pageHeader) {
+        container.insertBefore(banner, pageHeader.nextSibling)
+      } else {
+        container.insertBefore(banner, container.firstChild)
+      }
+    }
+    
+    // Auto remove after 6 seconds
     setTimeout(() => {
-      banner.remove()
-    }, 5000)
+      if (banner.parentNode) {
+        banner.style.animation = 'slideUpOut 0.3s ease-out'
+        setTimeout(() => {
+          banner.remove()
+        }, 300)
+      }
+    }, 6000)
   }
 }
 

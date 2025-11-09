@@ -1,5 +1,5 @@
 /* ===== Landing Page Specific Styles ===== */
-/* Variables are inherited from booking_page/css/styles.css */
+/* Variables and base styles are inherited from partials/styles.css */
 
 html {
     scroll-behavior: smooth;

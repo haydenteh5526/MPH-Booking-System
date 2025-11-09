@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - MPH Booking System</title>
-    <link rel="stylesheet" href="../booking_page/css/styles.css">
+    <link rel="stylesheet" href="../partials/styles.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -321,18 +321,18 @@
         // Setup profile dropdown
         function setupProfileDropdown() {
             const profileBtn = document.getElementById('profileBtn');
-            const profileDropdown = document.querySelector('.profile-dropdown');
+            const profileDropdown = document.getElementById('profileDropdown');
             const myBookingsBtn = document.getElementById('myBookingsBtn');
             
             if (profileBtn && profileDropdown) {
                 profileBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    profileDropdown.style.display = 
-                        profileDropdown.style.display === 'block' ? 'none' : 'block';
+                    const isVisible = profileDropdown.style.display === 'block';
+                    profileDropdown.style.display = isVisible ? 'none' : 'block';
                 });
                 
                 document.addEventListener('click', (e) => {
-                    if (!e.target.closest('.profile-dropdown-container')) {
+                    if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
                         profileDropdown.style.display = 'none';
                     }
                 });

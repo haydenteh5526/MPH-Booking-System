@@ -133,6 +133,22 @@ class BookingCalendar {
     const searchBtn = document.getElementById("searchBtn")
 
     if (dateSelect) {
+      // Make entire input field clickable to open calendar
+      dateSelect.addEventListener("click", (e) => {
+        e.stopPropagation()
+        // Focus the input to ensure calendar opens
+        dateSelect.focus()
+        // Trigger showPicker if available (for better browser support)
+        if (dateSelect.showPicker) {
+          try {
+            dateSelect.showPicker()
+          } catch (err) {
+            // Fallback: just focus, browser will handle it
+            console.log("showPicker not supported, using focus")
+          }
+        }
+      })
+      
       dateSelect.addEventListener("change", (e) => {
         this.selectedDate = e.target.value
         this.updateWhenDisplay()
@@ -146,7 +162,7 @@ class BookingCalendar {
         this.updateWhenDisplay()
         this.checkFormValidity()
       })
-    }
+  }
 
     if (periodSelect) {
       periodSelect.addEventListener("change", (e) => {
@@ -334,6 +350,22 @@ class BookingCalendar {
       featuredSection.style.display = "none"
     }
 
+    // Hide the new sections (Booking Tips, Why Book, CTA) when showing results
+    const bookingTipsSection = document.querySelector(".booking-tips-section")
+    if (bookingTipsSection) {
+      bookingTipsSection.style.display = "none"
+    }
+
+    const whyBookSection = document.querySelector(".why-book-section")
+    if (whyBookSection) {
+      whyBookSection.style.display = "none"
+    }
+
+    const bookingCtaSection = document.querySelector(".booking-cta-section")
+    if (bookingCtaSection) {
+      bookingCtaSection.style.display = "none"
+    }
+
     this.showCalendar()
     this.renderAvailableCourts()
   }
@@ -372,7 +404,7 @@ class BookingCalendar {
         
         if (!slotData) {
           return { hour, status: "blocked", price: 0 }
-        }
+      }
 
         // Check for conflicts
         const conflictCheck = this.checkCourtConflicts(this.selectedDate, hour, court.id)
@@ -661,7 +693,7 @@ class BookingCalendar {
       if (modal.style.display === 'flex') {
         modal.style.display = 'none'
         document.body.style.overflow = ''
-      }
+    }
     }, 3000)
   }
 
@@ -695,8 +727,8 @@ class BookingCalendar {
           conflictingCourts.forEach((conflictCourt) => {
             if (this.bookingData[this.selectedDate]?.[hour]?.[conflictCourt]) {
               this.bookingData[this.selectedDate][hour][conflictCourt].status = "booked"
-            }
-          })
+      }
+    })
         }
       }
 
@@ -788,7 +820,13 @@ class BookingCalendar {
   }
 
   hideCalendar() {
-    const calendarSection = document.querySelector(".calendar-results-section")
+    const calendarResultsSection = document.querySelector(".calendar-results-section")
+    const calendarSection = document.querySelector(".calendar-section")
+    
+    if (calendarResultsSection) {
+      calendarResultsSection.style.display = "none"
+    }
+    
     if (calendarSection) {
       calendarSection.style.display = "none"
     }
@@ -798,12 +836,41 @@ class BookingCalendar {
     if (featuredSection) {
       featuredSection.style.display = "block"
     }
+
+    // Show the new sections again when hiding calendar
+    const bookingTipsSection = document.querySelector(".booking-tips-section")
+    if (bookingTipsSection) {
+      bookingTipsSection.style.display = "block"
+    }
+
+    const whyBookSection = document.querySelector(".why-book-section")
+    if (whyBookSection) {
+      whyBookSection.style.display = "block"
+    }
+
+    const bookingCtaSection = document.querySelector(".booking-cta-section")
+    if (bookingCtaSection) {
+      bookingCtaSection.style.display = "block"
+    }
   }
 
   showCalendar() {
-    const calendarSection = document.querySelector(".calendar-results-section")
+    const calendarResultsSection = document.querySelector(".calendar-results-section")
+    const calendarSection = document.querySelector(".calendar-section")
+    
+    if (calendarResultsSection) {
+      calendarResultsSection.style.display = "block"
+    }
+    
     if (calendarSection) {
       calendarSection.style.display = "block"
+    }
+    
+    // Scroll to calendar section smoothly
+    if (calendarResultsSection) {
+      setTimeout(() => {
+        calendarResultsSection.scrollIntoView({ behavior: "smooth", block: "start" })
+      }, 100)
     }
   }
 

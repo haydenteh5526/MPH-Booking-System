@@ -1,6 +1,5 @@
 /* About Page Styles */
-
-/* Reset and Base - inherits from main styles.css */
+/* Variables and base styles are inherited from partials/styles.css */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
 }
