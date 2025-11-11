@@ -93,13 +93,11 @@ body {
 
 /* Header Styles */
 .main-header {
-    background-color: var(--bg-primary);
-    border-bottom: 1px solid var(--border-primary);
+    background-color: var(--bg-secondary);
     position: sticky;
     top: 0;
     z-index: 100;
     backdrop-filter: blur(8px);
-    background-color: rgba(255, 255, 255, 0.95);
 }
 
 .header-container {
@@ -200,6 +198,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding: 0.25rem 0;
 }
 
 .profile-dropdown-item {
@@ -207,8 +206,10 @@ body {
     align-items: center;
     gap: 0.75rem;
     padding: 0.875rem 1rem;
+    min-height: 44px;
     cursor: pointer;
     transition: background-color 0.2s;
+    white-space: nowrap;
 }
 
 .profile-dropdown-item:hover {
@@ -226,6 +227,9 @@ body {
     font-size: 0.9375rem;
     color: var(--text-primary);
     font-weight: 500;
+    display: inline-block;
+    line-height: 1.5;
+    flex: 1;
 }
 
 .profile-dropdown-divider {
