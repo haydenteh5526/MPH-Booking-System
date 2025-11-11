@@ -144,7 +144,7 @@ class BookingCalendar {
             dateSelect.showPicker()
           } catch (err) {
             // Fallback: just focus, browser will handle it
-            console.log("showPicker not supported, using focus")
+            dateSelect.focus()
           }
         }
       })

@@ -69,5 +69,5 @@ visualCards.forEach(card => {
   })
 })
 
-console.log('🏟️ MPH Sports Landing Page Loaded')
+// Landing page initialized
 
