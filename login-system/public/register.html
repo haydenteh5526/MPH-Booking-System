@@ -27,10 +27,29 @@
       <h2>Create account</h2>
       <p class="sub">Use your @student.tus.ie email</p>
       <form id="form">
-        <label for="email">Email</label>
+        <label for="name">Full Name</label>
+        <input id="name" type="text" required autocomplete="name" placeholder="Taylor Student" />
+
+        <label for="email">Student Email</label>
         <input id="email" type="email" required autocomplete="username" placeholder="you@student.tus.ie" />
+
+        <label for="phone">Phone Number</label>
+        <input id="phone" type="tel" required autocomplete="tel" placeholder="+353 871234567" />
+
+        <label for="studentId">Student ID</label>
+        <input id="studentId" type="text" required placeholder="e.g. A00123456" />
+
         <label for="password">Password</label>
-        <input id="password" type="password" required minlength="8" autocomplete="new-password" placeholder="At least 8 characters" />
+        <input
+          id="password"
+          type="password"
+          required
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="At least 8 chars, includes uppercase &amp; number"
+          title="At least 8 characters with at least one uppercase letter and at least one number"
+        />
+
         <label for="confirm">Confirm Password</label>
         <input id="confirm" type="password" required minlength="8" autocomplete="new-password" placeholder="Re-enter password" />
         <button type="submit">Create account</button>

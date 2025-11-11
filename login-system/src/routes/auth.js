@@ -16,26 +16,53 @@ const RESET_TOKEN_MINUTES = parseInt(process.env.RESET_TOKEN_MINUTES || "60", 10
 const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:" + (process.env.PORT || 3000);
 const ALLOWED_EMAIL_DOMAIN = (process.env.ALLOWED_EMAIL_DOMAIN || "student.tus.ie").toLowerCase();
 
+const PASSWORD_POLICY = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+const PASSWORD_REQUIREMENTS = "Password must be at least 8 characters and include at least one uppercase letter and one number.";
+const PHONE_PATTERN = /^[+0-9 ()-]{7,20}$/;
+const STUDENT_ID_PATTERN = /^[A-Za-z0-9]{5,20}$/;
+
 // no cookies used beyond session for simplified flow
 
 // POST /auth/register
 router.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body || {};
-    if (!email || !password) return res.status(400).json({ error: "Email and password are required." });
+    const { email, password, name, phoneNumber, studentId } = req.body || {};
+    if (!email || !password || !name || !phoneNumber || !studentId) {
+      return res.status(400).json({ error: "Name, email, phone number, student ID, and password are required." });
+    }
     const normEmail = String(email).trim().toLowerCase();
+    const fullName = String(name).trim();
+    const normPhone = String(phoneNumber).trim();
+    const normStudentId = String(studentId).trim().toUpperCase();
+
     if (!normEmail.endsWith("@" + ALLOWED_EMAIL_DOMAIN)) {
       return res.status(400).json({ error: `Email must be @${ALLOWED_EMAIL_DOMAIN}` });
     }
-    if (password.length < 8) return res.status(400).json({ error: "Password must be at least 8 characters." });
+    if (!PASSWORD_POLICY.test(password)) {
+      return res.status(400).json({ error: PASSWORD_REQUIREMENTS });
+    }
+    if (fullName.length < 2) {
+      return res.status(400).json({ error: "Please provide your full name." });
+    }
+    if (!PHONE_PATTERN.test(normPhone)) {
+      return res.status(400).json({ error: "Phone number should be 7-20 digits and may include +, spaces, or dashes." });
+    }
+    if (!STUDENT_ID_PATTERN.test(normStudentId)) {
+      return res.status(400).json({ error: "Student ID should be 5-20 letters/numbers." });
+    }
 
     const existing = await User.findOne({ email: normEmail });
     if (existing) return res.status(409).json({ error: "Account already exists." });
+    const studentIdInUse = await User.findOne({ studentId: normStudentId });
+    if (studentIdInUse) return res.status(409).json({ error: "Student ID already registered." });
 
     const passwordHash = await bcrypt.hash(password, 10);
     const { token, hash, expiresAt } = generateToken(32, VERIFY_TOKEN_MINUTES);
 
     const user = await User.create({
+      fullName,
+      phoneNumber: normPhone,
+      studentId: normStudentId,
       email: normEmail,
       passwordHash,
       emailVerified: false,
@@ -48,6 +75,14 @@ router.post("/register", async (req, res) => {
     return res.status(200).json({ message: "Registration successful. Check your email to verify." });
   } catch (e) {
     console.error("[register]", e);
+    if (e?.code === 11000) {
+      if (e.keyPattern?.studentId) {
+        return res.status(409).json({ error: "Student ID already registered." });
+      }
+      if (e.keyPattern?.email) {
+        return res.status(409).json({ error: "Account already exists." });
+      }
+    }
     return res.status(500).json({ error: "Server error" });
   }
 });
@@ -168,7 +203,7 @@ router.post("/reset-password", async (req, res) => {
   try {
     const { token, newPassword } = req.body || {};
     if (!token || !newPassword) return res.status(400).json({ error: "Token and newPassword are required." });
-    if (newPassword.length < 8) return res.status(400).json({ error: "Password must be at least 8 characters." });
+    if (!PASSWORD_POLICY.test(newPassword)) return res.status(400).json({ error: PASSWORD_REQUIREMENTS });
     const hash = sha256Hex(token);
     const now = new Date();
     const user = await User.findOne({ passwordResetTokenHash: hash, passwordResetExpires: { $gt: now } }).lean(false);

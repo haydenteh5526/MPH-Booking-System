@@ -19,6 +19,7 @@ function readEnv() {
 
 async function sendViaResend({ to, subject, text }) {
   const { RESEND_API_KEY, from } = readEnv();
+  const apiKey = RESEND_API_KEY;
   if (!apiKey) return null;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
