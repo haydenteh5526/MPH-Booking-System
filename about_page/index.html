@@ -448,6 +448,11 @@
             const logoutBtn = document.getElementById('logoutBtn');
             
             if (profileBtn && profileDropdown) {
+                // Ensure dropdown is hidden on page load
+                profileDropdown.style.display = 'none';
+                profileBtn.setAttribute('aria-expanded', 'false');
+                profileDropdown.setAttribute('aria-hidden', 'true');
+
                 // Toggle dropdown
                 function openDropdown() {
                     profileDropdown.style.display = 'block';

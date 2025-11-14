@@ -706,11 +706,15 @@ class BookingCalendar {
       const bookingHour = startHour + i
       if (this.bookingData[this.selectedDate]?.[bookingHour]?.[courtId]) {
         this.bookingData[this.selectedDate][bookingHour][courtId].status = "booked"
+        this.bookingData[this.selectedDate][bookingHour][courtId].bookedBySport = this.selectedSport
+        this.bookingData[this.selectedDate][bookingHour][courtId].bookedCourtId = courtId
 
         const conflictingCourts = this.courtConflicts[courtId] || []
         conflictingCourts.forEach((conflictCourt) => {
           if (this.bookingData[this.selectedDate]?.[bookingHour]?.[conflictCourt]) {
             this.bookingData[this.selectedDate][bookingHour][conflictCourt].status = "booked"
+            this.bookingData[this.selectedDate][bookingHour][conflictCourt].bookedBySport = this.selectedSport
+            this.bookingData[this.selectedDate][bookingHour][conflictCourt].bookedCourtId = courtId
           }
         })
       }
@@ -786,9 +790,17 @@ class BookingCalendar {
     for (const conflictCourt of conflictingCourts) {
       const booking = this.bookingData[date]?.[hour]?.[conflictCourt]
       if (booking && booking.status === "booked") {
-        return {
-          hasConflict: true,
-          conflictingCourt: conflictCourt,
+        // Check if the booked court would actually conflict with the current court
+        // A court is only blocked if the ORIGINAL booked court conflicts with it
+        const originalBookedCourt = booking.bookedCourtId || conflictCourt
+        
+        // Check if the original booked court conflicts with the current court we're checking
+        const originalCourtConflicts = this.courtConflicts[originalBookedCourt] || []
+        if (originalCourtConflicts.includes(courtId) || originalBookedCourt === courtId) {
+          return {
+            hasConflict: true,
+            conflictingCourt: conflictCourt,
+          }
         }
       }
     }
@@ -856,18 +868,23 @@ class BookingCalendar {
         const startHour = booking.time
         const duration = booking.duration
         const courtId = booking.courtId
+        const bookingSport = booking.sport
 
         // Mark the booked slots as "booked" for the duration
         for (let i = 0; i < duration; i++) {
           const hour = startHour + i
           if (data[bookingDate]?.[hour]?.[courtId]) {
             data[bookingDate][hour][courtId].status = "booked"
+            data[bookingDate][hour][courtId].bookedBySport = bookingSport
+            data[bookingDate][hour][courtId].bookedCourtId = courtId
 
             // Also mark conflicting courts as booked
             const conflictingCourts = this.courtConflicts[courtId] || []
             conflictingCourts.forEach(conflictCourt => {
               if (data[bookingDate]?.[hour]?.[conflictCourt]) {
                 data[bookingDate][hour][conflictCourt].status = "booked"
+                data[bookingDate][hour][conflictCourt].bookedBySport = bookingSport
+                data[bookingDate][hour][conflictCourt].bookedCourtId = courtId
               }
             })
           }
