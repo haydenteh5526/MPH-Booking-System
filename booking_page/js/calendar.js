@@ -12,9 +12,9 @@ class BookingCalendar {
     // Court availability by sport (Student-friendly pricing)
     this.sportCourts = {
       basketball: [
-        { id: "half-court-1", name: "Half Court 1", price: 8 },
-        { id: "half-court-2", name: "Half Court 2", price: 8 },
-        { id: "full-court", name: "Full Court", price: 15 },
+        { id: "basketball-half-1", name: "Half Court 1 (Courts 1-2)", price: 8 },
+        { id: "basketball-half-2", name: "Half Court 2 (Courts 3-4)", price: 8 },
+        { id: "basketball-full", name: "Full Court (Courts 1-4)", price: 15 },
       ],
       badminton: [
         { id: "badminton-1", name: "Court 1", price: 5 },
@@ -22,32 +22,75 @@ class BookingCalendar {
         { id: "badminton-3", name: "Court 3", price: 5 },
         { id: "badminton-4", name: "Court 4", price: 5 },
       ],
-      volleyball: [{ id: "volleyball-court", name: "Volleyball Court", price: 12 }],
+      volleyball: [
+        { id: "volleyball-half-1", name: "Half Court 1 (Courts 1-2)", price: 10 },
+        { id: "volleyball-half-2", name: "Half Court 2 (Courts 3-4)", price: 10 },
+      ],
     }
 
-    // Court conflict mapping
+    // Court conflict mapping based on MPH layout
+    // Courts 1-2 on one side, Courts 3-4 on the other side
     this.courtConflicts = {
-      "full-court": [
-        "half-court-1",
-        "half-court-2",
+      // Basketball Full Court blocks everything
+      "basketball-full": [
+        "basketball-half-1",
+        "basketball-half-2",
         "badminton-1",
         "badminton-2",
         "badminton-3",
         "badminton-4",
-        "volleyball-court",
+        "volleyball-half-1",
+        "volleyball-half-2",
       ],
-      "half-court-1": ["full-court", "badminton-1", "badminton-2", "volleyball-court"],
-      "half-court-2": ["full-court", "badminton-3", "badminton-4", "volleyball-court"],
-      "badminton-1": ["full-court", "half-court-1", "volleyball-court"],
-      "badminton-2": ["full-court", "half-court-1", "volleyball-court"],
-      "badminton-3": ["full-court", "half-court-2", "volleyball-court"],
-      "badminton-4": ["full-court", "half-court-2", "volleyball-court"],
-      "volleyball-court": [
-        "full-court",
-        "half-court-1",
-        "half-court-2",
+      // Basketball Half Court 1 (Courts 1-2) blocks courts 1-2
+      "basketball-half-1": [
+        "basketball-full",
         "badminton-1",
         "badminton-2",
+        "volleyball-half-1",
+      ],
+      // Basketball Half Court 2 (Courts 3-4) blocks courts 3-4
+      "basketball-half-2": [
+        "basketball-full",
+        "badminton-3",
+        "badminton-4",
+        "volleyball-half-2",
+      ],
+      // Badminton Court 1 conflicts with basketball/volleyball using courts 1-2
+      "badminton-1": [
+        "basketball-full",
+        "basketball-half-1",
+        "volleyball-half-1",
+      ],
+      // Badminton Court 2 conflicts with basketball/volleyball using courts 1-2
+      "badminton-2": [
+        "basketball-full",
+        "basketball-half-1",
+        "volleyball-half-1",
+      ],
+      // Badminton Court 3 conflicts with basketball/volleyball using courts 3-4
+      "badminton-3": [
+        "basketball-full",
+        "basketball-half-2",
+        "volleyball-half-2",
+      ],
+      // Badminton Court 4 conflicts with basketball/volleyball using courts 3-4
+      "badminton-4": [
+        "basketball-full",
+        "basketball-half-2",
+        "volleyball-half-2",
+      ],
+      // Volleyball Half Court 1 (Courts 1-2) blocks courts 1-2
+      "volleyball-half-1": [
+        "basketball-full",
+        "basketball-half-1",
+        "badminton-1",
+        "badminton-2",
+      ],
+      // Volleyball Half Court 2 (Courts 3-4) blocks courts 3-4
+      "volleyball-half-2": [
+        "basketball-full",
+        "basketball-half-2",
         "badminton-3",
         "badminton-4",
       ],
@@ -787,19 +830,8 @@ class BookingCalendar {
         data[dateString][hour.value] = {}
 
           allCourts.forEach((courtId) => {
-            const random = Math.random()
-            let status
-
-            const isPeakHour = hour.value >= 18 && hour.value <= 21
-            const threshold = isPeakHour ? 0.3 : 0.5
-
-            if (random < threshold) {
-              status = "available"
-            } else if (random < (isPeakHour ? 0.75 : 0.85)) {
-              status = "booked"
-            } else {
-              status = "blocked"
-            }
+            // Set all slots to available (green) by default
+            let status = "available"
 
           let price = 0
           Object.values(this.sportCourts).forEach((courts) => {
@@ -815,6 +847,33 @@ class BookingCalendar {
         })
       })
     }
+
+    // Load user bookings from localStorage and mark those slots as booked (red)
+    const userBookings = JSON.parse(localStorage.getItem('userBookings') || '[]')
+    userBookings.forEach(booking => {
+      if (booking.status === 'confirmed') {
+        const bookingDate = booking.date
+        const startHour = booking.time
+        const duration = booking.duration
+        const courtId = booking.courtId
+
+        // Mark the booked slots as "booked" for the duration
+        for (let i = 0; i < duration; i++) {
+          const hour = startHour + i
+          if (data[bookingDate]?.[hour]?.[courtId]) {
+            data[bookingDate][hour][courtId].status = "booked"
+
+            // Also mark conflicting courts as booked
+            const conflictingCourts = this.courtConflicts[courtId] || []
+            conflictingCourts.forEach(conflictCourt => {
+              if (data[bookingDate]?.[hour]?.[conflictCourt]) {
+                data[bookingDate][hour][conflictCourt].status = "booked"
+              }
+            })
+          }
+        }
+      }
+    })
 
     return data
   }

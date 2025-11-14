@@ -210,6 +210,12 @@ body {
     cursor: pointer;
     transition: background-color 0.2s;
     white-space: nowrap;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
 }
 
 .profile-dropdown-item:hover {
