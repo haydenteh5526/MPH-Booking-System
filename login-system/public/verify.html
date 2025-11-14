@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Email Verification</title>
+  <style>
+    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; margin: 40px; }
+    .card { max-width: 520px; padding: 20px; border: 1px solid #ddd; border-radius: 12px; }
+  </style>
+  <script>
+    function textForStatus(s){
+      switch(s){
+        case 'ok': return 'Your email has been verified. You can close this window and log in.';
+        case 'invalid': return 'This verification link is invalid or expired.';
+        case 'error': return 'An error occurred verifying your email.';
+        default: return 'Unknown status.';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      const params = new URLSearchParams(location.search);
+      const s = params.get('status') || 'invalid';
+      document.getElementById('status').textContent = textForStatus(s);
+    });
+  </script>
+  </head>
+<body>
+  <div class="card">
+    <h2>Email Verification</h2>
+    <p id="status">Checking…</p>
+  </div>
+</body>
+</html>
+
