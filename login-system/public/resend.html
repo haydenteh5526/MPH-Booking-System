@@ -1,38 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Resend Verification Email</title>
-  <style>
-    :root { --bg:#f7f9fc; --card:#fff; --pri:#0a7cff; --txt:#101828; --muted:#6b7280; }
-    * { box-sizing: border-box; }
-    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--txt); }
-    .wrap { min-height: 100vh; display: grid; place-items: center; padding: 40px 16px; }
-    .card { width: 100%; max-width: 420px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 16px; background: var(--card); box-shadow: 0 2px 8px rgba(16,24,40,.04); }
-    h2 { margin: 0 0 6px; font-size: 22px; }
-    .sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
-    label { display:block; margin: 12px 0 6px; font-weight: 500; }
-    input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; }
-    button { width: 100%; margin-top: 16px; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--pri); color:#fff; font-weight: 600; cursor: pointer; }
-    .foot { margin-top: 12px; font-size: 14px; }
-    .foot a { color: var(--pri); text-decoration: none; }
-    .err { color:#b00020; margin-top:12px; }
-    .ok { color:#0a7c2e; margin-top:12px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resend Verification - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h2>Resend verification</h2>
-      <p class="sub">Enter your account email and we'll send a new link</p>
-      <form id="form">
-        <label for="email">Email</label>
-        <input id="email" type="email" required autocomplete="username" placeholder="you@student.tus.ie" />
-        <button type="submit">Send verification email</button>
-      </form>
-      <div class="foot"><a href="/login.html">Back to sign in</a></div>
-      <div id="msg"></div>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Verify Your Student Account</h1>
+          <p class="auth-hero-description">
+            Didn't receive your verification email? No problem! We'll send you a fresh link to verify your TUS student email and activate your account.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Fresh Verification Link</h3>
+              <p class="auth-hero-feature-description">Get a new link sent to your inbox instantly</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Student Verified</h3>
+              <p class="auth-hero-feature-description">Ensure secure access with TUS email verification</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Quick Activation</h3>
+              <p class="auth-hero-feature-description">One click to activate and start booking</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <h1 class="auth-title">Resend Verification</h1>
+            <p class="auth-subtitle">Enter your email and we'll send a new verification link</p>
+          </div>
+
+          <div id="msg"></div>
+
+          <form id="form" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-input"
+                required 
+                autocomplete="username" 
+                placeholder="you@student.tus.ie" 
+              />
+            </div>
+
+            <button type="submit" class="auth-btn auth-btn-primary">Send Verification Email</button>
+          </form>
+
+          <div class="auth-footer">
+            <a href="/login.html" class="auth-footer-link">Back to sign in</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

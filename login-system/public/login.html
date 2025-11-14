@@ -1,52 +1,127 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Login</title>
-  <style>
-    :root { --bg:#f7f9fc; --card:#fff; --pri:#0a7cff; --txt:#101828; --muted:#6b7280; }
-    * { box-sizing: border-box; }
-    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; margin: 0; background: var(--bg); color: var(--txt); }
-    .wrap { min-height: 100vh; display: grid; place-items: center; padding: 40px 16px; }
-    .card { width: 100%; max-width: 420px; padding: 24px; border: 1px solid #e5e7eb; border-radius: 16px; background: var(--card); box-shadow: 0 2px 8px rgba(16,24,40,.04); }
-    h2 { margin: 0 0 4px; font-size: 22px; }
-    .sub { color: var(--muted); margin: 0 0 16px; font-size: 14px; }
-    label { display:block; margin: 12px 0 6px; font-weight: 500; }
-    input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #d1d5db; background: #fff; }
-    button { width: 100%; margin-top: 16px; padding: 12px 14px; border: 0; border-radius: 10px; background: var(--pri); color:#fff; font-weight: 600; cursor: pointer; }
-    .links { display: flex; justify-content: space-between; margin-top: 12px; font-size: 14px; }
-    .links a { color: var(--pri); text-decoration: none; }
-    .err { color:#b00020; margin-top:12px; }
-    .ok { color:#0a7c2e; margin-top:12px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h2>Sign in</h2>
-      <p class="sub">Use your @student.tus.ie account</p>
-      <form id="form">
-        <label for="email">Email</label>
-        <input id="email" type="email" required autocomplete="username" placeholder="you@student.tus.ie" />
-        <label for="password">Password</label>
-        <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••" />
-        
-        <button type="submit">Log in</button>
-      </form>
-      <div class="links">
-        <a href="/register.html">Create account</a>
-        <a href="/forgot.html">Forgot password?</a>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Welcome to MPH Booking System</h1>
+          <p class="auth-hero-description">
+            The premier platform for booking sports facilities at TUS. Secure your court, track your bookings, and manage your sports activities seamlessly.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Real-Time Availability</h3>
+              <p class="auth-hero-feature-description">Check facility availability and book instantly, 24/7</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Secure & Verified</h3>
+              <p class="auth-hero-feature-description">TUS student verification for campus facility access</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Easy Management</h3>
+              <p class="auth-hero-feature-description">Track all your bookings in one convenient dashboard</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="links" style="margin-top:6px;">
-        <a href="/resend.html">Resend verification email</a>
-        <span></span>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
       </div>
-      <div id="msg"></div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <h1 class="auth-title">Welcome Back</h1>
+            <p class="auth-subtitle">Sign in to your @student.tus.ie account</p>
+          </div>
+
+          <div id="msg"></div>
+
+          <form id="form" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-input"
+                required 
+                autocomplete="username" 
+                placeholder="you@student.tus.ie" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <div class="form-input-wrapper">
+                <input 
+                  id="password" 
+                  type="password" 
+                  class="form-input"
+                  required 
+                  autocomplete="current-password" 
+                  placeholder="Enter your password" 
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="auth-btn auth-btn-primary">Sign In</button>
+          </form>
+
+          <div class="auth-links">
+            <a href="/register.html" class="auth-link">Create account</a>
+            <a href="/forgot.html" class="auth-link">Forgot password?</a>
+          </div>
+
+          <div class="auth-footer">
+            <a href="/resend.html" class="auth-footer-link">Resend verification email</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- load external script so CSP 'script-src self' allows it -->
   <script src="/js/login.js" defer></script>
 </body>
 </html>

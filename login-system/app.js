@@ -35,6 +35,9 @@ app.use(session({
 // static login page
 app.use(express.static(path.join(__dirname, "public")));
 
+// static files for main site pages
+app.use(express.static(path.join(__dirname, "..")));
+
 // auth routes
 app.use("/auth", authRoutes);
 

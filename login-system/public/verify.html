@@ -1,34 +1,113 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Email Verification</title>
-  <style>
-    body { font-family: system-ui, Segoe UI, Roboto, sans-serif; margin: 40px; }
-    .card { max-width: 520px; padding: 20px; border: 1px solid #ddd; border-radius: 12px; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Account Activation</h1>
+          <p class="auth-hero-description">
+            We're verifying your TUS student email to ensure secure access to MPH Booking System. Once verified, you'll have full access to all sports facility bookings.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Verified Access</h3>
+              <p class="auth-hero-feature-description">Secure authentication for TUS students</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Enhanced Security</h3>
+              <p class="auth-hero-feature-description">Email verification protects your account</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Instant Activation</h3>
+              <p class="auth-hero-feature-description">Start booking immediately after verification</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header text-center">
+            <div class="auth-verification-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h1 class="auth-title">Email Verification</h1>
+          </div>
+
+          <div id="statusContainer"></div>
+
+          <div class="auth-footer" style="margin-top: 1.5rem;">
+            <a href="/login.html" class="auth-footer-link">Go to sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function textForStatus(s){
       switch(s){
-        case 'ok': return 'Your email has been verified. You can close this window and log in.';
-        case 'invalid': return 'This verification link is invalid or expired.';
-        case 'error': return 'An error occurred verifying your email.';
-        default: return 'Unknown status.';
+        case 'ok': return { text: 'Your email has been verified. You can now sign in to your account.', type: 'success' };
+        case 'invalid': return { text: 'This verification link is invalid or has expired.', type: 'error' };
+        case 'error': return { text: 'An error occurred verifying your email. Please try again.', type: 'error' };
+        default: return { text: 'Unknown verification status.', type: 'error' };
       }
     }
     document.addEventListener('DOMContentLoaded', function(){
       const params = new URLSearchParams(location.search);
       const s = params.get('status') || 'invalid';
-      document.getElementById('status').textContent = textForStatus(s);
+      const result = textForStatus(s);
+      const container = document.getElementById('statusContainer');
+      container.innerHTML = `<div class="message message-${result.type}">${result.text}</div>`;
     });
   </script>
-  </head>
-<body>
-  <div class="card">
-    <h2>Email Verification</h2>
-    <p id="status">Checking…</p>
-  </div>
 </body>
 </html>
 

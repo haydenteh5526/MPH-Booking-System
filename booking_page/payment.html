@@ -167,6 +167,7 @@
     <!-- Scripts -->
     <script src="js/payment.js"></script>
     <script src="js/navigation.js"></script>
+    <script src="../partials/profile-dropdown.js"></script>
     <script>
         // Load header and footer
         fetch('../partials/header.html')
@@ -174,22 +175,9 @@
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
                 
-                // Setup profile dropdown
-                const profileBtn = document.getElementById('profileBtn');
-                const profileDropdown = document.getElementById('profileDropdown');
-                
-                if (profileBtn && profileDropdown) {
-                    profileBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const isVisible = profileDropdown.style.display === 'block';
-                        profileDropdown.style.display = isVisible ? 'none' : 'block';
-                    });
-                    
-                    document.addEventListener('click', (e) => {
-                        if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                            profileDropdown.style.display = 'none';
-                        }
-                    });
+                // Initialize profile dropdown after header is loaded
+                if (window.initProfileDropdown) {
+                    window.initProfileDropdown();
                 }
                 
                 // My Bookings button

@@ -267,67 +267,7 @@
     <!-- Scripts -->
     <script src="js/my-bookings.js"></script>
     <script src="js/navigation.js"></script>
-    <script>
-        // Setup profile dropdown - header and footer are now inline
-        setupProfileDropdown();
-        
-        // Profile dropdown handler (accessible)
-        function setupProfileDropdown() {
-            const profileBtn = document.getElementById('profileBtn');
-            const profileDropdown = document.getElementById('profileDropdown');
-            const myBookingsBtn = document.getElementById('myBookingsBtn');
-            const profileLinkBtn = document.getElementById('profileLinkBtn');
-            const logoutBtn = document.getElementById('logoutBtn');
-
-            if (!profileBtn || !profileDropdown) return;
-
-            function openDropdown() {
-                profileBtn.setAttribute('aria-expanded', 'true');
-                profileDropdown.setAttribute('aria-hidden', 'false');
-                profileDropdown.style.display = 'block';
-            }
-
-            function closeDropdown() {
-                profileBtn.setAttribute('aria-expanded', 'false');
-                profileDropdown.setAttribute('aria-hidden', 'true');
-                profileDropdown.style.display = 'none';
-            }
-
-            profileBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const expanded = profileBtn.getAttribute('aria-expanded') === 'true';
-                if (expanded) closeDropdown(); else openDropdown();
-            });
-
-            // Close when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!profileBtn.contains(e.target) && !profileDropdown.contains(e.target)) {
-                    closeDropdown();
-                }
-            });
-
-            // Close with Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') closeDropdown();
-            });
-
-            // Close dropdown when links are clicked
-            if (myBookingsBtn) myBookingsBtn.addEventListener('click', () => closeDropdown());
-            if (profileLinkBtn) profileLinkBtn.addEventListener('click', () => closeDropdown());
-            
-            // Handle logout button
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    closeDropdown();
-                    // Add your logout logic here (e.g., clear session, redirect to login)
-                    alert('Logout clicked - implement your logout logic here');
-                });
-            }
-
-            // Start closed
-            closeDropdown();
-        }
-    </script>
+    <script src="../partials/profile-dropdown.js"></script>
 </body>
 </html>
 

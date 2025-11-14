@@ -1,39 +1,6 @@
 // Profile Page JavaScript
 
-// Profile Dropdown functionality
-const profileBtn = document.getElementById('profileBtn')
-const profileDropdown = document.getElementById('profileDropdown')
-const logoutBtn = document.getElementById('logoutBtn')
-
-if (profileBtn && profileDropdown) {
-  profileBtn.addEventListener('click', (e) => {
-    e.stopPropagation()
-    const isExpanded = profileBtn.getAttribute('aria-expanded') === 'true'
-    profileBtn.setAttribute('aria-expanded', !isExpanded)
-    profileDropdown.setAttribute('aria-hidden', isExpanded)
-    profileDropdown.classList.toggle('show')
-  })
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!profileDropdown.contains(e.target) && !profileBtn.contains(e.target)) {
-      profileBtn.setAttribute('aria-expanded', 'false')
-      profileDropdown.setAttribute('aria-hidden', 'true')
-      profileDropdown.classList.remove('show')
-    }
-  })
-
-  // Logout functionality
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      if (confirm('Are you sure you want to logout?')) {
-        localStorage.clear()
-        sessionStorage.clear()
-        window.location.href = '../landing_page/index.html'
-      }
-    })
-  }
-}
+// Profile Dropdown is now handled by universal profile-dropdown.js script
 
 // Change Avatar Button
 const changeAvatarBtn = document.getElementById('changeAvatarBtn')

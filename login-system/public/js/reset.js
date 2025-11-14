@@ -18,7 +18,7 @@ function getToken() {
 
 function showError(message) {
   if (!msg) return;
-  msg.className = 'err';
+  msg.className = 'message message-error';
   msg.textContent = message;
 }
 
@@ -56,8 +56,8 @@ if (!form || !msg || !passwordInput || !submitBtn) {
         try { data = await res.json(); } catch {}
 
         if (res.ok) {
-          msg.className = 'ok';
-          msg.innerHTML = 'Password reset ✅<br/>Redirecting to <a href="/login.html">sign in</a>...';
+          msg.className = 'message message-success';
+          msg.innerHTML = 'Password reset successfully!<br/>Redirecting to <a href="/login.html" style="color: inherit; text-decoration: underline;">sign in</a>...';
           setTimeout(() => { window.location.href = '/login.html'; }, 2500);
         } else {
           showError((data && data.error) || `Error ${res.status}`);

@@ -21,11 +21,11 @@ form.addEventListener('submit', async (e) => {
     try { data = await res.json(); } catch {}
 
     if (res.ok) {
-      msg.className = 'ok';
-      msg.textContent = `Success (${Math.round(t1 - t0)} ms). Redirecting…`;
-      setTimeout(() => location.href = '/dashboard', 600);
+      msg.className = 'message message-success';
+      msg.textContent = `Success! Redirecting...`;
+      setTimeout(() => location.href = '/landing_page/index.html', 600);
     } else {
-      msg.className = 'err';
+      msg.className = 'message message-error';
       if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {
         // Redirect to resend verification, pre-filling the email
         const q = new URLSearchParams({ email }).toString();
@@ -36,7 +36,7 @@ form.addEventListener('submit', async (e) => {
     }
   } catch (err) {
     console.error('Fetch error:', err);
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Network error. Is the server running on http://localhost:3000 ?';
   }
 });

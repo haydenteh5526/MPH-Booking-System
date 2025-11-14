@@ -14,27 +14,27 @@ form.addEventListener('submit', async (e) => {
   const password = document.getElementById('password').value;
   const confirm = document.getElementById('confirm').value;
   if (!name) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Please enter your full name.';
     return;
   }
   if (!PHONE_PATTERN.test(phoneNumber)) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Enter a valid phone number (7-20 digits, + allowed).';
     return;
   }
   if (!STUDENT_ID_PATTERN.test(studentId)) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Student ID should be 5-20 letters/numbers.';
     return;
   }
   if (password !== confirm) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Passwords do not match.';
     return;
   }
   if (!PASSWORD_PATTERN.test(password)) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Password needs at least one uppercase letter, at least one number, and 8+ chars.';
     return;
   }
@@ -46,14 +46,14 @@ form.addEventListener('submit', async (e) => {
     });
     let data = {}; try { data = await res.json(); } catch {}
     if (res.ok) {
-      msg.className = 'ok';
+      msg.className = 'message message-success';
       msg.textContent = 'Check your email for a verification link.';
     } else {
-      msg.className = 'err';
+      msg.className = 'message message-error';
       msg.textContent = (data && data.error) || `Error ${res.status}`;
     }
   } catch (err) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Network error.';
   }
 });

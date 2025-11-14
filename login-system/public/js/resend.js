@@ -20,14 +20,14 @@ form.addEventListener('submit', async (e) => {
     });
     let data = {}; try { data = await res.json(); } catch {}
     if (res.ok) {
-      msg.className = 'ok';
+      msg.className = 'message message-success';
       msg.textContent = 'If the account exists and is not verified, a new link has been sent.';
     } else {
-      msg.className = 'err';
+      msg.className = 'message message-error';
       msg.textContent = (data && data.error) || `Error ${res.status}`;
     }
   } catch (err) {
-    msg.className = 'err';
+    msg.className = 'message message-error';
     msg.textContent = 'Network error.';
   }
 });
