@@ -108,6 +108,25 @@ class BookingCalendar {
     this.hideCalendar()
     this.setMinDate()
     this.setupClickOutside()
+    this.checkURLParams()
+  }
+
+  checkURLParams() {
+    const urlParams = new URLSearchParams(window.location.search)
+    const sport = urlParams.get('sport')
+    
+    if (sport) {
+      const sportEmojis = {
+        basketball: '🏀',
+        badminton: '🏸',
+        volleyball: '🏐'
+      }
+      
+      const emoji = sportEmojis[sport.toLowerCase()]
+      if (emoji) {
+        this.selectSport(sport.toLowerCase(), emoji)
+      }
+    }
   }
 
   setMinDate() {
