@@ -224,6 +224,63 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
+// GET /auth/profile - Get current user profile
+router.get("/profile", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    const user = await User.findById(req.session.userId).select("-passwordHash -emailVerifyTokenHash -emailVerifyExpires -passwordResetTokenHash -passwordResetExpires -failedAttempts -lockedUntil").lean();
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.status(200).json(user);
+  } catch (e) {
+    console.error("[profile]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// PUT /auth/profile - Update user profile
+router.put("/profile", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    
+    const { fullName, phoneNumber } = req.body || {};
+    
+    if (!fullName || !phoneNumber) {
+      return res.status(400).json({ error: "Full name and phone number are required" });
+    }
+    
+    const trimmedName = String(fullName).trim();
+    const trimmedPhone = String(phoneNumber).trim();
+    
+    if (trimmedName.length < 2) {
+      return res.status(400).json({ error: "Please provide your full name" });
+    }
+    
+    if (!PHONE_PATTERN.test(trimmedPhone)) {
+      return res.status(400).json({ error: "Phone number should be 7-20 digits and may include +, spaces, or dashes" });
+    }
+    
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    user.fullName = trimmedName;
+    user.phoneNumber = trimmedPhone;
+    await user.save();
+    
+    return res.status(200).json({ message: "Profile updated successfully" });
+  } catch (e) {
+    console.error("[profile update]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 // POST /auth/logout
 router.post("/logout", (req, res) => {
   req.session?.destroy(() => {

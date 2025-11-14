@@ -2,6 +2,71 @@
 
 // Profile Dropdown is now handled by universal profile-dropdown.js script
 
+// Load user profile data
+async function loadUserProfile() {
+  try {
+    const response = await fetch('/auth/profile', {
+      method: 'GET',
+      credentials: 'include'
+    });
+
+    console.log('Profile response status:', response.status);
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        // Not authenticated, redirect to login
+        window.location.href = '/login.html';
+        return;
+      }
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('Profile error:', errorData);
+      throw new Error(errorData.error || 'Failed to load profile');
+    }
+
+    const user = await response.json();
+    console.log('User data loaded:', user);
+    
+    // Update profile display
+    const profileDisplayName = document.getElementById('profileDisplayName');
+    const profileDisplayEmail = document.getElementById('profileDisplayEmail');
+    
+    if (profileDisplayName) profileDisplayName.textContent = user.fullName || 'User';
+    if (profileDisplayEmail) profileDisplayEmail.textContent = user.email || '';
+    
+    // Update form fields - split full name into first and last
+    const nameParts = (user.fullName || '').split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+    
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+    const studentIdInput = document.getElementById('studentId');
+    
+    if (firstNameInput) firstNameInput.value = firstName;
+    if (lastNameInput) lastNameInput.value = lastName;
+    if (emailInput) emailInput.value = user.email || '';
+    if (phoneInput) phoneInput.value = user.phoneNumber || '';
+    if (studentIdInput) studentIdInput.value = user.studentId || '';
+    
+    // Update member since date
+    const memberSinceDate = document.getElementById('memberSinceDate');
+    if (memberSinceDate && user.createdAt) {
+      const date = new Date(user.createdAt);
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      memberSinceDate.textContent = `${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+    }
+    
+  } catch (error) {
+    console.error('Error loading profile:', error);
+    showNotification('Failed to load profile data', 'error');
+  }
+}
+
+// Load profile data when page loads
+document.addEventListener('DOMContentLoaded', loadUserProfile);
+
 // Change Avatar Button
 const changeAvatarBtn = document.getElementById('changeAvatarBtn')
 if (changeAvatarBtn) {
@@ -68,17 +133,13 @@ if (editPersonalInfoBtn) {
     originalPersonalInfo = {
       firstName: firstNameInput.value,
       lastName: lastNameInput.value,
-      email: emailInput.value,
-      phone: phoneInput.value,
-      studentId: studentIdInput.value
+      phone: phoneInput.value
     }
 
-    // Enable inputs
+    // Enable only name and phone inputs (email and student ID are not editable)
     firstNameInput.disabled = false
     lastNameInput.disabled = false
-    emailInput.disabled = false
     phoneInput.disabled = false
-    studentIdInput.disabled = false
 
     // Show action buttons
     personalInfoActions.classList.remove('hidden')
@@ -92,16 +153,12 @@ if (cancelPersonalInfoBtn) {
     // Restore original values
     firstNameInput.value = originalPersonalInfo.firstName
     lastNameInput.value = originalPersonalInfo.lastName
-    emailInput.value = originalPersonalInfo.email
     phoneInput.value = originalPersonalInfo.phone
-    studentIdInput.value = originalPersonalInfo.studentId
 
     // Disable inputs
     firstNameInput.disabled = true
     lastNameInput.disabled = true
-    emailInput.disabled = true
     phoneInput.disabled = true
-    studentIdInput.disabled = true
 
     // Hide action buttons
     personalInfoActions.classList.add('hidden')
@@ -111,47 +168,61 @@ if (cancelPersonalInfoBtn) {
 
 // Save personal information
 if (personalInfoForm) {
-  personalInfoForm.addEventListener('submit', (e) => {
+  personalInfoForm.addEventListener('submit', async (e) => {
     e.preventDefault()
 
     // Validate inputs
     if (!firstNameInput.value.trim() || !lastNameInput.value.trim()) {
-      alert('First name and last name are required.')
+      showNotification('First name and last name are required', 'error')
       return
     }
 
-    if (!emailInput.value.trim() || !isValidEmail(emailInput.value)) {
-      alert('Please enter a valid email address.')
+    if (!phoneInput.value.trim()) {
+      showNotification('Phone number is required', 'error')
       return
     }
 
-    // Save to localStorage (in a real app, this would be an API call)
-    const userProfile = {
-      firstName: firstNameInput.value.trim(),
-      lastName: lastNameInput.value.trim(),
-      email: emailInput.value.trim(),
-      phone: phoneInput.value.trim(),
-      studentId: studentIdInput.value.trim()
+    // Combine first and last name
+    const fullName = `${firstNameInput.value.trim()} ${lastNameInput.value.trim()}`
+    
+    try {
+      const response = await fetch('/auth/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          fullName: fullName,
+          phoneNumber: phoneInput.value.trim()
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update profile')
+      }
+
+      // Update display name
+      const profileDisplayName = document.getElementById('profileDisplayName')
+      if (profileDisplayName) profileDisplayName.textContent = fullName
+
+      // Disable inputs
+      firstNameInput.disabled = true
+      lastNameInput.disabled = true
+      emailInput.disabled = true
+      phoneInput.disabled = true
+      studentIdInput.disabled = true
+
+      // Hide action buttons
+      personalInfoActions.classList.add('hidden')
+      editPersonalInfoBtn.style.display = 'inline-flex'
+
+      // Show success message
+      showNotification('Profile updated successfully!', 'success')
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      showNotification(error.message || 'Failed to update profile', 'error')
     }
-
-    localStorage.setItem('userProfile', JSON.stringify(userProfile))
-
-    // Update display name
-    updateDisplayName()
-
-    // Disable inputs
-    firstNameInput.disabled = true
-    lastNameInput.disabled = true
-    emailInput.disabled = true
-    phoneInput.disabled = true
-    studentIdInput.disabled = true
-
-    // Hide action buttons
-    personalInfoActions.classList.add('hidden')
-    editPersonalInfoBtn.style.display = 'inline-flex'
-
-    // Show success message
-    showNotification('Profile updated successfully!', 'success')
   })
 }
 
