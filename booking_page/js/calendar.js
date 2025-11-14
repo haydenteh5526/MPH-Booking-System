@@ -23,8 +23,8 @@ class BookingCalendar {
         { id: "badminton-4", name: "Court 4", price: 5 },
       ],
       volleyball: [
-        { id: "volleyball-half-1", name: "Half Court 1 (Courts 1-2)", price: 10 },
-        { id: "volleyball-half-2", name: "Half Court 2 (Courts 3-4)", price: 10 },
+        { id: "volleyball-half-1", name: "Court 1 (Courts 1-2)", price: 10 },
+        { id: "volleyball-half-2", name: "Court 2 (Courts 3-4)", price: 10 },
       ],
     }
 
