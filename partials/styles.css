@@ -119,6 +119,7 @@ body {
     font-weight: 700;
     color: var(--brand-gold);
     letter-spacing: -0.03em;
+    text-decoration: none;
 }
 
 .header-center {
