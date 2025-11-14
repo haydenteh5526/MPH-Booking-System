@@ -990,4 +990,22 @@ class BookingCalendar {
 let bookingCalendar
 document.addEventListener("DOMContentLoaded", () => {
   bookingCalendar = new BookingCalendar()
+  
+  // Check for sport parameter in URL and auto-select it
+  const urlParams = new URLSearchParams(window.location.search)
+  const sportParam = urlParams.get('sport')
+  
+  if (sportParam) {
+    const sportMap = {
+      'basketball': { sport: 'basketball', emoji: '🏀' },
+      'badminton': { sport: 'badminton', emoji: '🏸' },
+      'volleyball': { sport: 'volleyball', emoji: '🏐' }
+    }
+    
+    const selectedSport = sportMap[sportParam.toLowerCase()]
+    if (selectedSport) {
+      // Auto-select the sport
+      bookingCalendar.selectSport(selectedSport.sport, selectedSport.emoji)
+    }
+  }
 })

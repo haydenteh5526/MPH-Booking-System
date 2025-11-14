@@ -91,6 +91,124 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== Fade-in Float Animations ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Apply animations to common elements */
+.main-header {
+    animation: fadeInDown 0.3s ease-out;
+}
+
+section {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.profile-card,
+.quick-actions-card,
+.booking-card,
+.court-card,
+.feature-card,
+.pricing-card,
+.step-card,
+.testimonial-card {
+    animation: fadeInUp 0.4s ease-out;
+    animation-fill-mode: both;
+}
+
+/* Stagger animation for multiple cards */
+.profile-card:nth-child(1),
+.booking-card:nth-child(1),
+.court-card:nth-child(1) {
+    animation-delay: 0.05s;
+}
+
+.profile-card:nth-child(2),
+.booking-card:nth-child(2),
+.court-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.profile-card:nth-child(3),
+.booking-card:nth-child(3),
+.court-card:nth-child(3) {
+    animation-delay: 0.15s;
+}
+
+.profile-card:nth-child(4),
+.booking-card:nth-child(4),
+.court-card:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+/* Page header animations */
+.page-header,
+.hero-content {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.page-title,
+.hero-title {
+    animation: fadeInUp 0.4s ease-out 0.05s;
+    animation-fill-mode: both;
+}
+
+.page-subtitle,
+.page-description,
+.hero-description {
+    animation: fadeInUp 0.4s ease-out 0.1s;
+    animation-fill-mode: both;
+}
+
+.booking-badge,
+.hero-badge {
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Footer animation */
+.main-footer {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
 /* Header Styles */
 .main-header {
     background-color: var(--bg-secondary);
@@ -197,9 +315,19 @@ body {
     min-width: 200px;
     z-index: 1000;
     overflow: hidden;
-    display: flex;
+    display: none;
     flex-direction: column;
     padding: 0.25rem 0;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.profile-dropdown[aria-hidden="false"],
+.profile-dropdown.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .profile-dropdown-item {
@@ -368,6 +496,16 @@ body {
     font-size: 0.875rem;
     line-height: 1.5;
     display: block;
+}
+
+.contact-item a {
+    color: rgba(255, 255, 255, 0.7) !important;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.contact-item a:hover {
+    color: #A39461 !important;
 }
 
 .contact-icon {
