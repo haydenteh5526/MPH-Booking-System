@@ -2,6 +2,7 @@
 class PaymentHandler {
   constructor() {
     this.bookingData = null
+    this.formSubmitted = false
     this.init()
   }
 
@@ -41,6 +42,28 @@ class PaymentHandler {
     const cardNumberInput = document.getElementById('cardNumber')
     const expiryInput = document.getElementById('expiryDate')
     const cvvInput = document.getElementById('cvv')
+    const cancelBtn = document.getElementById('cancelBtn')
+
+    // Prevent navigation away from page
+    window.addEventListener('beforeunload', (e) => {
+      if (!this.formSubmitted) {
+        e.preventDefault()
+        e.returnValue = ''
+        return ''
+      }
+    })
+
+    // Handle cancel button
+    if (cancelBtn) {
+      cancelBtn.addEventListener('click', () => {
+        const confirmed = confirm('Are you sure you want to cancel this payment? Your booking will not be confirmed.')
+        if (confirmed) {
+          this.formSubmitted = true
+          localStorage.removeItem('pendingBooking')
+          window.location.href = 'booking.html'
+        }
+      })
+    }
 
     // Format card number with spaces
     cardNumberInput.addEventListener('input', (e) => {
@@ -74,26 +97,83 @@ class PaymentHandler {
     const payBtn = document.getElementById('payBtn')
     const btnText = payBtn.querySelector('span')
     const originalText = btnText.innerHTML
+    const email = document.getElementById('email').value
 
     // Show loading state
     payBtn.disabled = true
     btnText.textContent = 'Processing...'
 
-    // Simulate payment processing
-    setTimeout(() => {
-      // Update booking status
-      this.bookingData.status = 'confirmed'
-      this.bookingData.paymentDate = new Date().toISOString()
-      this.bookingData.email = document.getElementById('email').value
+    // Simulate payment processing and send receipt
+    setTimeout(async () => {
+      try {
+        // Send booking confirmation and receipt email
+        const response = await fetch('/bookings/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            email: email,
+            sport: this.bookingData.sport,
+            courtName: this.bookingData.courtName,
+            dateFormatted: this.bookingData.dateFormatted,
+            timeFormatted: this.bookingData.timeFormatted,
+            duration: this.bookingData.duration,
+            totalPrice: this.bookingData.totalPrice
+          })
+        })
 
-      // Save to user's bookings
-      this.saveBooking()
+        const data = await response.json()
 
-      // Clear pending booking
-      localStorage.removeItem('pendingBooking')
+        if (!response.ok) {
+          console.error('Receipt error:', data)
+          throw new Error(data.error || 'Failed to send receipt')
+        }
 
-      // Redirect to success page
-      window.location.href = 'my-bookings.html?success=true'
+        console.log('Receipt sent successfully:', data)
+
+        // Update booking status
+        this.bookingData.status = 'confirmed'
+        this.bookingData.paymentDate = data.paymentDate
+        this.bookingData.email = email
+        this.bookingData.confirmationNumber = data.confirmationNumber
+
+        // Save to user's bookings (only save once here)
+        this.saveBooking()
+
+        // Clear pending booking
+        localStorage.removeItem('pendingBooking')
+
+        // Mark as submitted to prevent navigation warning
+        this.formSubmitted = true
+
+        // Redirect to My Bookings page with success flag
+        window.location.href = 'my-bookings.html?success=true'
+      } catch (error) {
+        console.error('Payment error:', error)
+        
+        // Show error but still complete the booking
+        alert('Booking confirmed! However, the receipt email may not have been sent. Please check your email or contact support if needed.')
+        
+        // Update booking status
+        this.bookingData.status = 'confirmed'
+        this.bookingData.paymentDate = new Date().toLocaleString('en-US', { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+        this.bookingData.email = email
+        this.bookingData.confirmationNumber = `MPH${Date.now().toString(36).toUpperCase()}`
+        
+        // Save booking
+        this.saveBooking()
+        localStorage.removeItem('pendingBooking')
+        this.formSubmitted = true
+        
+        // Redirect to My Bookings page
+        window.location.href = 'my-bookings.html?success=true'
+      }
     }, 2000)
   }
 

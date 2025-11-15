@@ -2508,6 +2508,9 @@
     border: 2px solid var(--border-primary);
     border-radius: calc(var(--radius) + 4px);
     padding: 2.5rem;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .payment-form-title {
@@ -2515,6 +2518,12 @@
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 2rem;
+}
+
+.payment-form-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .form-group {
@@ -2577,8 +2586,15 @@
     margin-top: 0.5rem;
 }
 
+.payment-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: 2rem;
+}
+
 .btn-pay {
-    width: 100%;
+    flex: 1;
     padding: 1rem 2rem;
     background: linear-gradient(135deg, var(--brand-gold), hsl(42, 45%, 56%));
     color: white;
@@ -2592,8 +2608,29 @@
     align-items: center;
     justify-content: center;
     gap: 0.75rem;
-    margin-top: 2rem;
     box-shadow: 0 4px 6px -1px rgba(163, 148, 97, 0.3);
+}
+
+.btn-cancel {
+    padding: 1rem 2rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.btn-cancel:hover {
+    border-color: hsl(0, 84%, 60%);
+    color: hsl(0, 84%, 60%);
+    background: hsla(0, 84%, 60%, 0.05);
 }
 
 .btn-pay:hover:not(:disabled) {

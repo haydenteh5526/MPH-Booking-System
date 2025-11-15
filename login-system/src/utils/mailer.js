@@ -101,3 +101,23 @@ export async function sendPasswordResetEmail(to, link) {
     text: `You requested a password reset. Click the link below to set a new password:\n${link}\n\nIf you did not request this, you can ignore this email.`
   });
 }
+
+export async function sendBookingReceipt(to, bookingDetails) {
+  const { sport, courtName, dateFormatted, timeFormatted, duration, totalPrice, paymentDate, confirmationNumber } = bookingDetails;
+  
+  return sendEmail({
+    to,
+    subject: "Booking Confirmation - MPH Booking System",
+    text: `Thank you for your booking!\n\nBOOKING CONFIRMATION\n${"=".repeat(50)}\n\nConfirmation Number: ${confirmationNumber}\n\nBooking Details:\n- Sport: ${sport}\n- Court: ${courtName}\n- Date: ${dateFormatted}\n- Time: ${timeFormatted}\n- Duration: ${duration} ${duration > 1 ? 'hours' : 'hour'}\n\nPayment Details:\n- Amount Paid: €${totalPrice}\n- Payment Date: ${paymentDate}\n- Payment Status: Confirmed\n\nIMPORTANT INFORMATION:\n- Please arrive 10 minutes before your booking time\n- Bring your student ID for verification\n- Cancellations must be made at least 24 hours in advance\n\nView your booking: ${process.env.APP_BASE_URL}/booking_page/my-bookings.html\n\nThank you for choosing MPH Booking System!\n\nIf you have any questions, please contact us at ${process.env.MAIL_FROM}`
+  });
+}
+
+export async function sendCancellationEmail(to, bookingDetails) {
+  const { sport, courtName, dateFormatted, timeFormatted, duration, totalPrice, confirmationNumber } = bookingDetails;
+  
+  return sendEmail({
+    to,
+    subject: "Booking Cancellation Confirmed - MPH Booking System",
+    text: `Your booking has been cancelled.\n\nCANCELLATION CONFIRMATION\n${"=".repeat(50)}\n\nConfirmation Number: ${confirmationNumber}\n\nCancelled Booking Details:\n- Sport: ${sport}\n- Court: ${courtName}\n- Date: ${dateFormatted}\n- Time: ${timeFormatted}\n- Duration: ${duration} ${duration > 1 ? 'hours' : 'hour'}\n- Amount Refunded: €${totalPrice}\n\nYour refund will be processed within 5-7 business days and credited to your original payment method.\n\nWe're sorry to see this booking cancelled. We hope to see you back soon!\n\nMake a new booking: ${process.env.APP_BASE_URL}/booking_page/booking.html\n\nIf you have any questions about your cancellation or refund, please contact us at ${process.env.MAIL_FROM}\n\nThank you for using MPH Booking System!`
+  });
+}

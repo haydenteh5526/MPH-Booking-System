@@ -7,6 +7,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.js";
+import bookingRoutes from "./src/routes/bookings.js";
 import { requireAuth } from "./src/middleware/requireAuth.js";
 
 const app = express();
@@ -16,7 +17,16 @@ const __dirname = path.dirname(__filename);
 await connectDB(process.env.MONGO_URI);
 
 // security + parsers
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
+    },
+  },
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,6 +50,9 @@ app.use(express.static(path.join(__dirname, "..")));
 
 // auth routes
 app.use("/auth", authRoutes);
+
+// booking routes
+app.use("/bookings", bookingRoutes);
 
 // tiny protected route to verify success
 app.get("/dashboard", requireAuth, (req, res) => {

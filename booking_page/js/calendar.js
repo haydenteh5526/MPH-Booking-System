@@ -850,6 +850,9 @@ class BookingCalendar {
     })
 
     const today = new Date()
+    const currentHour = today.getHours()
+    const currentDateString = today.toISOString().split("T")[0]
+    
     for (let dayOffset = 0; dayOffset < 60; dayOffset++) {
       const date = new Date(today)
       date.setDate(today.getDate() + dayOffset)
@@ -861,8 +864,11 @@ class BookingCalendar {
         data[dateString][hour.value] = {}
 
           allCourts.forEach((courtId) => {
-            // Set all slots to available (green) by default
-            let status = "available"
+            // Check if this time slot is in the past
+            const isPastTime = dateString === currentDateString && hour.value <= currentHour
+            
+            // Set slot status: blocked if in the past, otherwise available
+            let status = isPastTime ? "blocked" : "available"
 
           let price = 0
           Object.values(this.sportCourts).forEach((courts) => {

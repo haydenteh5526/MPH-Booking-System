@@ -25,10 +25,17 @@ class BookingsManager {
     if (banner) {
       banner.style.display = 'flex'
       
-      // Auto hide after 5 seconds
+      // Scroll to top to ensure banner is visible
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+      
+      // Auto hide after 8 seconds
       setTimeout(() => {
-        banner.style.display = 'none'
-      }, 5000)
+        banner.style.animation = 'slideUpOut 0.4s ease'
+        setTimeout(() => {
+          banner.style.display = 'none'
+          banner.style.animation = ''
+        }, 400)
+      }, 8000)
     }
   }
 
@@ -211,10 +218,39 @@ class BookingsManager {
     this.pendingCancelBooking = null
   }
 
-  confirmCancellation() {
+  async confirmCancellation() {
     if (!this.pendingCancelBooking) return
 
-    const cancelledBookingId = this.pendingCancelBooking.id
+    const booking = this.pendingCancelBooking
+    const cancelledBookingId = booking.id
+
+    try {
+      // Send cancellation email
+      const response = await fetch('/bookings/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          email: booking.email,
+          sport: booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1),
+          courtName: booking.courtName,
+          dateFormatted: booking.dateFormatted,
+          timeFormatted: booking.timeFormatted,
+          duration: booking.duration,
+          totalPrice: booking.totalPrice,
+          confirmationNumber: booking.confirmationNumber
+        })
+      })
+
+      if (response.ok) {
+        console.log('Cancellation email sent successfully')
+      } else {
+        console.warn('Failed to send cancellation email, but proceeding with cancellation')
+      }
+    } catch (error) {
+      console.error('Error sending cancellation email:', error)
+      // Continue with cancellation even if email fails
+    }
 
     // Remove booking from array
     this.bookings = this.bookings.filter(b => b.id !== cancelledBookingId)
