@@ -7,11 +7,12 @@ const PASSWORD_PATTERN = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 const PASSWORD_REQUIREMENTS = 'Password must include at least one uppercase letter, at least one number, and be 8+ characters long.';
 
 function getToken() {
-  const search = window.location.search || '';
+  const search = globalThis.location?.search || '';
   try {
     return new URLSearchParams(search).get('token') || '';
-  } catch {
-    const match = search.match(/[?&]token=([^&]+)/);
+  } catch (err) {
+    console.error('[reset] Failed to read URLSearchParams', err);
+    const match = /[?&]token=([^&]+)/.exec(search);
     return match ? decodeURIComponent(match[1]) : '';
   }
 }
@@ -53,14 +54,18 @@ if (!form || !msg || !passwordInput || !submitBtn) {
           body: JSON.stringify({ token, newPassword })
         });
         let data = {};
-        try { data = await res.json(); } catch {}
+        try {
+          data = await res.json();
+        } catch (err) {
+          console.error('[reset] parse error', err);
+        }
 
         if (res.ok) {
           msg.className = 'ok';
           msg.innerHTML = 'Password reset ✅<br/>Redirecting to <a href="/login.html">sign in</a>...';
-          setTimeout(() => { window.location.href = '/login.html'; }, 2500);
+          setTimeout(() => { globalThis.location.href = '/login.html'; }, 2500);
         } else {
-          showError((data && data.error) || `Error ${res.status}`);
+          showError(data?.error ?? `Error ${res.status}`);
           submitBtn.disabled = false;
           submitBtn.textContent = originalText;
         }

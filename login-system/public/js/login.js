@@ -3,7 +3,8 @@ const msg  = document.getElementById('msg');
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
-  msg.textContent = ''; msg.className = '';
+  msg.textContent = '';
+  msg.className = '';
 
   try {
     const email = document.getElementById('email').value.trim();
@@ -18,20 +19,23 @@ form.addEventListener('submit', async (e) => {
     const t1 = performance.now();
 
     let data = {};
-    try { data = await res.json(); } catch {}
+    try {
+      data = await res.json();
+    } catch (err) {
+      console.error('login: parse error', err);
+    }
 
     if (res.ok) {
       msg.className = 'ok';
       msg.textContent = `Success (${Math.round(t1 - t0)} ms). Redirecting…`;
-      setTimeout(() => location.href = '/dashboard', 600);
+      setTimeout(() => { globalThis.location.href = '/dashboard'; }, 600);
     } else {
       msg.className = 'err';
-      if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {
-        // Redirect to resend verification, pre-filling the email
+      if (typeof data?.error === 'string' && data.error.toLowerCase().includes('not verified')) {
         const q = new URLSearchParams({ email }).toString();
-        window.location.href = `/resend.html?${q}`;
+        globalThis.location.href = `/resend.html?${q}`;
       } else {
-        msg.textContent = (data && data.error) || `Error ${res.status}`;
+        msg.textContent = data?.error ?? `Error ${res.status}`;
       }
     }
   } catch (err) {

@@ -9,7 +9,7 @@ function readEnv() {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   const portRaw = process.env.SMTP_PORT;
-  const port = parseInt(portRaw || "0", 10) || undefined;
+  const port = Number.parseInt(portRaw || "0", 10) || undefined;
   const secureEnv = String(process.env.SMTP_SECURE || "").toLowerCase();
   const smtpSecure = secureEnv === "true" || secureEnv === "1" || (port === 465);
   const RESEND_API_KEY = process.env.RESEND_API_KEY;
@@ -78,26 +78,52 @@ async function sendEmail({ to, subject, text }) {
   return await tx.sendMail({ to, from, subject, text });
 }
 
+async function deliverEmail(payload, { fallback } = {}) {
+  try {
+    return await sendEmail(payload);
+  } catch (err) {
+    console.error("[mail] Failed to send email:", err.message);
+    if (typeof fallback === "function") {
+      try { fallback(); } catch (fallbackErr) {
+        console.error("[mail] Fallback logger failed:", fallbackErr.message);
+      }
+    }
+    return null;
+  }
+}
+
 export async function sendVerificationEmail(to, link) {
-  return sendEmail({
+  return deliverEmail({
     to,
     subject: "Verify your email",
     text: `Welcome to MPH Booking!\n\nPlease verify your email by visiting:\n${link}\n\nIf you did not create an account, you can ignore this email.`
+  }, {
+    fallback: () => {
+      console.log(`[mail:fallback][verify] ${to} -> ${link}`);
+    }
   });
 }
 
 export async function sendLoginOtpEmail(to, code) {
-  return sendEmail({
+  return deliverEmail({
     to,
     subject: "Your login verification code",
     text: `Your MPH Booking verification code is: ${code}\n\nThis code expires in 10 minutes.`
+  }, {
+    fallback: () => {
+      console.log(`[mail:fallback][otp] ${to} -> code ${code}`);
+    }
   });
 }
 
 export async function sendPasswordResetEmail(to, link) {
-  return sendEmail({
+  return deliverEmail({
     to,
     subject: "Reset your password",
     text: `You requested a password reset. Click the link below to set a new password:\n${link}\n\nIf you did not request this, you can ignore this email.`
+  }, {
+    fallback: () => {
+      console.log(`[mail:fallback][reset] ${to} -> ${link}`);
+    }
   });
 }

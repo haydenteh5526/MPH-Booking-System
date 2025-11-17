@@ -44,17 +44,22 @@ form.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, phoneNumber, studentId, password })
     });
-    let data = {}; try { data = await res.json(); } catch {}
+    let data = {};
+    try {
+      data = await res.json();
+    } catch (err) {
+      console.error('register: parse error', err);
+    }
     if (res.ok) {
       msg.className = 'ok';
       msg.textContent = 'Check your email for a verification link.';
     } else {
       msg.className = 'err';
-      msg.textContent = (data && data.error) || `Error ${res.status}`;
+      msg.textContent = data?.error ?? `Error ${res.status}`;
     }
   } catch (err) {
+    console.error('register: network error', err);
     msg.className = 'err';
     msg.textContent = 'Network error.';
   }
 });
-

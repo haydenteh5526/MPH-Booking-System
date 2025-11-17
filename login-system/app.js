@@ -3,8 +3,8 @@ import express from "express";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import helmet from "helmet";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { connectDB } from "./src/config/db.js";
 import authRoutes from "./src/routes/auth.js";
 import { requireAuth } from "./src/middleware/requireAuth.js";
@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // session (implements 30-min inactivity by cookie maxAge + rolling)
-const idleMs = (parseInt(process.env.SESSION_IDLE_MINUTES || "30", 10)) * 60 * 1000;
+const idleMs = Number.parseInt(process.env.SESSION_IDLE_MINUTES || "30", 10) * 60 * 1000;
 app.use(session({
   name: "sid",
   secret: process.env.SESSION_SECRET,
