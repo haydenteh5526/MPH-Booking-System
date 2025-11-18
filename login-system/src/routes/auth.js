@@ -289,4 +289,26 @@ router.post("/logout", (req, res) => {
   });
 });
 
+// GET /auth/check-admin
+router.get("/check-admin", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    return res.status(200).json({ 
+      isAdmin: user.isAdmin || false,
+      email: user.email
+    });
+  } catch (e) {
+    console.error("[check-admin]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
 export default router;

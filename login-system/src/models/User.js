@@ -16,7 +16,9 @@ const userSchema = new mongoose.Schema({
 
   failedAttempts: { type: Number, default: 0 },
   lockedUntil: { type: Date, default: null },
-  lastLoginAt: { type: Date, default: null }
+  lastLoginAt: { type: Date, default: null },
+  
+  isAdmin: { type: Boolean, default: false }
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

@@ -12,3 +12,11 @@ function setActiveNav(currentPage) {
         });
     }, 100);
 }
+
+// Auto-detect current page and set active nav
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPage = window.location.pathname.split('/').pop();
+    if (currentPage) {
+        setActiveNav(currentPage);
+    }
+});

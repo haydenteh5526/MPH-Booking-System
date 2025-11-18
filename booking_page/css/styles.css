@@ -2833,6 +2833,16 @@
     color: hsl(42, 45%, 35%);
 }
 
+.status-cancelled {
+    background-color: hsl(0, 70%, 96%);
+    color: hsl(0, 70%, 40%);
+}
+
+.booking-card.cancelled {
+    opacity: 0.7;
+    border: 2px solid hsl(0, 70%, 90%);
+}
+
 .booking-card-body {
     display: flex;
     flex-direction: column;
@@ -2905,6 +2915,25 @@
     background-color: hsl(0, 84%, 98%);
     border-color: var(--slot-booked);
     color: var(--slot-booked);
+}
+
+.btn-remove-booking {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    background-color: hsl(0, 70%, 96%);
+    color: hsl(0, 70%, 40%);
+    border: 2px solid hsl(0, 70%, 85%);
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-remove-booking:hover {
+    background-color: hsl(0, 70%, 50%);
+    border-color: hsl(0, 70%, 45%);
+    color: white;
 }
 
 /* Cancel Booking Modal */

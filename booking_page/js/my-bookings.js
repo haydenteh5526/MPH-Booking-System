@@ -15,9 +15,10 @@ class BookingsManager {
       window.history.replaceState({}, document.title, window.location.pathname)
     }
 
-    // Load bookings
-    this.loadBookings()
-    this.displayBookings()
+    // Load bookings (now async)
+    this.loadBookings().then(() => {
+      this.displayBookings()
+    })
   }
 
   showSuccessBanner() {
@@ -39,9 +40,31 @@ class BookingsManager {
     }
   }
 
-  loadBookings() {
-    const bookingsData = localStorage.getItem('userBookings')
-    this.bookings = bookingsData ? JSON.parse(bookingsData) : []
+  async loadBookings() {
+    try {
+      // Fetch bookings from server
+      const response = await fetch('/bookings/my-bookings', {
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to load bookings');
+      }
+      
+      const data = await response.json();
+      // Filter out cancelled bookings - only show active bookings
+      this.bookings = (data.bookings || []).filter(booking => !booking.cancelled);
+      
+      // Also sync with localStorage for offline access
+      localStorage.setItem('userBookings', JSON.stringify(this.bookings));
+    } catch (error) {
+      console.error('Error loading bookings:', error);
+      // Fallback to localStorage if server fetch fails
+      const bookingsData = localStorage.getItem('userBookings');
+      this.bookings = bookingsData ? JSON.parse(bookingsData) : [];
+      // Filter out cancelled bookings from localStorage too
+      this.bookings = this.bookings.filter(booking => !booking.cancelled);
+    }
   }
 
   displayBookings() {
@@ -103,15 +126,53 @@ class BookingsManager {
   }
 
   createBookingCard(booking) {
-    const statusClass = booking.status === 'confirmed' ? 'status-confirmed' : 'status-pending'
-    const statusText = booking.status === 'confirmed' ? 'Confirmed' : 'Pending'
+    // Determine status based on cancelled field
+    let statusClass, statusText
+    if (booking.cancelled) {
+      statusClass = 'status-cancelled'
+      statusText = 'Cancelled'
+    } else {
+      statusClass = 'status-confirmed'
+      statusText = 'Confirmed'
+    }
+    
+    // Format sport name
+    const sportName = booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1)
+    
+    // Format time display
+    let timeDisplay = booking.timeFormatted || booking.time
+    if (typeof booking.time === 'string' || typeof booking.time === 'number') {
+      const hour = parseInt(booking.time)
+      if (!isNaN(hour)) {
+        const startTime = `${hour.toString().padStart(2, '0')}:00`
+        const endTime = `${(hour + 2).toString().padStart(2, '0')}:00`
+        timeDisplay = `${startTime} - ${endTime}`
+      }
+    }
+    
+    // Format date
+    const bookingDate = new Date(booking.date)
+    const dateFormatted = booking.dateFormatted || bookingDate.toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+    
+    // Get sport emoji
+    const sportEmojis = {
+      basketball: '🏀',
+      badminton: '🏸',
+      volleyball: '🏐'
+    }
+    const sportEmoji = booking.sportEmoji || sportEmojis[booking.sport.toLowerCase()] || '🏟️'
 
     return `
-      <div class="booking-card" data-booking-id="${booking.id}">
+      <div class="booking-card ${booking.cancelled ? 'cancelled' : ''}" data-booking-id="${booking._id || booking.id}">
         <div class="booking-card-header">
           <div class="booking-sport">
-            <span class="booking-sport-icon">${booking.sportEmoji}</span>
-            <span class="booking-sport-name">${booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1)}</span>
+            <span class="booking-sport-icon">${sportEmoji}</span>
+            <span class="booking-sport-name">${sportName}</span>
           </div>
           <span class="booking-status ${statusClass}">${statusText}</span>
         </div>
@@ -121,7 +182,7 @@ class BookingsManager {
             <span class="booking-info-icon">🏟️</span>
             <div class="booking-info-content">
               <span class="booking-info-label">Court</span>
-              <span class="booking-info-value">${booking.courtName}</span>
+              <span class="booking-info-value">${booking.court || booking.courtName}</span>
             </div>
           </div>
           
@@ -129,7 +190,7 @@ class BookingsManager {
             <span class="booking-info-icon">📅</span>
             <div class="booking-info-content">
               <span class="booking-info-label">Date</span>
-              <span class="booking-info-value">${booking.dateFormatted}</span>
+              <span class="booking-info-value">${dateFormatted}</span>
             </div>
           </div>
           
@@ -137,7 +198,7 @@ class BookingsManager {
             <span class="booking-info-icon">⏰</span>
             <div class="booking-info-content">
               <span class="booking-info-label">Time</span>
-              <span class="booking-info-value">${booking.timeFormatted}</span>
+              <span class="booking-info-value">${timeDisplay}</span>
             </div>
           </div>
           
@@ -159,9 +220,15 @@ class BookingsManager {
         </div>
         
         <div class="booking-card-footer">
-          <button class="btn-cancel-booking" data-booking-id="${booking.id}">
-            Cancel Booking
-          </button>
+          ${booking.cancelled ? `
+            <button class="btn-remove-booking" data-booking-id="${booking._id || booking.id}">
+              Remove Booking
+            </button>
+          ` : `
+            <button class="btn-cancel-booking" data-booking-id="${booking._id || booking.id}">
+              Cancel Booking
+            </button>
+          `}
         </div>
       </div>
     `
@@ -175,17 +242,52 @@ class BookingsManager {
         this.cancelBooking(bookingId)
       })
     })
+    
+    const removeButtons = document.querySelectorAll('.btn-remove-booking')
+    removeButtons.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const bookingId = e.target.dataset.bookingId
+        this.removeBooking(bookingId)
+      })
+    })
   }
 
   cancelBooking(bookingId) {
-    const booking = this.bookings.find(b => b.id === bookingId)
+    const booking = this.bookings.find(b => (b._id || b.id) === bookingId)
     if (!booking) return
+    
+    if (booking.cancelled) {
+      alert('This booking has already been cancelled');
+      return;
+    }
 
     // Store pending cancellation
     this.pendingCancelBooking = booking
 
     // Show cancel modal
     this.showCancelModal(booking)
+  }
+  
+  removeBooking(bookingId) {
+    if (!confirm('Remove this cancelled booking from your list?')) return;
+    
+    // Remove booking from array
+    this.bookings = this.bookings.filter(b => (b._id || b.id) !== bookingId)
+    
+    // Update localStorage
+    localStorage.setItem('userBookings', JSON.stringify(this.bookings))
+    
+    // Remove the booking card from DOM with fade-out animation
+    const bookingCard = document.querySelector(`[data-booking-id="${bookingId}"]`)
+    if (bookingCard) {
+      bookingCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
+      bookingCard.style.opacity = '0'
+      bookingCard.style.transform = 'translateY(-10px)'
+      setTimeout(() => {
+        bookingCard.remove()
+        this.displayBookings()
+      }, 300)
+    }
   }
 
   showCancelModal(booking) {
@@ -222,63 +324,42 @@ class BookingsManager {
     if (!this.pendingCancelBooking) return
 
     const booking = this.pendingCancelBooking
-    const cancelledBookingId = booking.id
+    const bookingId = booking._id || booking.id
 
     try {
-      // Send cancellation email
-      const response = await fetch('/bookings/cancel', {
+      // Cancel booking in database
+      const response = await fetch('/bookings/user-cancel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          email: booking.email,
-          sport: booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1),
-          courtName: booking.courtName,
-          dateFormatted: booking.dateFormatted,
-          timeFormatted: booking.timeFormatted,
-          duration: booking.duration,
-          totalPrice: booking.totalPrice,
-          confirmationNumber: booking.confirmationNumber
+          bookingId: bookingId
         })
       })
 
-      if (response.ok) {
-        console.log('Cancellation email sent successfully')
-      } else {
-        console.warn('Failed to send cancellation email, but proceeding with cancellation')
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Failed to cancel booking')
       }
-    } catch (error) {
-      console.error('Error sending cancellation email:', error)
-      // Continue with cancellation even if email fails
-    }
-
-    // Remove booking from array
-    this.bookings = this.bookings.filter(b => b.id !== cancelledBookingId)
-    
-    // Update localStorage
-    localStorage.setItem('userBookings', JSON.stringify(this.bookings))
-    
-    // Close modal
-    this.closeCancelModal()
-    
-    // Remove the booking card from DOM with fade-out animation
-    const bookingCard = document.querySelector(`[data-booking-id="${cancelledBookingId}"]`)
-    if (bookingCard) {
-      bookingCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease'
-      bookingCard.style.opacity = '0'
-      bookingCard.style.transform = 'translateY(-10px)'
-      setTimeout(() => {
-        bookingCard.remove()
-        // Refresh display after animation completes (will handle empty state if no bookings)
-        this.displayBookings()
-      }, 300)
-    } else {
-      // If card not found, refresh immediately
+      
+      const result = await response.json()
+      console.log('Booking cancelled successfully:', result)
+      
+      // Close modal
+      this.closeCancelModal()
+      
+      // Reload bookings from server (will automatically filter out cancelled)
+      await this.loadBookings()
       this.displayBookings()
+      
+      // Show success banner
+      this.showCancellationSuccess()
+      
+    } catch (error) {
+      console.error('Error cancelling booking:', error)
+      alert('Failed to cancel booking: ' + error.message)
+      this.closeCancelModal()
     }
-    
-    // Show success message
-    this.showCancellationSuccess()
   }
 
   showCancellationSuccess() {
@@ -288,25 +369,23 @@ class BookingsManager {
       existingBanner.remove()
     }
 
-    // Create a prominent success banner
+    // Create a prominent success banner matching the payment success style
     const banner = document.createElement('div')
     banner.className = 'success-banner cancellation-success-banner'
-    banner.style.marginBottom = '2rem'
-    banner.style.animation = 'slideDown 0.3s ease-out'
+    banner.style.cssText = 'display: flex; margin-bottom: 2rem; padding: 1.25rem 1.5rem; background: linear-gradient(135deg, hsl(142, 76%, 96%), hsl(142, 76%, 98%)); border: 2px solid hsl(142, 76%, 40%); border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); animation: slideDown 0.3s ease-out;'
     banner.innerHTML = `
-      <div class="success-banner-content">
-        <svg class="success-banner-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;">
+      <div class="success-banner-content" style="display: flex; align-items: center; gap: 1rem; width: 100%;">
+        <svg class="success-banner-icon" viewBox="0 0 24 24" fill="none" stroke="hsl(142, 76%, 30%)" stroke-width="2" style="width: 2.5rem; height: 2.5rem; flex-shrink: 0;">
           <circle cx="12" cy="12" r="10"></circle>
           <path d="M9 12l2 2 4-4"></path>
         </svg>
         <div>
-          <h3 class="success-banner-title">Booking Cancelled Successfully</h3>
-          <p class="success-banner-text">Your booking has been cancelled and removed. Refund will be processed within 3-5 business days.</p>
+          <h3 class="success-banner-title" style="margin: 0 0 0.25rem 0; color: hsl(142, 76%, 30%); font-size: 1.125rem; font-weight: 600;">Booking Cancelled Successfully</h3>
+          <p class="success-banner-text" style="margin: 0; color: hsl(142, 76%, 25%); font-size: 0.9375rem;">Your booking has been cancelled. Confirmation email sent.</p>
         </div>
       </div>
     `
     
-    const container = document.querySelector('.content-container')
     const bookingsContainer = document.getElementById('bookingsContainer')
     
     // Insert banner before bookings container

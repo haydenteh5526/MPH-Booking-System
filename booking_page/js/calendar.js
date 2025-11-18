@@ -98,16 +98,23 @@ class BookingCalendar {
 
     // Initialize hours and booking data
     this.hours = this.generateHours()
+    this.blockedSlots = [] // Will store blocked slots from database
+    this.actualBookings = [] // Will store actual bookings from database
     this.bookingData = this.generateMockData()
 
     this.init()
   }
 
-  init() {
+  async init() {
     this.attachFormListeners()
     this.hideCalendar()
     this.setMinDate()
+    
+    // Fetch blocked slots and actual bookings from database
+    await this.fetchBlockedSlots()
+    await this.fetchActualBookings()
     this.setupClickOutside()
+    this.fetchBlockedSlots() // Fetch blocked slots from server
     this.checkURLParams()
   }
 
@@ -126,6 +133,54 @@ class BookingCalendar {
       if (emoji) {
         this.selectSport(sport.toLowerCase(), emoji)
       }
+    }
+  }
+
+  // Fetch blocked slots from the server
+  async fetchBlockedSlots() {
+    try {
+      const response = await fetch('/bookings/blocked-slots', {
+        credentials: 'include'
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        this.blockedSlots = data.blockedSlots || []
+        console.log('Fetched blocked slots:', this.blockedSlots)
+        // Regenerate booking data with blocked slots applied
+        this.bookingData = this.generateMockData()
+        
+        // If user has already selected sport/date, refresh the display
+        if (this.selectedSport && this.selectedDate) {
+          this.updateAvailability()
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching blocked slots:', error)
+    }
+  }
+
+  // Fetch actual bookings from the server
+  async fetchActualBookings() {
+    try {
+      const response = await fetch('/bookings/all-bookings', {
+        credentials: 'include'
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        this.actualBookings = data.bookings || []
+        console.log('Fetched actual bookings:', this.actualBookings)
+        // Regenerate booking data with actual bookings applied
+        this.bookingData = this.generateMockData()
+        
+        // If user has already selected sport/date, refresh the display
+        if (this.selectedSport && this.selectedDate) {
+          this.updateAvailability()
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching actual bookings:', error)
     }
   }
 
@@ -885,35 +940,96 @@ class BookingCalendar {
       })
     }
 
-    // Load user bookings from localStorage and mark those slots as booked (red)
-    const userBookings = JSON.parse(localStorage.getItem('userBookings') || '[]')
-    userBookings.forEach(booking => {
-      if (booking.status === 'confirmed') {
-        const bookingDate = booking.date
-        const startHour = booking.time
-        const duration = booking.duration
-        const courtId = booking.courtId
-        const bookingSport = booking.sport
-
-        // Mark the booked slots as "booked" for the duration
-        for (let i = 0; i < duration; i++) {
-          const hour = startHour + i
-          if (data[bookingDate]?.[hour]?.[courtId]) {
-            data[bookingDate][hour][courtId].status = "booked"
-            data[bookingDate][hour][courtId].bookedBySport = bookingSport
-            data[bookingDate][hour][courtId].bookedCourtId = courtId
-
-            // Also mark conflicting courts as booked
-            const conflictingCourts = this.courtConflicts[courtId] || []
-            conflictingCourts.forEach(conflictCourt => {
-              if (data[bookingDate]?.[hour]?.[conflictCourt]) {
-                data[bookingDate][hour][conflictCourt].status = "booked"
-                data[bookingDate][hour][conflictCourt].bookedBySport = bookingSport
-                data[bookingDate][hour][conflictCourt].bookedCourtId = courtId
-              }
-            })
+    // Apply blocked slots from database
+    console.log('Applying blocked slots:', this.blockedSlots.length)
+    this.blockedSlots.forEach(blockedSlot => {
+      const slotDate = new Date(blockedSlot.date)
+      const dateString = slotDate.toISOString().split('T')[0]
+      const [hours, minutes] = blockedSlot.time.split(':')
+      const hour = parseInt(hours)
+      
+      console.log(`Processing blocked slot: ${blockedSlot.sport} - ${blockedSlot.court} on ${dateString} at ${hour}:00`)
+      
+      // Convert sport name to lowercase for court ID matching
+      const sportKey = blockedSlot.sport.toLowerCase()
+      
+      // Find matching courts and block them
+      if (this.sportCourts[sportKey]) {
+        this.sportCourts[sportKey].forEach(court => {
+          // Use exact match only to avoid blocking multiple courts
+          const courtMatches = court.name === blockedSlot.court
+          
+          if (courtMatches) {
+            console.log(`  Matched court: ${court.name} (${court.id})`)
+            if (data[dateString]?.[hour]?.[court.id]) {
+              data[dateString][hour][court.id].status = 'blocked'
+              console.log(`    Blocked ${court.id} at ${hour}:00`)
+              
+              // Also block all conflicting courts
+              const conflictingCourts = this.courtConflicts[court.id] || []
+              console.log(`    Blocking ${conflictingCourts.length} overlapping courts`)
+              conflictingCourts.forEach(conflictCourtId => {
+                if (data[dateString]?.[hour]?.[conflictCourtId]) {
+                  data[dateString][hour][conflictCourtId].status = 'blocked'
+                  console.log(`      Blocked overlapping court: ${conflictCourtId} at ${hour}:00`)
+                }
+              })
+            } else {
+              console.log(`    Data not found for ${dateString} ${hour} ${court.id}`)
+            }
           }
-        }
+        })
+      } else {
+        console.log(`  Sport key '${sportKey}' not found in sportCourts`)
+      }
+    })
+
+    // Apply actual bookings from database (non-cancelled bookings only)
+    console.log('Applying actual bookings:', this.actualBookings.length)
+    this.actualBookings.forEach(booking => {
+      // Skip cancelled bookings
+      if (booking.cancelled) return
+      
+      const bookingDate = new Date(booking.date)
+      const dateString = bookingDate.toISOString().split('T')[0]
+      const bookingTime = typeof booking.time === 'string' ? booking.time : booking.time.toString()
+      const hour = parseInt(bookingTime.split(':')[0] || bookingTime)
+      const sportKey = booking.sport.toLowerCase()
+      
+      console.log(`Processing booking: ${booking.sport} - ${booking.court} on ${dateString} at ${hour}:00`)
+      
+      // Find the court ID that matches this booking
+      if (this.sportCourts[sportKey]) {
+        this.sportCourts[sportKey].forEach(court => {
+          const courtMatches = court.name === booking.court
+          
+          if (courtMatches) {
+            console.log(`  Matched court: ${court.name} (${court.id})`)
+            
+            // Mark 2-hour duration as booked (standard booking duration)
+            for (let i = 0; i < 2; i++) {
+              const bookingHour = hour + i
+              if (data[dateString]?.[bookingHour]?.[court.id]) {
+                data[dateString][bookingHour][court.id].status = 'booked'
+                data[dateString][bookingHour][court.id].bookedBySport = booking.sport
+                data[dateString][bookingHour][court.id].bookedCourtId = court.id
+                console.log(`    Marked ${court.id} as booked at ${bookingHour}:00`)
+                
+                // Also mark conflicting courts as booked
+                const conflictingCourts = this.courtConflicts[court.id] || []
+                conflictingCourts.forEach(conflictCourt => {
+                  if (data[dateString]?.[bookingHour]?.[conflictCourt]) {
+                    data[dateString][bookingHour][conflictCourt].status = 'booked'
+                    data[dateString][bookingHour][conflictCourt].bookedBySport = booking.sport
+                    data[dateString][bookingHour][conflictCourt].bookedCourtId = court.id
+                  }
+                })
+              }
+            }
+          }
+        })
+      } else {
+        console.log(`  Sport key '${sportKey}' not found in sportCourts`)
       }
     })
 

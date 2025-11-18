@@ -8,3 +8,10 @@ export async function connectDB(uri) {
   });
   console.log("[db] connected");
 }
+
+export async function connectToDatabase() {
+  if (mongoose.connection.readyState === 0) {
+    await connectDB(process.env.MONGO_URI);
+  }
+  return mongoose.connection.db;
+}

@@ -23,7 +23,23 @@ form.addEventListener('submit', async (e) => {
     if (res.ok) {
       msg.className = 'message message-success';
       msg.textContent = `Success! Redirecting...`;
-      setTimeout(() => location.href = '/landing_page/index.html', 600);
+      
+      // Check if user is admin
+      try {
+        const adminCheck = await fetch('/auth/check-admin', {
+          credentials: 'include'
+        });
+        const adminData = await adminCheck.json();
+        
+        if (adminCheck.ok && adminData.isAdmin) {
+          setTimeout(() => location.href = '/admin_page/index.html', 600);
+        } else {
+          setTimeout(() => location.href = '/landing_page/index.html', 600);
+        }
+      } catch (err) {
+        // If check fails, default to landing page
+        setTimeout(() => location.href = '/landing_page/index.html', 600);
+      }
     } else {
       msg.className = 'message message-error';
       if (data && typeof data.error === 'string' && data.error.toLowerCase().includes('not verified')) {

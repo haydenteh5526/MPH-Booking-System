@@ -6,7 +6,7 @@ class PaymentHandler {
     this.init()
   }
 
-  init() {
+  async init() {
     // Load booking data from localStorage
     const pendingBooking = localStorage.getItem('pendingBooking')
     
@@ -19,7 +19,33 @@ class PaymentHandler {
 
     this.bookingData = JSON.parse(pendingBooking)
     this.displayBookingSummary()
+    
+    // Load user email and pre-fill
+    await this.loadUserEmail()
+    
     this.setupFormHandlers()
+  }
+  
+  async loadUserEmail() {
+    try {
+      const response = await fetch('/auth/profile', {
+        method: 'GET',
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        const emailInput = document.getElementById('email');
+        if (emailInput && user.email) {
+          emailInput.value = user.email;
+          // Make email field readonly to prevent changes
+          emailInput.readOnly = true;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading user email:', error);
+      // If we can't load email, leave the field editable
+    }
   }
 
   displayBookingSummary() {
@@ -118,7 +144,9 @@ class PaymentHandler {
             dateFormatted: this.bookingData.dateFormatted,
             timeFormatted: this.bookingData.timeFormatted,
             duration: this.bookingData.duration,
-            totalPrice: this.bookingData.totalPrice
+            totalPrice: this.bookingData.totalPrice,
+            date: this.bookingData.date,
+            time: this.bookingData.time
           })
         })
 
