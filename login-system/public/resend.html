@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resend Verification - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Verify Your Student Account</h1>
+          <p class="auth-hero-description">
+            Didn't receive your verification email? No problem! We'll send you a fresh link to verify your TUS student email and activate your account.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Fresh Verification Link</h3>
+              <p class="auth-hero-feature-description">Get a new link sent to your inbox instantly</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Student Verified</h3>
+              <p class="auth-hero-feature-description">Ensure secure access with TUS email verification</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Quick Activation</h3>
+              <p class="auth-hero-feature-description">One click to activate and start booking</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <h1 class="auth-title">Resend Verification</h1>
+            <p class="auth-subtitle">Enter your email and we'll send a new verification link</p>
+          </div>
+
+          <div id="msg"></div>
+
+          <form id="form" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-input"
+                required 
+                autocomplete="username" 
+                placeholder="example@student.tus.ie" 
+              />
+            </div>
+
+            <button type="submit" class="auth-btn auth-btn-primary">Send Verification Email</button>
+          </form>
+
+          <div class="auth-footer">
+            <a href="/login.html" class="auth-footer-link">Back to sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/resend.js" defer></script>
+</body>
+</html>
+

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Start Your Booking Journey</h1>
+          <p class="auth-hero-description">
+            Join TUS students in experiencing hassle-free sports facility bookings. Create your account and get instant access to all campus sports venues.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Real-Time Availability</h3>
+              <p class="auth-hero-feature-description">Check facility availability and book instantly, 24/7</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Secure & Verified</h3>
+              <p class="auth-hero-feature-description">TUS student verification for campus facility access</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Easy Management</h3>
+              <p class="auth-hero-feature-description">Track all your bookings in one convenient dashboard</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Sign up with your @student.tus.ie email</p>
+          </div>
+
+          <div id="msg"></div>
+
+          <form id="form" class="auth-form">
+            <div class="form-group">
+              <label for="name" class="form-label">Full Name</label>
+              <input 
+                id="name" 
+                type="text" 
+                class="form-input"
+                required 
+                autocomplete="name" 
+                placeholder="John Doe" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Student Email</label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-input"
+                required 
+                autocomplete="username" 
+                placeholder="example@student.tus.ie" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input 
+                id="phone" 
+                type="tel" 
+                class="form-input"
+                required 
+                autocomplete="tel" 
+                placeholder="+353871234567" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="studentId" class="form-label">Student ID</label>
+              <input 
+                id="studentId" 
+                type="text" 
+                class="form-input"
+                required 
+                placeholder="e.g. A00123456" 
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password</label>
+              <div class="form-input-wrapper">
+                <input
+                  id="password"
+                  type="password"
+                  class="form-input"
+                  required
+                  minlength="8"
+                  autocomplete="new-password"
+                  placeholder="At least 8 characters"
+                  title="At least 8 characters with at least one uppercase letter and at least one number"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm" class="form-label">Confirm Password</label>
+              <div class="form-input-wrapper">
+                <input 
+                  id="confirm" 
+                  type="password" 
+                  class="form-input"
+                  required 
+                  minlength="8" 
+                  autocomplete="new-password" 
+                  placeholder="Re-enter password" 
+                />
+              </div>
+            </div>
+
+            <button type="submit" class="auth-btn auth-btn-primary">Create Account</button>
+          </form>
+
+          <div class="auth-footer">
+            Already have an account? <a href="/login.html" class="auth-footer-link">Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/register.js" defer></script>
+</body>
+</html>
+

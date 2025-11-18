@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | MPH Booking System</title>
+    <link rel="stylesheet" href="../partials/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Left: Brand Name -->
+            <div class="header-left">
+                <a href="../landing_page/index.html" class="brand-name">MPH Booking System</a>
+            </div>
+
+            <!-- Center: Navigation -->
+            <nav class="header-center" aria-label="Main navigation">
+                <a href="../landing_page/index.html" class="nav-link">Home</a>
+                <a href="../booking_page/booking.html" class="nav-link">Bookings</a>
+                <a href="../about_page/index.html" class="nav-link">About</a>
+            </nav>
+
+            <!-- Right: Profile Icon -->
+            <div class="header-right">
+                <div class="profile-dropdown-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-haspopup="true" aria-expanded="false">
+                        <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                        </svg>
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown" aria-hidden="true">
+                        <a href="../booking_page/my-bookings.html" class="profile-dropdown-item" id="myBookingsBtn">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>My Bookings</span>
+                        </a>
+
+                        <a href="../landing_page/profile.html" class="profile-dropdown-item" id="profileLinkBtn">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Profile</span>
+                        </a>
+
+                        <button class="profile-dropdown-item" id="logoutBtn" type="button">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="about-hero-container">
+            <div class="about-hero-content">
+                <div class="about-badge">About MPH</div>
+                <h1 class="about-hero-title">Your Premier Sports Facility at TUS Athlone</h1>
+                <p class="about-hero-description">
+                    The Multi-Purpose Hall (MPH) is more than just a sports facility—it's where students come together to play, compete, and build lasting memories. Since our establishment, we've been dedicated to providing top-quality courts and an exceptional booking experience.
+                </p>
+                <div class="about-stats">
+                    <div class="about-stat">
+                        <div class="about-stat-value">7</div>
+                        <div class="about-stat-label">Total Courts</div>
+                    </div>
+                    <div class="about-stat-divider"></div>
+                    <div class="about-stat">
+                        <div class="about-stat-value">1000+</div>
+                        <div class="about-stat-label">Students Served</div>
+                    </div>
+                    <div class="about-stat-divider"></div>
+                    <div class="about-stat">
+                        <div class="about-stat-value">14hrs</div>
+                        <div class="about-stat-label">Daily Operation</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="about-story">
+        <div class="about-container">
+            <div class="about-section-header">
+                <div class="about-section-badge">Our Story</div>
+                <h2 class="about-section-title">Built for Students, By Students</h2>
+                <p class="about-section-description">
+                    Understanding the challenges students face in booking sports facilities, we created MPH Booking System—a simple, affordable, and efficient way to reserve your favorite courts.
+                </p>
+            </div>
+
+            <div class="about-story-grid">
+                <div class="about-story-card">
+                    <div class="about-story-icon">🎯</div>
+                    <h3 class="about-story-card-title">Our Mission</h3>
+                    <p class="about-story-card-text">
+                        To make sports accessible to every student at TUS Athlone by providing affordable, easy-to-book facilities that promote active lifestyles and community building.
+                    </p>
+                </div>
+
+                <div class="about-story-card">
+                    <div class="about-story-icon">💡</div>
+                    <h3 class="about-story-card-title">Our Vision</h3>
+                    <p class="about-story-card-text">
+                        To be the leading student-focused sports facility in Ireland, where every student can play their favorite sport without barriers of cost or complexity.
+                    </p>
+                </div>
+
+                <div class="about-story-card">
+                    <div class="about-story-icon">❤️</div>
+                    <h3 class="about-story-card-title">Our Values</h3>
+                    <p class="about-story-card-text">
+                        Accessibility, affordability, quality, and community. We believe sports should bring people together, and we're committed to making that happen every day.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="about-facilities">
+        <div class="about-container">
+            <div class="about-section-header">
+                <div class="about-section-badge">Our Facilities</div>
+                <h2 class="about-section-title">Professional-Grade Courts & Equipment</h2>
+                <p class="about-section-description">
+                    We maintain our facilities to the highest standards to ensure you have the best playing experience.
+                </p>
+            </div>
+
+            <div class="about-facilities-grid">
+                <div class="about-facility-card">
+                    <div class="about-facility-image">🏀</div>
+                    <div class="about-facility-content">
+                        <h3 class="about-facility-title">Basketball Courts</h3>
+                        <p class="about-facility-description">
+                            Two professional half-courts with hardwood flooring and regulation hoops. Can be combined into a full court for competitive games.
+                        </p>
+                        <ul class="about-facility-features">
+                            <li>✓ Professional hardwood flooring</li>
+                            <li>✓ Regulation height hoops</li>
+                            <li>✓ Half or full court options</li>
+                            <li>✓ From €8/hour</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-facility-card">
+                    <div class="about-facility-image">🏸</div>
+                    <div class="about-facility-content">
+                        <h3 class="about-facility-title">Badminton Courts</h3>
+                        <p class="about-facility-description">
+                            Four dedicated badminton courts with high ceilings and professional lighting for perfect gameplay conditions.
+                        </p>
+                        <ul class="about-facility-features">
+                            <li>✓ High ceilings (no interference)</li>
+                            <li>✓ Professional court markings</li>
+                            <li>✓ Quality equipment available</li>
+                            <li>✓ From €5/hour</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="about-facility-card">
+                    <div class="about-facility-image">🏐</div>
+                    <div class="about-facility-content">
+                        <h3 class="about-facility-title">Volleyball Court</h3>
+                        <p class="about-facility-description">
+                            Regulation-size volleyball court with professional net system, perfect for team practices and competitive matches.
+                        </p>
+                        <ul class="about-facility-features">
+                            <li>✓ Regulation court size</li>
+                            <li>✓ Professional net system</li>
+                            <li>✓ Full space for team games</li>
+                            <li>✓ From €12/hour</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Location Section -->
+    <section class="about-location">
+        <div class="about-container">
+            <div class="about-location-grid">
+                <div class="about-location-info">
+                    <div class="about-section-badge">Find Us</div>
+                    <h2 class="about-location-title">Visit the Multi-Purpose Hall</h2>
+                    <p class="about-location-description">
+                        Located at the heart of TUS Athlone campus, the MPH is easily accessible for all students. Drop by during our operating hours or book online for guaranteed court time.
+                    </p>
+
+                    <div class="about-location-details">
+                        <div class="about-location-item">
+                            <div class="about-location-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                            </div>
+                            <div class="about-location-text">
+                                <h4>Address</h4>
+                                <p>Multi-Purpose Hall<br>TUS Athlone<br>Dublin Road, Athlone, Co. Westmeath</p>
+                            </div>
+                        </div>
+
+                        <div class="about-location-item">
+                            <div class="about-location-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="about-location-text">
+                                <h4>Operating Hours</h4>
+                                <p>Monday - Sunday<br>8:00 AM - 10:00 PM<br>Extended hours during term time</p>
+                            </div>
+                        </div>
+
+                        <div class="about-location-item">
+                            <div class="about-location-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                            </div>
+                            <div class="about-location-text">
+                                <h4>Contact Us</h4>
+                                <p>Email: support@mph.com<br>Phone: (090) 646 8000<br>Response time: Within 24 hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-location-map">
+                    <div class="map-placeholder">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        <p>TUS Athlone Campus<br>Multi-Purpose Hall</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="about-why">
+        <div class="about-container">
+            <div class="about-section-header">
+                <div class="about-section-badge">Why Choose MPH</div>
+                <h2 class="about-section-title">What Makes Us Different</h2>
+                <p class="about-section-description">
+                    We're not just another sports facility. Here's what sets us apart.
+                </p>
+            </div>
+
+            <div class="about-why-grid">
+                <div class="about-why-card">
+                    <div class="about-why-number">01</div>
+                    <h3 class="about-why-title">Student-Friendly Pricing</h3>
+                    <p class="about-why-text">
+                        Starting from just €5/hour, we offer the most affordable rates in the region. We believe cost shouldn't be a barrier to staying active.
+                    </p>
+                </div>
+
+                <div class="about-why-card">
+                    <div class="about-why-number">02</div>
+                    <h3 class="about-why-title">Instant Online Booking</h3>
+                    <p class="about-why-text">
+                        No phone calls, no waiting. Book your court in seconds from any device. See real-time availability and get instant confirmation.
+                    </p>
+                </div>
+
+                <div class="about-why-card">
+                    <div class="about-why-number">03</div>
+                    <h3 class="about-why-title">Flexible Cancellation</h3>
+                    <p class="about-why-text">
+                        Plans change—we get it. Cancel your booking anytime with full refund processing within 3-5 business days. No questions asked.
+                    </p>
+                </div>
+
+                <div class="about-why-card">
+                    <div class="about-why-number">04</div>
+                    <h3 class="about-why-title">Premium Facilities</h3>
+                    <p class="about-why-text">
+                        Professional-grade courts with quality equipment. We maintain our facilities to the highest standards for the best playing experience.
+                    </p>
+                </div>
+
+                <div class="about-why-card">
+                    <div class="about-why-number">05</div>
+                    <h3 class="about-why-title">Extended Hours</h3>
+                    <p class="about-why-text">
+                        Open 14 hours daily, 7 days a week. Book early morning sessions or late evening games—whatever fits your schedule.
+                    </p>
+                </div>
+
+                <div class="about-why-card">
+                    <div class="about-why-number">06</div>
+                    <h3 class="about-why-title">Community Focused</h3>
+                    <p class="about-why-text">
+                        We're more than a facility—we're building a sports community. Join tournaments, meet fellow players, and be part of something bigger.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="about-cta">
+        <div class="about-cta-container">
+            <div class="about-cta-content">
+                <h2 class="about-cta-title">Ready to Experience MPH?</h2>
+                <p class="about-cta-description">
+                    Join our growing community of students who love sports. Book your first session today and discover why MPH is the preferred choice for student athletes.
+                </p>
+                <div class="about-cta-actions">
+                    <a href="../booking_page/booking.html" class="about-btn about-btn-primary">
+                        <span>Start Booking Now</span>
+                        <svg class="about-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <a href="mailto:support@mph.com" class="about-btn about-btn-secondary">
+                        <span>Contact Us</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Brand Column -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="footer-brand-name">MPH Booking System</span>
+                    </div>
+                    <p class="footer-tagline">Student-friendly court bookings for basketball, badminton, and volleyball. Book your session today!</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/share/1DK9mzdg55/?mibextid=wwXIfr" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/tus_athlone/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        <a href="https://x.com/tus_athlone_?s=21&t=vDJULpsHznC6ItpnzuL2kA" class="social-link" aria-label="X (formerly Twitter)" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <a href="../landing_page/index.html" class="footer-link">Home</a>
+                    <a href="../booking_page/booking.html" class="footer-link">Book Now</a>
+                    <a href="../booking_page/my-bookings.html" class="footer-link">My Bookings</a>
+                    <a href="../about_page/index.html" class="footer-link">About Us</a>
+                </div>
+
+                <!-- Sports Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Sports</h4>
+                    <a href="../booking_page/booking.html?sport=basketball" class="footer-link">🏀 Basketball</a>
+                    <a href="../booking_page/booking.html?sport=badminton" class="footer-link">🏸 Badminton</a>
+                    <a href="../booking_page/booking.html?sport=volleyball" class="footer-link">🏐 Volleyball</a>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Contact</h4>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Multi-Purpose Hall<br>TUS Athlone</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>Mon - Sun<br>8:00 AM - 10:00 PM</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span><a href="mailto:support@mph.com">support@mph.com</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2025 MPH Booking System. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="../partials/privacy-policy.html" class="footer-bottom-link">Privacy Policy</a>
+                    <span class="footer-divider">•</span>
+                    <a href="../partials/terms-of-service.html" class="footer-bottom-link">Terms of Service</a>
+                    <span class="footer-divider">•</span>
+                    <a href="../partials/refund-policy.html" class="footer-bottom-link">Refund Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="../partials/js/profile-dropdown.js"></script>
+    <script>
+        // Smooth scroll for anchor links
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Scroll animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all sections
+            document.querySelectorAll('.about-story-card, .about-facility-card, .about-why-card, .about-location-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        });
+    </script>
+    <script src="../partials/js/check-user-auth.js"></script>
+</body>
+</html>
+

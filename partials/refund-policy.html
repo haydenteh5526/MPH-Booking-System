@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund Policy | MPH Booking System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/policy-styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="../landing_page/index.html" class="brand-name">MPH Booking System</a>
+            </div>
+            <nav class="header-center" aria-label="Main navigation">
+                <a href="../landing_page/index.html" class="nav-link">Home</a>
+                <a href="../booking_page/booking.html" class="nav-link">Bookings</a>
+                <a href="../about_page/index.html" class="nav-link">About</a>
+            </nav>
+            <div class="header-right">
+                <div class="profile-dropdown-container">
+                    <button class="profile-btn" id="profileBtn" aria-label="User profile" aria-haspopup="true" aria-expanded="false">
+                        <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"></circle>
+                            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+                        </svg>
+                    </button>
+                    <div class="profile-dropdown" id="profileDropdown" aria-hidden="true">
+                        <a href="../booking_page/my-bookings.html" class="profile-dropdown-item">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            <span>My Bookings</span>
+                        </a>
+                        <a href="../landing_page/profile.html" class="profile-dropdown-item">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            <span>Profile</span>
+                        </a>
+                        <button class="profile-dropdown-item" id="logoutBtn" type="button">
+                            <svg class="dropdown-item-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                <polyline points="16 17 21 12 16 7"></polyline>
+                                <line x1="21" y1="12" x2="9" y2="12"></line>
+                            </svg>
+                            <span>Logout</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="policy-container">
+        <h1>Refund Policy</h1>
+        <p class="last-updated">Last Updated: January 2025</p>
+
+        <h2>1. Overview</h2>
+        <p>At MPH Booking System, we strive to provide excellent service and a fair refund policy. This Refund Policy outlines the terms and conditions under which refunds are issued for court bookings. Please read this policy carefully before making a booking.</p>
+        <p>By completing a booking on our platform, you acknowledge that you have read, understood, and agree to this Refund Policy.</p>
+
+        <h2>2. Cancellation and Refund Schedule</h2>
+        <p>Refund eligibility is determined by when you cancel your booking relative to the scheduled booking time. Our cancellation policy is as follows:</p>
+
+        <div class="refund-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cancellation Timeframe</th>
+                        <th>Refund Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>24 hours or more before booking time</td>
+                        <td><span class="refund-amount">100% Full Refund</span></td>
+                    </tr>
+                    <tr>
+                        <td>12-24 hours before booking time</td>
+                        <td><span class="refund-amount">50% Partial Refund</span></td>
+                    </tr>
+                    <tr>
+                        <td>Less than 12 hours before booking time</td>
+                        <td><span class="no-refund">No Refund</span></td>
+                    </tr>
+                    <tr>
+                        <td>After booking time has passed</td>
+                        <td><span class="no-refund">No Refund</span></td>
+                    </tr>
+                    <tr>
+                        <td>No-show (did not cancel or attend)</td>
+                        <td><span class="no-refund">No Refund</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="highlight-box">
+            <p><strong>💡 Tip:</strong> To receive a full refund, cancel your booking at least 24 hours before your scheduled time. You can cancel anytime through the "My Bookings" page.</p>
+        </div>
+
+        <h2>3. How to Cancel a Booking</h2>
+        <p>Cancelling your booking is simple and can be done in a few steps:</p>
+
+        <p style="margin-top: 24px;"><span class="step-number">1</span><strong>Log in to your account</strong> on the MPH Booking System</p>
+        <p><span class="step-number">2</span><strong>Navigate to "My Bookings"</strong> from the main menu or profile dropdown</p>
+        <p><span class="step-number">3</span><strong>Find the booking you wish to cancel</strong> in your list of active bookings</p>
+        <p><span class="step-number">4</span><strong>Click the "Cancel Booking" button</strong> next to the booking</p>
+        <p><span class="step-number">5</span><strong>Confirm the cancellation</strong> when prompted</p>
+        <p><span class="step-number">6</span><strong>Receive confirmation</strong> - You will receive a cancellation confirmation email with refund details</p>
+
+        <h2>4. Refund Processing</h2>
+
+        <h3>4.1 Processing Time</h3>
+        <p>Once your cancellation is confirmed:</p>
+        <ul>
+            <li>Refunds are processed within <strong>5-7 business days</strong></li>
+            <li>The refund will be credited to the original payment method used for the booking</li>
+            <li>You will receive an email notification when the refund has been processed</li>
+            <li>Depending on your bank or payment provider, it may take an additional 3-5 business days for the funds to appear in your account</li>
+        </ul>
+
+        <h3>4.2 Refund Method</h3>
+        <p>Refunds are issued to the original payment method:</p>
+        <ul>
+            <li><strong>Credit/Debit Card:</strong> Refunded to the card used for payment</li>
+            <li><strong>Digital Wallets:</strong> Refunded to the wallet account</li>
+            <li><strong>Bank Transfer:</strong> For special cases, refunds may be processed via bank transfer (requires verification)</li>
+        </ul>
+
+        <h2>5. Non-Refundable Circumstances</h2>
+        <div class="warning-box">
+            <p><strong>⚠️ Important:</strong> Refunds will NOT be issued in the following situations:</p>
+            <ul>
+                <li><strong>Late Cancellations:</strong> Bookings cancelled less than 12 hours before the scheduled time</li>
+                <li><strong>No-Shows:</strong> Failure to attend your booking without prior cancellation</li>
+                <li><strong>Violation of Terms:</strong> Bookings cancelled due to violation of our Terms of Service or facility rules</li>
+                <li><strong>Facility Misuse:</strong> Damage to facility property or inappropriate conduct</li>
+                <li><strong>Fraudulent Activity:</strong> Any fraudulent bookings or payment activities</li>
+                <li><strong>Past Bookings:</strong> Requests for refunds after the booking time has passed</li>
+            </ul>
+        </div>
+
+        <h2>6. Facility Closures and Emergency Situations</h2>
+
+        <h3>6.1 Facility-Initiated Cancellations</h3>
+        <p>If we need to cancel your booking due to:</p>
+        <ul>
+            <li>Facility maintenance or repairs</li>
+            <li>Emergency closures</li>
+            <li>Weather-related issues</li>
+            <li>Technical problems with the facilities</li>
+            <li>Other circumstances beyond your control</li>
+        </ul>
+        <p><strong>You will receive a 100% full refund</strong>, regardless of when the cancellation occurs. The refund will be processed automatically within 3-5 business days.</p>
+
+        <h3>6.2 Force Majeure</h3>
+        <p>In cases of force majeure events (natural disasters, government restrictions, pandemics, etc.), we will work with affected users on a case-by-case basis to provide fair solutions, which may include:</p>
+        <ul>
+            <li>Full refunds</li>
+            <li>Rebooking at a later date without additional charges</li>
+            <li>Credit toward future bookings</li>
+        </ul>
+
+        <h2>7. Modification vs. Cancellation</h2>
+        <div class="highlight-box">
+            <p><strong>Please Note:</strong> Our system currently does not support booking modifications. If you need to change your booking date, time, or court type, you must:</p>
+            <ol style="margin-left: 20px;">
+                <li>Cancel your existing booking (subject to our refund policy)</li>
+                <li>Make a new booking with your desired details</li>
+            </ol>
+            <p>To avoid losing money on late cancellations, please ensure you book the correct details initially, and cancel early if changes are needed.</p>
+        </div>
+
+        <h2>8. Partial Refunds</h2>
+        <p>For cancellations made 12-24 hours before your booking time, you will receive a 50% refund:</p>
+        <ul>
+            <li>The refund amount is calculated as 50% of the total booking cost</li>
+            <li>The remaining 50% is retained as a late cancellation fee</li>
+            <li>This policy helps us manage court availability and compensate for last-minute cancellations</li>
+        </ul>
+
+        <h2>9. Refund Confirmation</h2>
+        <p>After cancelling a booking eligible for a refund, you will receive:</p>
+        <ul>
+            <li><strong>Immediate:</strong> A cancellation confirmation email with your booking details and refund information</li>
+            <li><strong>Within 5-7 days:</strong> A refund processing notification when the refund has been initiated</li>
+            <li><strong>Original payment method:</strong> The refund credited to your account</li>
+        </ul>
+        <p>Each confirmation email includes:</p>
+        <ul>
+            <li>Your booking confirmation number</li>
+            <li>Booking details (date, time, court, sport)</li>
+            <li>Cancellation date and time</li>
+            <li>Refund amount and expected processing time</li>
+        </ul>
+
+        <h2>10. Disputed Refunds</h2>
+        <p>If you believe you are entitled to a refund that was not provided, or if you have questions about a refund decision:</p>
+        <ul>
+            <li>Contact our support team within <strong>14 days</strong> of the booking date</li>
+            <li>Provide your booking confirmation number and details</li>
+            <li>Explain the reason for your dispute</li>
+            <li>Include any supporting documentation (screenshots, emails, etc.)</li>
+        </ul>
+        <p>We will review your case and respond within 3-5 business days. Refund disputes are handled on a case-by-case basis, and our decision is final.</p>
+
+        <h2>11. Special Circumstances</h2>
+        <p>We understand that unexpected situations may arise. If you have special circumstances that prevented you from cancelling within the required timeframe (e.g., medical emergencies, family emergencies), please contact our support team:</p>
+        <ul>
+            <li>Provide detailed information about your situation</li>
+            <li>Include relevant documentation (medical certificates, etc.)</li>
+            <li>Submit your request within 7 days of the booking date</li>
+        </ul>
+        <p>While we cannot guarantee approval, we will review each case with consideration and may offer a partial refund or credit for future bookings.</p>
+
+        <h2>12. Contact for Refund Inquiries</h2>
+        <div class="contact-info">
+            <p><strong>For questions about refunds, cancellations, or to dispute a refund decision, please contact us:</strong></p>
+            <p>Email: <a href="mailto:support@mph.com">support@mph.com</a><br>
+            Subject Line: "Refund Inquiry - [Your Confirmation Number]"<br>
+            Location: Multi-Purpose Hall, TUS Athlone<br>
+            Hours: Monday - Sunday, 8:00 AM - 10:00 PM</p>
+            <p style="margin-top: 12px;"><strong>What to Include:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li>Your full name and student ID</li>
+                <li>Booking confirmation number</li>
+                <li>Booking date and time</li>
+                <li>Reason for refund request</li>
+                <li>Any supporting documentation</li>
+            </ul>
+        </div>
+
+        <h2>13. Changes to This Policy</h2>
+        <p>We reserve the right to modify this Refund Policy at any time. Changes will be effective immediately upon posting to our platform. We encourage you to review this policy periodically. Your continued use of the Service after changes are posted constitutes acceptance of the modified policy.</p>
+        <p>However, any changes to this policy will not affect bookings made prior to the effective date of the change.</p>
+
+        <div class="highlight-box" style="margin-top: 40px;">
+            <p><strong>📋 Summary:</strong></p>
+            <ul style="margin-left: 20px;">
+                <li><strong>Cancel 24+ hours before:</strong> 100% full refund</li>
+                <li><strong>Cancel 12-24 hours before:</strong> 50% partial refund</li>
+                <li><strong>Cancel less than 12 hours before:</strong> No refund</li>
+                <li><strong>Refund processing time:</strong> 5-7 business days</li>
+                <li><strong>Facility cancellations:</strong> 100% automatic refund</li>
+                <li><strong>Cancel through:</strong> "My Bookings" page</li>
+            </ul>
+        </div>
+
+        <a href="../landing_page/index.html" class="back-link">← Back to Home</a>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <!-- Brand Column -->
+                <div class="footer-brand">
+                    <div class="footer-logo">
+                        <span class="footer-brand-name">MPH Booking System</span>
+                    </div>
+                    <p class="footer-tagline">Student-friendly court bookings for basketball, badminton, and volleyball. Book your session today!</p>
+                    <div class="footer-social">
+                        <a href="https://www.facebook.com/share/1DK9mzdg55/?mibextid=wwXIfr" class="social-link" aria-label="Facebook" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a href="https://www.instagram.com/tus_athlone/" class="social-link" aria-label="Instagram" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                            </svg>
+                        </a>
+                        <a href="https://x.com/tus_athlone_?s=21&t=vDJULpsHznC6ItpnzuL2kA" class="social-link" aria-label="X (formerly Twitter)" target="_blank" rel="noopener noreferrer">
+                            <svg viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Quick Links Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Quick Links</h4>
+                    <a href="../landing_page/index.html" class="footer-link">Home</a>
+                    <a href="../booking_page/booking.html" class="footer-link">Book Now</a>
+                    <a href="../booking_page/my-bookings.html" class="footer-link">My Bookings</a>
+                    <a href="../about_page/index.html" class="footer-link">About Us</a>
+                </div>
+
+                <!-- Sports Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Sports</h4>
+                    <a href="../booking_page/booking.html?sport=basketball" class="footer-link">🏀 Basketball</a>
+                    <a href="../booking_page/booking.html?sport=badminton" class="footer-link">🏸 Badminton</a>
+                    <a href="../booking_page/booking.html?sport=volleyball" class="footer-link">🏐 Volleyball</a>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="footer-links">
+                    <h4 class="footer-heading">Contact</h4>
+                    <div class="footer-contact">
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Multi-Purpose Hall<br>TUS Athlone</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>Mon - Sun<br>8:00 AM - 10:00 PM</span>
+                        </div>
+                        <div class="contact-item">
+                            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span><a href="mailto:support@mph.com">support@mph.com</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2025 MPH Booking System. All rights reserved.</p>
+                <div class="footer-bottom-links">
+                    <a href="privacy-policy.html" class="footer-bottom-link">Privacy Policy</a>
+                    <span class="footer-divider">•</span>
+                    <a href="terms-of-service.html" class="footer-bottom-link">Terms of Service</a>
+                    <span class="footer-divider">•</span>
+                    <a href="refund-policy.html" class="footer-bottom-link">Refund Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/policy-scripts.js"></script>
+    <script src="js/policy-nav.js"></script>
+</body>
+</html>

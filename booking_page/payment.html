@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment | MPH Booking System</title>
+    <link rel="stylesheet" href="../partials/css/styles.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <div id="header-placeholder"></div>
+    
+    <!-- Payment Hero Section -->
+    <section class="payment-hero-section">
+        <div class="content-container">
+            <!-- Page Title -->
+            <div class="page-header">
+                <div class="page-header-content-center">
+                    <div class="booking-badge">Secure Checkout</div>
+                    <h1 class="page-title">Complete Your Payment</h1>
+                    <p class="page-subtitle">Secure online payment for your court booking</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Payment Form Section -->
+    <section class="payment-form-section">
+        <div class="content-container">
+            <div class="payment-layout">
+                <!-- Booking Summary -->
+                <div class="booking-summary-card">
+                    <h2 class="summary-title">Booking Summary</h2>
+                    
+                    <div class="summary-details">
+                        <div class="summary-item">
+                            <span class="summary-icon" id="summaryIcon">🏀</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Sport</span>
+                                <span class="summary-value" id="summarySport">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-icon">🏟️</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Court</span>
+                                <span class="summary-value" id="summaryCourt">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-icon">📅</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Date</span>
+                                <span class="summary-value" id="summaryDate">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-icon">⏰</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Time</span>
+                                <span class="summary-value" id="summaryTime">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <span class="summary-icon">⏳</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Duration</span>
+                                <span class="summary-value" id="summaryDuration">-</span>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-item summary-item-total">
+                            <span class="summary-icon">💰</span>
+                            <div class="summary-content">
+                                <span class="summary-label">Total Amount</span>
+                                <span class="summary-value summary-value-price" id="summaryPrice">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Payment Form -->
+                <div class="payment-form-card">
+                    <h2 class="payment-form-title">Payment Details</h2>
+                    
+                    <form id="paymentForm" class="payment-form-wrapper">
+                        <div>
+                            <!-- Card Number -->
+                            <div class="form-group">
+                                <label class="form-label">Card Number</label>
+                                <div class="input-with-icon">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                                        <line x1="1" y1="10" x2="23" y2="10"></line>
+                                    </svg>
+                                    <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Card Holder -->
+                            <div class="form-group">
+                                <label class="form-label">Card Holder Name</label>
+                                <div class="input-with-icon">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    <input type="text" id="cardHolder" class="form-input" placeholder="John Doe" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Expiry and CVV -->
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Expiry Date</label>
+                                    <input type="text" id="expiryDate" class="form-input" placeholder="MM/YY" maxlength="5" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">CVV</label>
+                                    <input type="text" id="cvv" class="form-input" placeholder="123" maxlength="3" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label class="form-label">Email Address</label>
+                                <div class="input-with-icon">
+                                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    <input type="email" id="email" class="form-input" placeholder="your@email.com" required>
+                                </div>
+                                <span class="form-hint">Receipt will be sent to this email</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="payment-actions">
+                            <button type="button" class="btn-cancel" id="cancelBtn">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                <span>Cancel</span>
+                            </button>
+                            <button type="submit" class="btn-pay" id="payBtn">
+                                <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                </svg>
+                                <span>Pay €<span id="payAmount">0</span></span>
+                            </button>
+                        </div>
+                        
+                        <p class="payment-note">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            Your payment information is secure and encrypted
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+    
+    <!-- Scripts -->
+    <script src="js/load-partials.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="js/payment.js"></script>
+    <script src="../partials/js/profile-dropdown.js"></script>
+    <script src="../partials/js/check-user-auth.js"></script>
+</body>
+</html>
+

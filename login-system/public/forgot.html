@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password - MPH Booking System</title>
+  <link rel="stylesheet" href="/css/auth-styles.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Left Side - Hero Section -->
+    <div class="auth-hero">
+      <div class="auth-hero-content">
+        <div class="auth-hero-header">
+          <h1 class="auth-hero-title">Need Help Accessing Your Account?</h1>
+          <p class="auth-hero-description">
+            Don't worry, it happens to the best of us. We'll send you a secure link to reset your password and get you back to booking sports facilities in no time.
+          </p>
+        </div>
+
+        <div class="auth-hero-features">
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Secure Reset Process</h3>
+              <p class="auth-hero-feature-description">Your security is our priority with encrypted links</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Instant Email Delivery</h3>
+              <p class="auth-hero-feature-description">Receive your reset link within seconds</p>
+            </div>
+          </div>
+
+          <div class="auth-hero-feature">
+            <div class="auth-hero-feature-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div class="auth-hero-feature-text">
+              <h3 class="auth-hero-feature-title">Quick Recovery</h3>
+              <p class="auth-hero-feature-description">Get back to your bookings in minutes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-hero-footer">
+        <p>&copy; 2024 MPH Booking System. All rights reserved.</p>
+      </div>
+    </div>
+
+    <!-- Right Side - Form Container -->
+    <div class="auth-container">
+      <div class="auth-container-inner">
+        <!-- Brand Header (Mobile) -->
+        <div class="auth-brand">
+          <h1 class="auth-brand-name">MPH Booking System</h1>
+        </div>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+          <div class="auth-header">
+            <h1 class="auth-title">Forgot Password?</h1>
+            <p class="auth-subtitle">Enter your email to receive a reset link</p>
+          </div>
+
+          <div id="msg"></div>
+
+          <form id="form" class="auth-form">
+            <div class="form-group">
+              <label for="email" class="form-label">Email Address</label>
+              <input 
+                id="email" 
+                type="email" 
+                class="form-input"
+                required 
+                autocomplete="username" 
+                placeholder="example@student.tus.ie" 
+              />
+            </div>
+
+            <button type="submit" class="auth-btn auth-btn-primary">Send Reset Link</button>
+          </form>
+
+          <div class="auth-footer">
+            <a href="/login.html" class="auth-footer-link">Back to sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/forgot.js" defer></script>
+</body>
+</html>
+
