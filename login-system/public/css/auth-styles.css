@@ -599,6 +599,93 @@ body {
     text-align: center;
 }
 
+/* Remember Me Checkbox Styling */
+.remember-me-group {
+    margin-bottom: 1.25rem !important;
+    margin-top: 0rem !important;
+    gap: 0.5rem !important;
+}
+
+.remember-me-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: fit-content;
+}
+
+.remember-me-label:hover .remember-me-text {
+    color: var(--text-primary);
+}
+
+.remember-me-checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-primary);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.remember-me-checkbox:hover {
+    border-color: var(--border-secondary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.remember-me-checkbox:checked {
+    background: var(--brand-gold);
+    border-color: var(--brand-gold);
+    box-shadow: 0 0 0 3px rgba(163, 148, 97, 0.15);
+}
+
+.remember-me-checkbox:checked::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 10px;
+    height: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    animation: checkmark 0.2s ease-out;
+}
+
+@keyframes checkmark {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.remember-me-checkbox:focus-visible {
+    outline: 2px solid var(--brand-gold);
+    outline-offset: 2px;
+}
+
+.remember-me-text {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: hsl(215, 20.2%, 75%);
+    letter-spacing: -0.01em;
+    transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .mt-1 { margin-top: 0.5rem; }
 .mt-2 { margin-top: 1rem; }
 .mt-3 { margin-top: 1.5rem; }

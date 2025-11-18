@@ -1,6 +1,8 @@
 import "../config/env.js";
 import { Router } from "express";
 import bcrypt from "bcrypt";
+import speakeasy from "speakeasy";
+import QRCode from "qrcode";
 import User from "../models/User.js";
 import { generateToken, sha256Hex } from "../utils/tokens.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../utils/mailer.js";
@@ -107,33 +109,10 @@ router.get("/verify-email", async (req, res) => {
   }
 });
 
-// POST /auth/resend-verification
-router.post("/resend-verification", async (req, res) => {
-  try {
-    const { email } = req.body || {};
-    if (!email) return res.status(200).json({ message: "If the account exists, an email has been sent." });
-    const normEmail = String(email).trim().toLowerCase();
-    const user = await User.findOne({ email: normEmail }).lean(false);
-    if (!user || user.emailVerified) {
-      return res.status(200).json({ message: "If the account exists, an email has been sent." });
-    }
-    const { token, hash, expiresAt } = generateToken(32, VERIFY_TOKEN_MINUTES);
-    user.emailVerifyTokenHash = hash;
-    user.emailVerifyExpires = expiresAt;
-    await user.save();
-    const link = `${APP_BASE_URL}/auth/verify-email?token=${encodeURIComponent(token)}`;
-    await sendVerificationEmail(normEmail, link);
-    return res.status(200).json({ message: "Verification email sent." });
-  } catch (e) {
-    console.error("[resend-verification]", e);
-    return res.status(500).json({ error: "Server error" });
-  }
-});
-
 // POST /auth/login
 router.post("/login", async (req, res) => {
   const start = Date.now();
-  const { email, password } = req.body || {};
+  const { email, password, twoFactorCode, rememberMe } = req.body || {};
   if (!email || !password) return res.status(400).json({ error: "Email and password are required." });
 
   const normEmail = String(email).trim().toLowerCase();
@@ -162,7 +141,51 @@ router.post("/login", async (req, res) => {
     return res.status(403).json({ error: "Email not verified. Please verify before logging in." });
   }
 
-  // Simplified: successful login sets session directly (no OTP/mfa)
+  // Check if 2FA code is provided (for second step of login)
+  if (twoFactorCode) {
+    // Verify the 2FA code from email
+    if (!user.twoFactorCodeHash || !user.twoFactorCodeExpires) {
+      return res.status(401).json({ error: "No 2FA code was sent. Please try logging in again." });
+    }
+
+    if (new Date() > user.twoFactorCodeExpires) {
+      return res.status(401).json({ error: "2FA code has expired. Please request a new one." });
+    }
+
+    const codeMatches = await bcrypt.compare(twoFactorCode, user.twoFactorCodeHash);
+    if (!codeMatches) {
+      return res.status(401).json({ error: "Invalid 2FA code." });
+    }
+
+    // Clear the used 2FA code
+    user.twoFactorCodeHash = null;
+    user.twoFactorCodeExpires = null;
+  } else {
+    // First step: password is correct, send 2FA code via email
+    const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
+    const codeHash = await bcrypt.hash(code, 10);
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    user.twoFactorCodeHash = codeHash;
+    user.twoFactorCodeExpires = expiresAt;
+    await user.save();
+
+    // Send 2FA code email
+    try {
+      const { sendTwoFactorEmail } = await import("../utils/mailer.js");
+      await sendTwoFactorEmail(normEmail, code);
+    } catch (emailErr) {
+      console.error("[2FA email]", emailErr);
+      return res.status(500).json({ error: "Failed to send 2FA code. Please try again." });
+    }
+
+    return res.status(200).json({ 
+      requiresTwoFactor: true, 
+      message: "A 6-digit code has been sent to your email. Please enter it to continue." 
+    });
+  }
+
+  // Successful login
   user.failedAttempts = 0;
   user.lockedUntil = null;
   user.lastLoginAt = now;
@@ -170,6 +193,14 @@ router.post("/login", async (req, res) => {
 
   req.session.userId = user._id.toString();
   req.session.email = user.email;
+  
+  // Handle remember me by setting session cookie max age
+  if (rememberMe) {
+    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 days
+  } else {
+    req.session.cookie.maxAge = null; // Session cookie (expires when browser closes)
+  }
+  
   res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
   return res.status(200).json({ message: "Logged in", userId: req.session.userId, expiresIn: idleSecs });
 });
@@ -277,6 +308,151 @@ router.put("/profile", async (req, res) => {
     return res.status(200).json({ message: "Profile updated successfully" });
   } catch (e) {
     console.error("[profile update]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /auth/2fa/setup - Generate 2FA secret and QR code
+router.post("/2fa/setup", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+    
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Generate a new secret
+    const secret = speakeasy.generateSecret({
+      name: `MPH Booking (${user.email})`,
+      issuer: 'MPH Booking System'
+    });
+
+    // Generate QR code
+    const qrCodeUrl = await QRCode.toDataURL(secret.otpauth_url);
+
+    // Store the secret temporarily (not enabled yet)
+    user.twoFactorSecret = secret.base32;
+    await user.save();
+
+    return res.status(200).json({
+      secret: secret.base32,
+      qrCode: qrCodeUrl,
+      otpauthUrl: secret.otpauth_url
+    });
+  } catch (e) {
+    console.error("[2fa setup]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /auth/2fa/verify-setup - Verify and enable 2FA
+router.post("/2fa/verify-setup", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { token } = req.body || {};
+    if (!token) {
+      return res.status(400).json({ error: "Token is required" });
+    }
+
+    const user = await User.findById(req.session.userId);
+    if (!user || !user.twoFactorSecret) {
+      return res.status(400).json({ error: "2FA setup not initiated" });
+    }
+
+    // Verify the token
+    const verified = speakeasy.totp.verify({
+      secret: user.twoFactorSecret,
+      encoding: 'base32',
+      token: token,
+      window: 2
+    });
+
+    if (!verified) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    // Generate backup codes
+    const backupCodes = [];
+    for (let i = 0; i < 8; i++) {
+      backupCodes.push(generateToken(8, 0).token.toUpperCase());
+    }
+
+    // Enable 2FA
+    user.twoFactorEnabled = true;
+    user.twoFactorBackupCodes = await Promise.all(
+      backupCodes.map(code => bcrypt.hash(code, 10))
+    );
+    await user.save();
+
+    return res.status(200).json({
+      message: "2FA enabled successfully",
+      backupCodes: backupCodes
+    });
+  } catch (e) {
+    console.error("[2fa verify-setup]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /auth/2fa/disable - Disable 2FA
+router.post("/2fa/disable", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const { password } = req.body || {};
+    if (!password) {
+      return res.status(400).json({ error: "Password is required" });
+    }
+
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Verify password
+    const ok = await bcrypt.compare(password, user.passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+
+    // Disable 2FA
+    user.twoFactorEnabled = false;
+    user.twoFactorSecret = null;
+    user.twoFactorBackupCodes = [];
+    await user.save();
+
+    return res.status(200).json({ message: "2FA disabled successfully" });
+  } catch (e) {
+    console.error("[2fa disable]", e);
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+// GET /auth/2fa/status - Check if 2FA is enabled
+router.get("/2fa/status", async (req, res) => {
+  try {
+    if (!req.session?.userId) {
+      return res.status(401).json({ error: "Not authenticated" });
+    }
+
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    return res.status(200).json({
+      enabled: user.twoFactorEnabled || false
+    });
+  } catch (e) {
+    console.error("[2fa status]", e);
     return res.status(500).json({ error: "Server error" });
   }
 });

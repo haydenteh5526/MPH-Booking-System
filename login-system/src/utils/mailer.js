@@ -94,6 +94,14 @@ export async function sendLoginOtpEmail(to, code) {
   });
 }
 
+export async function sendTwoFactorEmail(to, code) {
+  return sendEmail({
+    to,
+    subject: "Your Two-Factor Authentication Code",
+    text: `Your MPH Booking System login verification code is: ${code}\n\nThis code will expire in 10 minutes.\n\nIf you did not attempt to log in, please secure your account immediately.`
+  });
+}
+
 export async function sendPasswordResetEmail(to, link) {
   return sendEmail({
     to,

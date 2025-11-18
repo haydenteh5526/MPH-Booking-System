@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
   passwordResetTokenHash: { type: String, default: null },
   passwordResetExpires: { type: Date, default: null },
 
+  // Email-based 2FA fields
+  twoFactorCodeHash: { type: String, default: null },
+  twoFactorCodeExpires: { type: Date, default: null },
+
   failedAttempts: { type: Number, default: 0 },
   lockedUntil: { type: Date, default: null },
   lastLoginAt: { type: Date, default: null },
