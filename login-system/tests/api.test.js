@@ -1,5 +1,4 @@
-import request from 'supertest';
-import { describe, it, expect } from '@jest/globals';
+const request = require('supertest');
 
 // Basic API endpoint tests
 describe('API Health Check', () => {
