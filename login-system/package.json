@@ -16,6 +16,10 @@
   },
   "scripts": {
     "start": "node app.js",
-    "seed": "node scripts/resetPassword.mjs"
+    "seed": "node scripts/resetPassword.mjs",
+    "test": "echo \"No tests specified yet\" && exit 0",
+    "lint": "echo \"No linter configured yet\" && exit 0",
+    "dev": "node app.js",
+    "build": "echo \"Build completed\" && exit 0"
   }
 }
