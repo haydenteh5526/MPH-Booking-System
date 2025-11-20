@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us | MPH Booking System</title>
+  <style>
+    /* =======================================
+       THEME VARIABLES
+    ======================================= */
+    :root {
+      --brand-gold: #A39461;
+      --brand-black: #000000;
+      --brand-white: #FFFFFF;
+      --accent-skyblue: #AFD2F0;
+      --accent-mossgreen: #E1EB73;
+      --accent-riverblue: #232D9B;
+      
+      /* Modern neutral palette */
+      --background: 0 0% 100%;
+      --foreground: 222.2 84% 4.9%;
+      --card: 0 0% 100%;
+      --card-foreground: 222.2 84% 4.9%;
+      --popover: 0 0% 100%;
+      --popover-foreground: 222.2 84% 4.9%;
+      --primary: 42 45% 51%;
+      --primary-foreground: 210 40% 98%;
+      --secondary: 210 40% 96.1%;
+      --secondary-foreground: 222.2 47.4% 11.2%;
+      --muted: 210 40% 96.1%;
+      --muted-foreground: 215.4 16.3% 46.9%;
+      --accent: 210 40% 96.1%;
+      --accent-foreground: 222.2 47.4% 11.2%;
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 40% 98%;
+      --border: 214.3 31.8% 91.4%;
+      --input: 214.3 31.8% 91.4%;
+      --ring: 42 45% 51%;
+      --radius: 0.5rem;
+
+      /* Semantic colors */
+      --text-primary: hsl(222.2, 84%, 4.9%);
+      --text-secondary: hsl(215.4, 16.3%, 46.9%);
+      --bg-primary: hsl(0, 0%, 100%);
+      --bg-secondary: hsl(210, 40%, 98%);
+      --bg-tertiary: hsl(210, 40%, 96.1%);
+      --border-primary: hsl(214.3, 31.8%, 91.4%);
+      --border-secondary: hsl(214.3, 31.8%, 85%);
+
+      /* Slot colors - more vibrant */
+      --slot-available: hsl(142, 76%, 36%);
+      --slot-available-hover: hsl(142, 76%, 32%);
+      --slot-booked: hsl(0, 84%, 60%);
+      --slot-blocked: hsl(215, 16%, 47%);
+
+      /* Shadows */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --background: 222.2 84% 4.9%;
+        --foreground: 210 40% 98%;
+        --card: 222.2 84% 4.9%;
+        --card-foreground: 210 40% 98%;
+        --popover: 222.2 84% 4.9%;
+        --popover-foreground: 210 40% 98%;
+        --primary: 42 45% 51%;
+        --primary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 217.2 32.6% 17.5%;
+        --secondary-foreground: 210 40% 98%;
+        --muted: 217.2 32.6% 17.5%;
+        --muted-foreground: 215 20.2% 65.1%;
+        --accent: 217.2 32.6% 17.5%;
+        --accent-foreground: 210 40% 98%;
+        --border: 217.2 32.6% 17.5%;
+        --input: 217.2 32.6% 17.5%;
+        
+        --text-primary: hsl(210, 40%, 98%);
+        --text-secondary: hsl(215, 20.2%, 65.1%);
+        --bg-primary: hsl(222.2, 84%, 4.9%);
+        --bg-secondary: hsl(217.2, 32.6%, 12%);
+        --bg-tertiary: hsl(217.2, 32.6%, 17.5%);
+        --border-primary: hsl(217.2, 32.6%, 17.5%);
+        --border-secondary: hsl(217.2, 32.6%, 25%);
+      }
+    }
+
+    /* =======================================
+       GLOBAL STYLES
+    ======================================= */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* =======================================
+       HEADER
+    ======================================= */
+    .main-header {
+      background-color: var(--bg-secondary);
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 40px;
+    }
+
+    .brand-name {
+      color: var(--brand-gold);
+      font-size: 1.4rem;
+      font-weight: bold;
+    }
+
+    .header-center .nav-link {
+      margin: 0 15px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .header-center .nav-link:hover,
+    .header-center .nav-link.active {
+      color: var(--brand-gold);
+    }
+
+    .profile-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+
+    .profile-btn:hover {
+      color: var(--brand-gold);
+    }
+
+    .profile-icon {
+      width: 36px;
+      height: 36px;
+    }
+
+    /* =======================================
+       ABOUT SECTION
+    ======================================= */
+    .top-box {
+    margin-left: 50px;
+      padding: 60px 20px 20px 20px;
+    }
+
+    .top-box h1 {
+      font-size: 2.2rem;
+      color: var(--brand-gold);
+      margin: 0;
+    }
+
+    .box-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .box {
+      background-color: var(--bg-secondary);
+      width: 45%;
+      min-width: 300px;
+      height: 180px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .box1-content {
+      display: flex;
+      align-items: center;
+      width: 100%;
+    }
+
+    .image-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .circle-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--brand-gold);
+    }
+
+    .click-me {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--brand-white);
+      font-weight: bold;
+      background-color: rgba(35, 45, 155, 0.7);
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      z-index: 10;
+    }
+
+    .details {
+      flex: 1;
+      margin-left: 15px;
+    }
+
+    .details h2 {
+      margin: 0 0 5px 0;
+      font-size: 1.1rem;
+      color: var(--brand-gold);
+    }
+
+    .details p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* =======================================
+       FOOTER
+    ======================================= */
+    .main-footer {
+      background-color: var(--bg-secondary);
+      text-align: center;
+      padding: 20px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border-primary);
+      margin-top: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .box {
+        width: 90%;
+      }
+
+      .header-container {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="header-left">
+        <h1 class="brand-name">MPH Booking System</h1>
+      </div>
+      <nav class="header-center">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="booking.html" class="nav-link">Bookings</a>
+        <a href="about.html" class="nav-link active">About</a>
+      </nav>
+      <div class="header-right">
+        <button class="profile-btn" aria-label="User profile">
+          <svg class="profile-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="8" r="4"></circle>
+            <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ABOUT SECTION -->
+  <div class="top-box">
+    <h1>About Us</h1>
+  </div>
+
+  <div class="box-container">
+    <div class="box">
+      <div class="box1-content">
+        <div class="image-container">
+          <a href="https://www.linkedin.com/in/shyi-sheng-tan-b79658387" target="_blank">
+            <img src="image/man-profile-cartoon_18591-58482.avif" alt="Profile" class="circle-img">
+          </a>
+          <div class="click-me">Click Me</div>
+        </div>
+        <div class="details">
+          <h2>John Doe</h2>
+          <p>Web Developer</p>
+          <p>Passionate about creating modern, responsive websites.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="box">Box 2</div>
+    <div class="box">Box 3</div>
+    <div class="box">Box 4</div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <p>&copy; 2025 MPH Booking System. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    const clickMe = document.querySelector('.click-me');
+    function toggleClickMe() {
+      clickMe.style.display = 'flex';
+      setTimeout(() => {
+        clickMe.style.display = 'none';
+      }, 1000);
+    }
+    setInterval(toggleClickMe, 2000);
+    clickMe.addEventListener('click', () => {
+      alert('You clicked the image!');
+      clickMe.style.display = 'none';
+    });
+  </script>
+</body>
+</html>
