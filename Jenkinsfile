@@ -7,11 +7,12 @@ pipeline {
     
     environment {
         NODE_ENV = 'production'
-        // Add environment variables from Jenkins credentials
-        SMTP_HOST = credentials('smtp-host')
-        SMTP_USER = credentials('smtp-user')
-        SMTP_PASS = credentials('smtp-pass')
-        MONGODB_URI = credentials('mongodb-uri')
+        // Credentials will be added later in Jenkins
+        // Uncomment these after adding credentials in Jenkins:
+        // SMTP_HOST = credentials('smtp-host')
+        // SMTP_USER = credentials('smtp-user')
+        // SMTP_PASS = credentials('smtp-pass')
+        // MONGODB_URI = credentials('mongodb-uri')
     }
     
     stages {
@@ -106,7 +107,7 @@ pipeline {
         }
         always {
             echo 'Cleaning up workspace...'
-            cleanWs()
+            // cleanWs() - Uncomment after fixing workspace issues
         }
     }
 }
