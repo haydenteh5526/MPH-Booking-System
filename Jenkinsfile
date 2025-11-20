@@ -16,13 +16,6 @@ pipeline {
     }
     
     stages {
-        stage('Checkout') {
-            steps {
-                echo 'Checking out code from repository...'
-                checkout scm
-            }
-        }
-        
         stage('Install Dependencies') {
             steps {
                 dir('login-system') {
