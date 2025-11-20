@@ -7,12 +7,11 @@ pipeline {
     
     environment {
         NODE_ENV = 'production'
-        // Credentials will be added later in Jenkins
-        // Uncomment these after adding credentials in Jenkins:
-        // SMTP_HOST = credentials('smtp-host')
-        // SMTP_USER = credentials('smtp-user')
-        // SMTP_PASS = credentials('smtp-pass')
-        // MONGODB_URI = credentials('mongodb-uri')
+        // Credentials from Jenkins
+        SMTP_HOST = credentials('smtp-host')
+        SMTP_USER = credentials('smtp-user')
+        SMTP_PASS = credentials('smtp-pass')
+        MONGODB_URI = credentials('mongodb-uri')
     }
     
     stages {

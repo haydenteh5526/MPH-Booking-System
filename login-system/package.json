@@ -17,9 +17,14 @@
   "scripts": {
     "start": "node app.js",
     "seed": "node scripts/resetPassword.mjs",
-    "test": "echo \"No tests specified yet\" && exit 0",
-    "lint": "echo \"No linter configured yet\" && exit 0",
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "echo \"Add ESLint here\" && exit 0",
     "dev": "node app.js",
     "build": "echo \"Build completed\" && exit 0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }
