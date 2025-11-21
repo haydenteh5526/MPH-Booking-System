@@ -23,7 +23,7 @@ Go to `Manage Jenkins` → `Global Tool Configuration`:
 **NodeJS Installation:**
 - Name: `NodeJS`
 - Install automatically: ✓
-- Version: Latest LTS (18.x or 20.x)
+- Version: Latest LTS
 
 **Git Installation:**
 - Name: `Default`
@@ -40,17 +40,17 @@ Go to `Manage Jenkins` → `Manage Credentials` → `(global)` → `Add Credenti
 2. **SMTP User**
    - Kind: Secret text
    - ID: `smtp-user`
-   - Secret: `apikey` (SendGrid literal username)
+   - Secret: `apikey` (SendGrid uses "apikey" as literal username)
 
 3. **SMTP Password**
    - Kind: Secret text
    - ID: `smtp-pass`
-   - Secret: Your SendGrid API key
+   - Secret: Your SendGrid API key (starts with SG.)
 
 4. **MongoDB URI**
    - Kind: Secret text
    - ID: `mongodb-uri`
-   - Secret: `mongodb+srv://mph_user:MPHBooking123@cluster0.hztkp33.mongodb.net/?appName=Cluster0`
+   - Secret: Your MongoDB Atlas connection string
 
 ### 4. Create Pipeline Job
 
@@ -76,37 +76,13 @@ Go to `Manage Jenkins` → `Manage Credentials` → `(global)` → `Add Credenti
 - Branch Specifier: `*/main`
 - Script Path: `Jenkinsfile`
 
-### 5. Configure GitHub Webhook (Optional)
-
-In your GitHub repository:
-1. Go to `Settings` → `Webhooks` → `Add webhook`
-2. Payload URL: `http://your-jenkins-url:8080/github-webhook/`
-3. Content type: `application/json`
-4. Events: Select `Just the push event`
-5. Active: ✓
-
-### 6. Environment Variables
-
-Create a `.env.jenkins` file (not committed to Git) with:
-```
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/mph-booking
-SESSION_SECRET=your-session-secret
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-MAIL_FROM=noreply@mph-booking.com
-ALLOWED_EMAIL_DOMAIN=student.tus.ie
-```
-
-### 7. Test the Pipeline
+### 5. Test the Pipeline
 
 1. Click `Build Now` in your Jenkins job
 2. Monitor the build progress in `Console Output`
 3. Check each stage completes successfully
 
-### 8. Common Issues & Solutions
+### 6. Common Issues & Solutions
 
 **Issue: Node/npm not found**
 - Solution: Configure NodeJS in Global Tool Configuration
