@@ -35,28 +35,22 @@ Go to `Manage Jenkins` → `Manage Credentials` → `(global)` → `Add Credenti
 1. **SMTP Host**
    - Kind: Secret text
    - ID: `smtp-host`
-   - Secret: Your SMTP host
+   - Secret: `smtp.sendgrid.net`
 
 2. **SMTP User**
    - Kind: Secret text
    - ID: `smtp-user`
-   - Secret: Your SMTP username
+   - Secret: `apikey` (SendGrid literal username)
 
 3. **SMTP Password**
    - Kind: Secret text
    - ID: `smtp-pass`
-   - Secret: Your SMTP password
+   - Secret: Your SendGrid API key
 
 4. **MongoDB URI**
    - Kind: Secret text
    - ID: `mongodb-uri`
-   - Secret: mongodb://localhost:27017/mph-booking
-
-5. **GitHub Credentials (if private repo)**
-   - Kind: Username with password
-   - ID: `github-credentials`
-   - Username: haydenteh5526
-   - Password: Your GitHub token
+   - Secret: `mongodb+srv://mph_user:MPHBooking123@cluster0.hztkp33.mongodb.net/?appName=Cluster0`
 
 ### 4. Create Pipeline Job
 
@@ -79,7 +73,7 @@ Go to `Manage Jenkins` → `Manage Credentials` → `(global)` → `Add Credenti
 - SCM: `Git`
 - Repository URL: `https://github.com/haydenteh5526/MPH-Booking-System.git`
 - Credentials: Select your GitHub credentials (if private)
-- Branch Specifier: `*/booking-system`
+- Branch Specifier: `*/main`
 - Script Path: `Jenkinsfile`
 
 ### 5. Configure GitHub Webhook (Optional)
@@ -118,10 +112,13 @@ ALLOWED_EMAIL_DOMAIN=student.tus.ie
 - Solution: Configure NodeJS in Global Tool Configuration
 
 **Issue: MongoDB connection failed**
-- Solution: Ensure MongoDB is running and URI is correct
+- Solution: Verify MongoDB Atlas URI and network access settings
 
-**Issue: Git authentication failed**
-- Solution: Add GitHub credentials in Jenkins
+**Issue: Git authentication failed (port 443 blocked)**
+- Solution: Add Windows Firewall rule for Jenkins Java process (see Windows Firewall Configuration section)
+
+**Issue: Jest cannot find supertest**
+- Solution: Ensure devDependencies are installed with `npm ci` (not `npm install`)
 
 **Issue: Permission denied on Windows**
 - Solution: Run Jenkins as Administrator
@@ -130,14 +127,29 @@ ALLOWED_EMAIL_DOMAIN=student.tus.ie
 
 The Jenkinsfile includes these stages:
 
-1. **Checkout** - Pull latest code from Git
-2. **Install Dependencies** - Run `npm ci`
-3. **Lint & Code Quality** - Run linting
-4. **Security Audit** - Run `npm audit`
-5. **Unit Tests** - Run test suite
-6. **Build** - Build the application
-7. **Deploy to Staging** - Auto-deploy on `booking-system` branch
-8. **Deploy to Production** - Manual approval for `main` branch
+1. **Install Dependencies** - Run `npm ci`
+2. **Lint & Code Quality** - Run linting (placeholder for ESLint)
+
+3. **Security Updates**
+   - Nodemailer updated to 7.0.10 (fixed vulnerability)
+   - No security issues in dependencies
+
+4. **Build** - Build the application
+5. **Deploy to Staging** - Auto-deploy on development branches
+6. **Deploy to Production** - Manual approval for `main` branch
+
+## Windows Firewall Configuration
+
+If Jenkins cannot connect to GitHub, add a firewall rule:
+
+**Run as Administrator:**
+```cmd
+netsh advfirewall firewall add rule name="Jenkins HTTPS Outbound" dir=out action=allow protocol=TCP remoteport=443 program="C:\Program Files\Java\jdk-21\bin\java.exe"
+```
+
+Replace the Java path with your Jenkins Java installation:
+- Find in Jenkins: `Manage Jenkins` → `System Information` → `java.home`
+- The program path: `[java.home]\bin\java.exe`
 
 ## Monitoring
 
@@ -148,9 +160,30 @@ The Jenkinsfile includes these stages:
 
 ## Next Steps
 
-1. Add actual test suite (replace placeholder)
-2. Configure ESLint for code quality
-3. Set up proper staging/production servers
-4. Configure email notifications
-5. Add SonarQube for code analysis (optional)
-6. Set up artifact archiving
+1. Write real integration tests (replace placeholder tests in `tests/api.test.js`)
+2. Configure ESLint for code quality enforcement
+3. Set up proper staging/production deployment servers
+4. Configure email notifications for build failures
+5. Add SonarQube for advanced code analysis (optional)
+6. Consider GitHub webhooks for instant builds instead of SCM polling
+
+## Project Features Included
+
+- **Authentication System**
+  - Email verification with SendGrid
+  - Email-based 2FA (6-digit codes, 10-minute expiry)
+  - Remember Me functionality
+  - Password visibility toggle
+  - Account lockout after failed attempts
+
+- **Security Features**
+  - Helmet.js for security headers
+  - Session management with MongoDB
+  - HTTPS-ready configuration
+  - Updated dependencies (no vulnerabilities)
+
+- **CI/CD Pipeline**
+  - Automated builds on push to main
+  - Security auditing
+  - Test coverage reporting
+  - Environment variable management via Jenkins credentials
