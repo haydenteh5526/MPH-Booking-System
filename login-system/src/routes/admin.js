@@ -7,6 +7,7 @@ import "../config/env.js";
 import { requireAdmin } from "../middleware/requireAuth.js";
 
 const router = Router();
+const ENABLE_2FA = process.env.ENABLE_2FA !== "false";
 
 // Court overlap mapping - matches frontend logic
 const getCourtId = (sport, court) => {
@@ -471,19 +472,22 @@ router.post("/cancel-booking", requireAdmin, async (req, res) => {
       </div>
     `;
     
-    try {
-      await sendAdminEmail(
-        booking.userEmail,
-        "Booking Cancelled - MPH Booking System",
-        emailHtml
-      );
-    } catch (emailError) {
-      console.error("[admin/cancel-booking] Email error:", emailError);
-      // Continue even if email fails
+    // Send email notification (only if email is enabled)
+    if (ENABLE_2FA) {
+      try {
+        await sendAdminEmail(
+          booking.userEmail,
+          "Booking Cancelled - MPH Booking System",
+          emailHtml
+        );
+      } catch (emailError) {
+        console.error("[admin/cancel-booking] Email error:", emailError);
+        // Continue even if email fails
+      }
     }
     
     return res.status(200).json({ 
-      message: "Booking cancelled and user notified",
+      message: ENABLE_2FA ? "Booking cancelled and user notified" : "Booking cancelled",
       booking
     });
   } catch (e) {

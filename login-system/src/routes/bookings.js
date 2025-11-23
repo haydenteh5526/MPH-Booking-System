@@ -6,6 +6,7 @@ import User from "../models/User.js";
 import { requireRegularUser } from "../middleware/requireAuth.js";
 
 const router = Router();
+const ENABLE_2FA = process.env.ENABLE_2FA !== "false";
 
 // POST /bookings/confirm - Confirm booking and send receipt (regular users only)
 router.post("/confirm", requireRegularUser, async (req, res) => {
@@ -69,20 +70,27 @@ router.post("/confirm", requireRegularUser, async (req, res) => {
     
     await bookingsCollection.insertOne(booking);
 
-    // Send receipt email
-    await sendBookingReceipt(email, {
-      sport,
-      courtName,
-      dateFormatted,
-      timeFormatted,
-      duration,
-      totalPrice,
-      paymentDate,
-      confirmationNumber
-    });
+    // Send receipt email (only if email is enabled)
+    if (ENABLE_2FA) {
+      try {
+        await sendBookingReceipt(email, {
+          sport,
+          courtName,
+          dateFormatted,
+          timeFormatted,
+          duration,
+          totalPrice,
+          paymentDate,
+          confirmationNumber
+        });
+      } catch (emailErr) {
+        console.error("[booking receipt]", emailErr);
+        // Continue even if email fails
+      }
+    }
 
     return res.status(200).json({ 
-      message: "Booking confirmed and receipt sent",
+      message: ENABLE_2FA ? "Booking confirmed and receipt sent" : "Booking confirmed",
       confirmationNumber,
       paymentDate
     });
@@ -182,20 +190,22 @@ router.post("/user-cancel", requireRegularUser, async (req, res) => {
       }
     }
     
-    // Send cancellation confirmation email
-    try {
-      await sendCancellationEmail(booking.userEmail, {
-        sport: booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1),
-        courtName: booking.court,
-        dateFormatted: formattedDate,
-        timeFormatted: timeDisplay,
-        duration: booking.duration || 2,
-        totalPrice: booking.totalPrice,
-        confirmationNumber: booking.confirmationNumber
-      });
-    } catch (emailError) {
-      console.error("[user-cancel] Email error:", emailError);
-      // Continue even if email fails
+    // Send cancellation confirmation email (only if email is enabled)
+    if (ENABLE_2FA) {
+      try {
+        await sendCancellationEmail(booking.userEmail, {
+          sport: booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1),
+          courtName: booking.court,
+          dateFormatted: formattedDate,
+          timeFormatted: timeDisplay,
+          duration: booking.duration || 2,
+          totalPrice: booking.totalPrice,
+          confirmationNumber: booking.confirmationNumber
+        });
+      } catch (emailError) {
+        console.error("[user-cancel] Email error:", emailError);
+        // Continue even if email fails
+      }
     }
     
     return res.status(200).json({ 
