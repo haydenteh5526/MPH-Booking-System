@@ -102,6 +102,15 @@ app.use(async (req, res, next) => {
 // static files for main site pages
 app.use(express.static(path.join(__dirname, "..")));
 
+// Root route - redirect to login
+app.get("/", (req, res) => {
+  if (req.session.userId) {
+    res.redirect("/landing_page/index.html");
+  } else {
+    res.redirect("/login.html");
+  }
+});
+
 // auth routes
 app.use("/auth", authRoutes);
 
