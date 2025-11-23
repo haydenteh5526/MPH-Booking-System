@@ -1,15 +1,19 @@
 # 🏀 MPH Booking System
 
+**🌐 Live Demo:** [https://mph-booking-system.onrender.com](https://mph-booking-system.onrender.com)
+
 ## 📖 Project Description
 
 A full-stack web application for booking sports facilities at TUS Athlone. Students can book basketball, badminton, and volleyball courts in real-time with automated conflict detection. Administrators can manage bookings, block time slots for maintenance, and handle cancellations through a dedicated dashboard.
 
 **Key Features:**
 - ⚡ Real-time court availability with smart overlap detection
-- 🔐 Secure user authentication with email verification
+- 🔐 Secure user authentication with email verification & 2FA
 - 💳 Complete booking flow with payment processing
 - 👨‍💼 Admin dashboard with sortable tables and data cleanup
 - 📧 Professional email notifications for confirmations and cancellations
+- 🔄 CI/CD pipeline with Jenkins for automated testing
+- ☁️ Deployed on Render with MongoDB Atlas
 
 **Tech Stack:** Node.js, Express, MongoDB, Vanilla JavaScript, SendGrid
 
@@ -56,7 +60,23 @@ A full-stack web application for booking sports facilities at TUS Athlone. Stude
    ```
 
 5. **🌐 Access the application**
-   - Open your browser and go to: `http://localhost:3000`
+   - **Local Development:** `http://localhost:3000`
+   - **Production:** [https://mph-booking-system.onrender.com](https://mph-booking-system.onrender.com)
+
+---
+
+## 🌐 Deployment
+
+The application is deployed on **Render** with the following configuration:
+
+- **Build Command:** `npm install`
+- **Start Command:** `node app.js`
+- **Root Directory:** `login-system`
+- **Environment Variables:** Set via Render dashboard (see `.env.example`)
+- **Auto-Deploy:** Enabled from `main` branch
+- **CI/CD:** Jenkins pipeline runs tests before deployment
+
+**Note:** Free tier apps may spin down after 15 minutes of inactivity.
 
 ---
 
@@ -109,12 +129,16 @@ This project was developed as part of the Software Engineering module at TUS Ath
 - ⚙️ Backend: Node.js, Express.js
 - 🗄️ Database: MongoDB Atlas
 - 📧 Email Service: SendGrid
-- 🔑 Authentication: JSON Web Tokens (JWT)
+- 🔑 Authentication: express-session with 2FA
+- 🔒 Security: Helmet.js, bcrypt password hashing
+- 🚀 CI/CD: Jenkins pipeline with automated testing
+- ☁️ Hosting: Render (backend), MongoDB Atlas (database)
 
 **Special Thanks:**
 - 🎓 TUS Athlone Software Engineering Module
 - 📨 SendGrid for email service
 - ☁️ MongoDB Atlas for database hosting
+- 🚀 Render for application hosting
 
 ---
 
