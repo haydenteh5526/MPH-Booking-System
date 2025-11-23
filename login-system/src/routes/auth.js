@@ -68,14 +68,27 @@ router.post("/register", async (req, res) => {
       studentId: normStudentId,
       email: normEmail,
       passwordHash,
-      emailVerified: false,
-      emailVerifyTokenHash: hash,
-      emailVerifyExpires: expiresAt
+      emailVerified: !ENABLE_2FA, // Auto-verify if email is disabled
+      emailVerifyTokenHash: ENABLE_2FA ? hash : null,
+      emailVerifyExpires: ENABLE_2FA ? expiresAt : null
     });
 
-    const link = `${APP_BASE_URL}/auth/verify-email?token=${encodeURIComponent(token)}`;
-    await sendVerificationEmail(normEmail, link);
-    return res.status(200).json({ message: "Registration successful. Check your email to verify." });
+    // Skip email if disabled
+    if (ENABLE_2FA) {
+      const link = `${APP_BASE_URL}/auth/verify-email?token=${encodeURIComponent(token)}`;
+      try {
+        await sendVerificationEmail(normEmail, link);
+      } catch (emailErr) {
+        console.error("[verification email]", emailErr);
+        // Don't fail registration if email fails
+      }
+    }
+
+    return res.status(200).json({ 
+      message: ENABLE_2FA 
+        ? "Registration successful. Check your email to verify." 
+        : "Registration successful. You can now log in."
+    });
   } catch (e) {
     console.error("[register]", e);
     if (e?.code === 11000) {
@@ -234,15 +247,23 @@ router.post("/forgot-password", async (req, res) => {
     if (!email) return res.status(200).json({ message: "If the account exists, an email has been sent." });
     const normEmail = String(email).trim().toLowerCase();
     const user = await User.findOne({ email: normEmail }).lean(false);
-    if (user) {
+    if (user && ENABLE_2FA) {
       const { token, hash, expiresAt } = generateToken(32, RESET_TOKEN_MINUTES);
       user.passwordResetTokenHash = hash;
       user.passwordResetExpires = expiresAt;
       await user.save();
       const link = `${APP_BASE_URL}/reset.html?token=${encodeURIComponent(token)}`;
-      await sendPasswordResetEmail(normEmail, link);
+      try {
+        await sendPasswordResetEmail(normEmail, link);
+      } catch (emailErr) {
+        console.error("[reset email]", emailErr);
+      }
     }
-    return res.status(200).json({ message: "If the account exists, an email has been sent." });
+    return res.status(200).json({ 
+      message: ENABLE_2FA 
+        ? "If the account exists, an email has been sent." 
+        : "Password reset via email is currently unavailable. Please contact support."
+    });
   } catch (e) {
     console.error("[forgot-password]", e);
     return res.status(500).json({ error: "Server error" });
