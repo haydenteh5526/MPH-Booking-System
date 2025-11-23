@@ -17,6 +17,7 @@ const VERIFY_TOKEN_MINUTES = parseInt(process.env.VERIFY_TOKEN_MINUTES || "1440"
 const RESET_TOKEN_MINUTES = parseInt(process.env.RESET_TOKEN_MINUTES || "60", 10);
 const APP_BASE_URL = process.env.APP_BASE_URL || "http://localhost:" + (process.env.PORT || 3000);
 const ALLOWED_EMAIL_DOMAIN = (process.env.ALLOWED_EMAIL_DOMAIN || "student.tus.ie").toLowerCase();
+const ENABLE_2FA = process.env.ENABLE_2FA !== "false"; // Default true, set to "false" to disable
 
 const PASSWORD_POLICY = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
 const PASSWORD_REQUIREMENTS = "Password must be at least 8 characters and include at least one uppercase letter and one number.";
@@ -161,6 +162,25 @@ router.post("/login", async (req, res) => {
     user.twoFactorCodeHash = null;
     user.twoFactorCodeExpires = null;
   } else {
+    // If 2FA is disabled, skip directly to login
+    if (!ENABLE_2FA) {
+      // Skip 2FA and log in directly
+      user.failedLoginAttempts = 0;
+      user.lockUntil = null;
+      await user.save();
+
+      req.session.userId = user._id;
+      req.session.email = normEmail;
+      req.session.role = user.role;
+      req.session.cookie.maxAge = rememberMe ? 7 * 24 * 60 * 60 * 1000 : idleSecs * 1000;
+
+      return res.status(200).json({ 
+        success: true, 
+        message: "Login successful",
+        role: user.role
+      });
+    }
+
     // First step: password is correct, send 2FA code via email
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
     const codeHash = await bcrypt.hash(code, 10);
