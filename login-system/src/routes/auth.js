@@ -175,8 +175,8 @@ router.post("/login", async (req, res) => {
     user.twoFactorCodeHash = null;
     user.twoFactorCodeExpires = null;
   } else {
-    // If 2FA is disabled, skip directly to login
-    if (!ENABLE_2FA) {
+    // Skip 2FA for admins or if 2FA is disabled globally
+    if (!ENABLE_2FA || user.role === 'admin') {
       // Skip 2FA and log in directly
       user.failedLoginAttempts = 0;
       user.lockUntil = null;
