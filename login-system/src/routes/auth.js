@@ -3,6 +3,7 @@ import { Router } from "express";
 import bcrypt from "bcrypt";
 import speakeasy from "speakeasy";
 import QRCode from "qrcode";
+import crypto from "crypto";
 import User from "../models/User.js";
 import { generateToken, sha256Hex } from "../utils/tokens.js";
 import { sendVerificationEmail, sendPasswordResetEmail } from "../utils/mailer.js";
@@ -155,6 +156,33 @@ router.post("/login", async (req, res) => {
     return res.status(403).json({ error: "Email not verified. Please verify before logging in." });
   }
 
+  // Check for valid remember me token (skip 2FA if valid)
+  const rememberMeCookie = req.cookies?.rememberMe;
+  let hasValidRememberMe = false;
+  
+  console.log(`[login] Remember me cookie present: ${!!rememberMeCookie}, User has token: ${!!user.rememberMeToken}`);
+  
+  if (rememberMeCookie && user.rememberMeToken && user.rememberMeExpires) {
+    // Verify the remember me token
+    const tokenMatches = await bcrypt.compare(rememberMeCookie, user.rememberMeToken);
+    const isNotExpired = new Date() < user.rememberMeExpires;
+    
+    console.log(`[login] Token match: ${tokenMatches}, Not expired: ${isNotExpired}`);
+    
+    if (tokenMatches && isNotExpired) {
+      hasValidRememberMe = true;
+      console.log(`[login] Valid remember me token found for: ${normEmail}, skipping 2FA`);
+    } else {
+      // Token is invalid or expired, clear it
+      console.log(`[login] Remember me token invalid or expired, clearing it`);
+      user.rememberMeToken = null;
+      user.rememberMeExpires = null;
+      await user.save();
+    }
+  } else if (rememberMeCookie && (!user.rememberMeToken || !user.rememberMeExpires)) {
+    console.log(`[login] Remember me cookie exists but user has no token in database`);
+  }
+
   // Check if 2FA code is provided (for second step of login)
   if (twoFactorCode) {
     // Verify the 2FA code from email
@@ -175,20 +203,41 @@ router.post("/login", async (req, res) => {
     user.twoFactorCodeHash = null;
     user.twoFactorCodeExpires = null;
   } else {
-    // Skip 2FA for admins or if 2FA is disabled globally
-    console.log(`[login] User isAdmin: ${user.isAdmin}, ENABLE_2FA: ${ENABLE_2FA}`);
-    if (!ENABLE_2FA || user.isAdmin) {
-      console.log(`[login] Skipping 2FA for user: ${normEmail} (isAdmin: ${user.isAdmin})`);
+    // Skip 2FA for admins, if 2FA is disabled globally, or if valid remember me token exists
+    console.log(`[login] User isAdmin: ${user.isAdmin}, ENABLE_2FA: ${ENABLE_2FA}, hasValidRememberMe: ${hasValidRememberMe}`);
+    if (!ENABLE_2FA || user.isAdmin || hasValidRememberMe) {
+      console.log(`[login] Skipping 2FA for user: ${normEmail} (isAdmin: ${user.isAdmin}, rememberMe: ${hasValidRememberMe})`);
       // Skip 2FA and log in directly
       user.failedAttempts = 0;
       user.lockedUntil = null;
       user.lastLoginAt = now;
+      
+      // Generate and store remember me token if requested
+      if (rememberMe && !hasValidRememberMe) {
+        const rememberMeToken = crypto.randomBytes(32).toString('hex');
+        const rememberMeTokenHash = await bcrypt.hash(rememberMeToken, 10);
+        const rememberMeExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+        
+        user.rememberMeToken = rememberMeTokenHash;
+        user.rememberMeExpires = rememberMeExpires;
+        
+    // Set secure HTTP-only cookie
+    res.cookie('rememberMe', rememberMeToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow cookie on cross-site requests
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      path: '/' // Ensure cookie is available for all paths
+    });
+    console.log(`[login] Set remember me cookie after 2FA for: ${normEmail}`);
+      }
+      
       await user.save();
 
       req.session.userId = user._id.toString();
       req.session.email = normEmail;
       req.session.isAdmin = user.isAdmin;
-      req.session.cookie.maxAge = rememberMe ? 7 * 24 * 60 * 60 * 1000 : idleSecs * 1000;
+      req.session.cookie.maxAge = rememberMe || hasValidRememberMe ? 30 * 24 * 60 * 60 * 1000 : idleSecs * 1000;
 
       res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
       return res.status(200).json({ 
@@ -228,6 +277,27 @@ router.post("/login", async (req, res) => {
   user.failedAttempts = 0;
   user.lockedUntil = null;
   user.lastLoginAt = now;
+  
+  // Generate and store remember me token if requested
+  if (rememberMe) {
+    const rememberMeToken = crypto.randomBytes(32).toString('hex');
+    const rememberMeTokenHash = await bcrypt.hash(rememberMeToken, 10);
+    const rememberMeExpires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+    
+    user.rememberMeToken = rememberMeTokenHash;
+    user.rememberMeExpires = rememberMeExpires;
+    
+    // Set secure HTTP-only cookie
+    res.cookie('rememberMe', rememberMeToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax', // Changed from 'strict' to 'lax' to allow cookie on cross-site requests
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      path: '/' // Ensure cookie is available for all paths
+    });
+    console.log(`[login] Set remember me cookie for: ${normEmail}`);
+  }
+  
   await user.save();
 
   req.session.userId = user._id.toString();
@@ -506,9 +576,15 @@ router.get("/2fa/status", async (req, res) => {
 });
 
 // POST /auth/logout
-router.post("/logout", (req, res) => {
+router.post("/logout", async (req, res) => {
+  // Note: We do NOT clear the remember me token on logout
+  // This allows the remember me functionality to persist across logout/login cycles
+  // The token will only be cleared when it expires (30 days) or if it's invalid
+  
   req.session?.destroy(() => {
     res.clearCookie("sid");
+    // Don't clear rememberMe cookie - let it persist for remember me functionality
+    console.log(`[logout] Session destroyed, remember me token preserved`);
     res.status(200).json({ message: "Logged out" });
   });
 });

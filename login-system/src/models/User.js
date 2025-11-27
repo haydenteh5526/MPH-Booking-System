@@ -22,6 +22,10 @@ const userSchema = new mongoose.Schema({
   lockedUntil: { type: Date, default: null },
   lastLoginAt: { type: Date, default: null },
   
+  // Remember Me token
+  rememberMeToken: { type: String, default: null },
+  rememberMeExpires: { type: Date, default: null },
+  
   isAdmin: { type: Boolean, default: false }
 }, { timestamps: true });
 

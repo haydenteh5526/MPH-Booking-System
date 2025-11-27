@@ -293,13 +293,46 @@ class BookingsManager {
   showCancelModal(booking) {
     const modal = document.getElementById('cancelModal')
     
+    // Get sport emoji
+    const sportEmojis = {
+      basketball: '🏀',
+      badminton: '🏸',
+      volleyball: '🏐'
+    }
+    const sportEmoji = booking.sportEmoji || sportEmojis[booking.sport.toLowerCase()] || '🏟️'
+    
+    // Format sport name
+    const sportName = booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1)
+    
+    // Format court name
+    const courtName = booking.court || booking.courtName || '-'
+    
+    // Format date
+    const bookingDate = new Date(booking.date)
+    const dateFormatted = booking.dateFormatted || bookingDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    })
+    
+    // Format time
+    let timeFormatted = booking.timeFormatted || booking.time
+    if (typeof booking.time === 'string' || typeof booking.time === 'number') {
+      const hour = parseInt(booking.time)
+      if (!isNaN(hour)) {
+        const startTime = `${hour.toString().padStart(2, '0')}:00`
+        const endTime = `${(hour + 2).toString().padStart(2, '0')}:00`
+        timeFormatted = `${startTime} - ${endTime}`
+      }
+    }
+    
     // Populate modal with booking details
-    document.getElementById('cancelSportIcon').textContent = booking.sportEmoji
-    document.getElementById('cancelSport').textContent = 
-      booking.sport.charAt(0).toUpperCase() + booking.sport.slice(1)
-    document.getElementById('cancelCourt').textContent = booking.courtName
-    document.getElementById('cancelDate').textContent = booking.dateFormatted
-    document.getElementById('cancelTime').textContent = booking.timeFormatted
+    document.getElementById('cancelSportIcon').textContent = sportEmoji
+    document.getElementById('cancelSport').textContent = sportName
+    document.getElementById('cancelCourt').textContent = courtName
+    document.getElementById('cancelDate').textContent = dateFormatted
+    document.getElementById('cancelTime').textContent = timeFormatted
 
     // Show modal
     modal.style.display = 'flex'

@@ -959,21 +959,27 @@ class BookingCalendar {
           // Use exact match only to avoid blocking multiple courts
           const courtMatches = court.name === blockedSlot.court
           
-          if (courtMatches) {
+            if (courtMatches) {
             console.log(`  Matched court: ${court.name} (${court.id})`)
             if (data[dateString]?.[hour]?.[court.id]) {
               data[dateString][hour][court.id].status = 'blocked'
               console.log(`    Blocked ${court.id} at ${hour}:00`)
               
-              // Also block all conflicting courts
-              const conflictingCourts = this.courtConflicts[court.id] || []
-              console.log(`    Blocking ${conflictingCourts.length} overlapping courts`)
-              conflictingCourts.forEach(conflictCourtId => {
-                if (data[dateString]?.[hour]?.[conflictCourtId]) {
-                  data[dateString][hour][conflictCourtId].status = 'blocked'
-                  console.log(`      Blocked overlapping court: ${conflictCourtId} at ${hour}:00`)
-                }
-              })
+              // Only apply conflict logic to manually blocked slots
+              // Auto-blocked slots already have their overlaps handled by the backend
+              if (!blockedSlot.autoBlocked) {
+                // Also block all conflicting courts
+                const conflictingCourts = this.courtConflicts[court.id] || []
+                console.log(`    Blocking ${conflictingCourts.length} overlapping courts`)
+                conflictingCourts.forEach(conflictCourtId => {
+                  if (data[dateString]?.[hour]?.[conflictCourtId]) {
+                    data[dateString][hour][conflictCourtId].status = 'blocked'
+                    console.log(`      Blocked overlapping court: ${conflictCourtId} at ${hour}:00`)
+                  }
+                })
+              } else {
+                console.log(`    Skipping conflict logic for auto-blocked slot`)
+              }
             } else {
               console.log(`    Data not found for ${dateString} ${hour} ${court.id}`)
             }

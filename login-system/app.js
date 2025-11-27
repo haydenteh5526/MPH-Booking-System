@@ -3,6 +3,7 @@ import express from "express";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import { connectDB } from "./src/config/db.js";
@@ -31,6 +32,7 @@ app.use(helmet({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // session (implements 30-min inactivity by cookie maxAge + rolling)
 const idleMs = (parseInt(process.env.SESSION_IDLE_MINUTES || "30", 10)) * 60 * 1000;

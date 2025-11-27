@@ -218,6 +218,7 @@ function renderBlockedSlotsTable(slots) {
                 date: slot.date,
                 reason: slot.reason,
                 createdBy: slot.createdBy,
+                autoBlocked: slot.autoBlocked || false, // Store autoBlocked status
                 times: [],
                 ids: []
             };
@@ -246,7 +247,13 @@ function renderBlockedSlotsTable(slots) {
         return group;
     });
     
-    tbody.innerHTML = groupedArray.map(group => `
+    tbody.innerHTML = groupedArray.map(group => {
+        const isAutoBlocked = group.autoBlocked;
+        const unblockButton = isAutoBlocked
+            ? '<span class="auto-blocked-label" style="color: #999; font-style: italic;">Auto-blocked</span>'
+            : `<button class="action-btn unblock-btn" data-block-ids="${group.ids.join(',')}">Unblock</button>`;
+        
+        return `
         <tr>
             <td>#${group.ids[0].substring(0, 8)}</td>
             <td>${group.sport}</td>
@@ -257,13 +264,12 @@ function renderBlockedSlotsTable(slots) {
             <td>${group.createdBy || 'Admin'}</td>
             <td>
                 <div class="action-btns">
-                    <button class="action-btn unblock-btn" data-block-ids="${group.ids.join(',')}">
-                        Unblock
-                    </button>
+                    ${unblockButton}
                 </div>
             </td>
         </tr>
-    `).join('');
+        `;
+    }).join('');
     
     // Add event listeners to unblock buttons
     tbody.querySelectorAll('.unblock-btn').forEach(btn => {
@@ -501,6 +507,7 @@ async function handleBlockTimeSlot(e) {
         let successCount = 0;
         let failCount = 0;
         let errors = [];
+        let overlappingCount = 0; // Track unique overlapping courts (same for all time slots)
         
         // Block each time slot in the range
         for (const time of slotsToBlock) {
@@ -518,6 +525,11 @@ async function handleBlockTimeSlot(e) {
                 
                 if (response.ok) {
                     successCount++;
+                    // Get overlapping count from first successful response
+                    // (same overlapping courts are created for each time slot)
+                    if (successCount === 1 && data.overlappingBlocks) {
+                        overlappingCount = data.overlappingBlocks;
+                    }
                 } else {
                     failCount++;
                     errors.push(`${time}: ${data.error || 'Failed'}`);
@@ -530,7 +542,17 @@ async function handleBlockTimeSlot(e) {
         
         // Show summary notification
         if (successCount > 0 && failCount === 0) {
-            showNotification(`Successfully blocked ${successCount} time slot(s)`, 'success');
+            const mainCount = 1; // One main court entry in the table
+            const totalCount = mainCount + overlappingCount;
+            
+            let message;
+            if (overlappingCount > 0) {
+                // Show what the user sees in the table: 1 main entry + X overlapping entries = Y total
+                message = `Successfully blocked ${mainCount} time slot(s) for ${court}, which also auto-blocked ${overlappingCount} overlapping slot(s) across other courts (${totalCount} total)`;
+            } else {
+                message = `Successfully blocked ${mainCount} time slot(s)`;
+            }
+            showNotification(message, 'success');
             closeBlockTimeSlotModal();
             loadDashboardData();
         } else if (successCount > 0 && failCount > 0) {
@@ -625,10 +647,16 @@ function openUnblockModal(blockIds) {
     const slots = allBlockedSlots.filter(s => ids.includes(s._id));
     if (slots.length === 0) return;
     
+    // Prevent unblocking auto-blocked slots
+    const firstSlot = slots[0];
+    if (firstSlot.autoBlocked) {
+        showNotification('Auto-blocked slots cannot be unblocked directly. Unblock the main slot instead.', 'error');
+        return;
+    }
+    
     // Store IDs for unblocking
     currentBlockId = ids;
     
-    const firstSlot = slots[0];
     const detailsDiv = document.getElementById('unblockSlotDetails');
     
     // Format time display
@@ -668,9 +696,15 @@ async function handleUnblockSlot() {
     // Handle both single ID and array of IDs
     const ids = Array.isArray(currentBlockId) ? currentBlockId : [currentBlockId];
     
+    // Check if this is a main block (not auto-blocked) to count overlaps
+    const firstSlot = allBlockedSlots.find(s => ids.includes(s._id));
+    const isMainBlock = firstSlot && !firstSlot.autoBlocked;
+    
     try {
         let successCount = 0;
+        let totalUnblocked = 0; // Count of unique court entries unblocked
         let failCount = 0;
+        let overlapsRemoved = 0;
         
         for (const blockId of ids) {
             try {
@@ -683,8 +717,20 @@ async function handleUnblockSlot() {
                     body: JSON.stringify({ blockId })
                 });
                 
+                const data = await response.json();
+                
                 if (response.ok) {
                     successCount++;
+                    // For main blocks, track overlaps removed (only count once, from first successful unblock)
+                    if (isMainBlock && successCount === 1) {
+                        overlapsRemoved = data.overlapsRemoved || 0;
+                        // Count unique court entries: 1 main + unique overlapping courts
+                        // Since overlaps are the same courts across all time slots, we only count once
+                        totalUnblocked = 1 + overlapsRemoved;
+                    } else if (!isMainBlock && successCount === 1) {
+                        // Auto-blocked slot, just count as 1 unique court entry
+                        totalUnblocked = 1;
+                    }
                 } else {
                     failCount++;
                 }
@@ -694,7 +740,15 @@ async function handleUnblockSlot() {
         }
         
         if (successCount > 0 && failCount === 0) {
-            showNotification(`Successfully unblocked ${successCount} time slot(s)`, 'success');
+            let message;
+            if (isMainBlock && totalUnblocked > 1) {
+                const mainCount = 1;
+                const overlappingCount = totalUnblocked - mainCount;
+                message = `Successfully unblocked ${mainCount} time slot(s) for ${firstSlot.court}, which also unblocked ${overlappingCount} overlapping slot(s) across other courts (${totalUnblocked} total)`;
+            } else {
+                message = `Successfully unblocked ${totalUnblocked || 1} time slot(s)`;
+            }
+            showNotification(message, 'success');
         } else if (successCount > 0 && failCount > 0) {
             showNotification(`Unblocked ${successCount} slot(s), ${failCount} failed`, 'warning');
         } else {
@@ -1009,6 +1063,11 @@ function renderBlockedSlotsTableFromGroups(groups) {
         
         const slotIds = group.slots.map(s => s._id);
         
+        const isAutoBlocked = firstSlot.autoBlocked || false;
+        const unblockButton = isAutoBlocked
+            ? '<span class="auto-blocked-label" style="color: #999; font-style: italic;">Auto-blocked</span>'
+            : `<button class="action-btn unblock-btn" data-block-ids='${JSON.stringify(slotIds)}'>Unblock</button>`;
+        
         return `
             <tr>
                 <td>#${firstSlot._id.substring(0, 8)}</td>
@@ -1019,9 +1078,7 @@ function renderBlockedSlotsTableFromGroups(groups) {
                 <td>${group.reason}</td>
                 <td>${group.createdBy || 'Admin'}</td>
                 <td>
-                    <button class="action-btn unblock-btn" data-block-ids='${JSON.stringify(slotIds)}'>
-                        Unblock
-                    </button>
+                    ${unblockButton}
                 </td>
             </tr>
         `;
