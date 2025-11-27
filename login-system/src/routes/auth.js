@@ -176,23 +176,29 @@ router.post("/login", async (req, res) => {
     user.twoFactorCodeExpires = null;
   } else {
     // Skip 2FA for admins or if 2FA is disabled globally
-    if (!ENABLE_2FA || user.role === 'admin') {
+    console.log(`[login] User isAdmin: ${user.isAdmin}, ENABLE_2FA: ${ENABLE_2FA}`);
+    if (!ENABLE_2FA || user.isAdmin) {
+      console.log(`[login] Skipping 2FA for user: ${normEmail} (isAdmin: ${user.isAdmin})`);
       // Skip 2FA and log in directly
-      user.failedLoginAttempts = 0;
-      user.lockUntil = null;
+      user.failedAttempts = 0;
+      user.lockedUntil = null;
+      user.lastLoginAt = now;
       await user.save();
 
-      req.session.userId = user._id;
+      req.session.userId = user._id.toString();
       req.session.email = normEmail;
-      req.session.role = user.role;
+      req.session.isAdmin = user.isAdmin;
       req.session.cookie.maxAge = rememberMe ? 7 * 24 * 60 * 60 * 1000 : idleSecs * 1000;
 
+      res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
       return res.status(200).json({ 
         success: true, 
         message: "Login successful",
-        role: user.role
+        isAdmin: user.isAdmin
       });
     }
+    
+    console.log(`[login] Sending 2FA code to: ${normEmail}`);
 
     // First step: password is correct, send 2FA code via email
     const code = Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit code
@@ -218,7 +224,7 @@ router.post("/login", async (req, res) => {
     });
   }
 
-  // Successful login
+  // Successful login (after 2FA verification)
   user.failedAttempts = 0;
   user.lockedUntil = null;
   user.lastLoginAt = now;
@@ -226,6 +232,7 @@ router.post("/login", async (req, res) => {
 
   req.session.userId = user._id.toString();
   req.session.email = user.email;
+  req.session.isAdmin = user.isAdmin;
   
   // Handle remember me by setting session cookie max age
   if (rememberMe) {
@@ -235,7 +242,7 @@ router.post("/login", async (req, res) => {
   }
   
   res.setHeader("X-Auth-Login-Duration", `${Date.now() - start}ms`);
-  return res.status(200).json({ message: "Logged in", userId: req.session.userId, expiresIn: idleSecs });
+  return res.status(200).json({ message: "Logged in", userId: req.session.userId, expiresIn: idleSecs, isAdmin: user.isAdmin });
 });
 
 // MFA removed in simplified flow
